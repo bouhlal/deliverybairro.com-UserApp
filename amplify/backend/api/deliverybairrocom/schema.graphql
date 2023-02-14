@@ -1,0 +1,158 @@
+type BasketItem @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  qtd: Int
+  basketID: ID! @index(name: "byBasket")
+}
+
+type Basket @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  BasketItems: [BasketItem] @hasMany(indexName: "byBasket", fields: ["id"])
+  userID: ID! @index(name: "byUser")
+}
+
+type Categoria @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  descricao: String
+  url_imagem: AWSURL
+  ordem: String
+  deliverys: [Delivery] @manyToMany(relationName: "DeliveryCategoria")
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nome: String
+  sobrenome: String
+  telefone: AWSPhone
+  email: AWSEmail
+  endereco: AWSJSON
+  uf: UF
+  marcador: AWSJSON
+  url_foto: AWSURL
+  token: String
+  Baskets: [Basket] @hasMany(indexName: "byUser", fields: ["id"])
+  Pedidos: [Pedido] @hasMany(indexName: "byUser", fields: ["id"])
+}
+
+enum Situacao {
+  ATIVO
+  INATIVO
+}
+
+enum Plano {
+  FREE
+  BASIC
+  PRO
+  PREMIUM
+}
+
+type Delivery @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nome: String
+  plano_assinatura: Plano
+  situacao: Situacao
+  responsavel: String
+  telefone: AWSPhone
+  email: AWSEmail
+  endereco: AWSJSON
+  uf: UF
+  marcador: AWSJSON
+  horario: String
+  minDeliveryTime: Int
+  maxDeliveryTime: Int
+  rating: Float
+  taxa_entrega: Float
+  url_imagem: String
+  Produtos: [Produto] @manyToMany(relationName: "DeliveryProduto")
+  Categorias: [Categoria] @manyToMany(relationName: "DeliveryCategoria")
+}
+
+type Item @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  qtd: Int
+  vr_unitario: Float
+  vr_total: Float
+  pedidoID: ID! @index(name: "byPedido")
+}
+
+enum Status {
+  NOVO
+  AGUARDANDO
+  PREPARANDO
+  PRONTO_PARA_RETIRADA
+  RETIRADO
+  ENTREGUE
+  FINALIZADO
+  CANCELADO
+}
+
+type Pedido @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  dt_pedido: AWSDateTime
+  vr_subtotal: Float
+  vr_taxaentrega: Float
+  vr_total: Float
+  status: Status
+  token_sms: String
+  Items: [Item] @hasMany(indexName: "byPedido", fields: ["id"])
+  Delivery: Delivery @hasOne
+  Courier: Courier @hasOne
+  userID: ID! @index(name: "byUser")
+}
+
+type Produto @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nome: String
+  descricao: String
+  vr_unitario: Float
+  url_imagem: AWSURL
+  deliverys: [Delivery] @manyToMany(relationName: "DeliveryProduto")
+}
+
+enum Transporte {
+  DRIVING
+  BICYCLING
+}
+
+enum UF {
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MT
+  MS
+  MG
+  PA
+  PB
+  PE
+  PI
+  PR
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SE
+  SP
+  TO
+}
+
+type Courier @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  nome: String
+  cpf: String
+  telefone: AWSPhone
+  endereco: AWSJSON
+  uf: UF
+  marcador: AWSJSON
+  tipo_transporte: Transporte
+  url_foto: AWSURL
+  token_sms: String
+}
+ 

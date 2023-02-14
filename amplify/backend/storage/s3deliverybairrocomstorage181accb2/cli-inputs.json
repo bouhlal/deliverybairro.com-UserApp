@@ -1,0 +1,14 @@
+{
+  "resourceName": "s3deliverybairrocomstorage181accb2",
+  "bucketName": "deliverybairrocom-storage-181accb2",
+  "policyUUID": "9aa61b81",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "DELETE"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}

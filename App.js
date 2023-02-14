@@ -1,20 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { LogBox } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+
+import AuthProvider from "./src/context/Auth";
+import Routes from './src/routes';
+
+import { Amplify } from "aws-amplify";
+import awsconfig from "./src/aws-exports";
+
+Amplify.configure({
+  ...awsconfig, 
+  Analytics: {
+    disabled: true
+  },
+});
+
+LogBox.ignoreLogs(['Warning: Possible Unhandled Promise Rejection']);
+LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core and will be removed in a future release.']);
+LogBox.ignoreLogs(['Warning: Async Storage has been extracted from react-native core']);
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <AuthProvider>
+        <StatusBar style="dark" />
+        <Routes/>
+      </AuthProvider>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// import { withAuthenticator } from "aws-amplify-react-native/dist/Auth";
+// import AuthProvider  from "./src/context/Auth";
+// import CartProvider  from "./src/context/Cart";
+// import OrderProvider from "./src/context/Order";
+// import RootNavigator from "./src/navigation";
+
+// function App() {
+
+// export default withAuthenticator(App);
