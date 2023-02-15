@@ -85,7 +85,7 @@ export default function AppRoutes() {
           drawerStyle: {
             backgroundColor: '#FFF',
             width: '70%',
-            marginTop: 5,
+            marginTop: 82,
             marginBotton: 5,
             borderTopRightRadius: 25,
             borderBottomRightRadius: 25,
@@ -138,7 +138,7 @@ export default function AppRoutes() {
         component={ Categorias }
         options={() => ({
           headerShown: true,
-          headerTitle: 'Categorias de Produtos',
+          headerTitle: 'Categorias',
           headerTintColor: '#FFF',
           headerStyle: {
             backgroundColor: '#000',
@@ -152,7 +152,7 @@ export default function AppRoutes() {
         component={ Deliveries }
         options={() => ({
           headerShown: true,
-          headerTitle: 'Deliverys por Categoria',
+          headerTitle: 'Deliveries por Categoria',
           headerTintColor: '#FFF',
           headerStyle: {
             backgroundColor: '#000',
@@ -166,7 +166,7 @@ export default function AppRoutes() {
         component={ DeliveryInfo }
         options={() => ({
           headerShown: true,
-          headerTitle: 'Delivery (Cardápio de Produtos)',
+          headerTitle: 'Delivery (Cardápio)',
           headerTintColor: '#FFF',
           headerStyle: {
             backgroundColor: '#000',

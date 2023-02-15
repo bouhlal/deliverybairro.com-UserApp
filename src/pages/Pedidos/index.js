@@ -1,17 +1,18 @@
-import React from 'react';
 import { View, Text, StyleSheet} from 'react-native';
+import { authContext } from '../../context/Auth';
 
 import Header from '../../components/Header';
 
 export default function Pedidos() { 
+  const { user } = authContext();
 
   return (
     <View style={styles.background}>
+      <Header/>
       <View style={styles.container}>
-        <Header/>
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>Pedidos</Text>
-        </View>
+        <Text>Meus Pedidos</Text>
+        <Text>{user.email}</Text>
+        <Text>{user.token}</Text>
       </View>
     </View>
   );

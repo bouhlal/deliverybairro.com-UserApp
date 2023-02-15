@@ -25,7 +25,7 @@ export default function App() {
     <NavigationContainer>
       <AuthProvider>
         <CartProvider> 
-          <StatusBar style="dark" />
+          <StatusBar style="light" />
           <Routes/>
         </CartProvider> 
       </AuthProvider>

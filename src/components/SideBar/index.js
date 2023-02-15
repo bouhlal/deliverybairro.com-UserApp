@@ -1,5 +1,4 @@
-import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { FontAwesome5, Fontisto, AntDesign, Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -20,13 +19,11 @@ export default function SideBar({ props }) {
   return (
     <DrawerContentScrollView {...props}>
 
-      <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 25 }}>
-        <Image source={logo_png} style={{ width: 120, height: 120 }} resizeMode="contain" />
-
-        <Text style={{ color: '#5D5D5D', fontSize: 18, marginTop: 25 }}>Bem vindo!</Text>
-        
-        <Text style={{ color: '#000', fontSize: 15, fontWeight: 'bold'}}>{user.attributes.email}</Text>
-        <Text style={{ color: '#000', fontSize: 13, marginBottom: 10 }}>{user.attributes.phone_number}</Text>
+      <View style={styles.hearder}>
+        <Image style={styles.logo} source={logo_png} resizeMode="contain" />
+        <Text style={styles.title}>Bem vindo!</Text>
+        <Text style={styles.subtitle}>{user.attributes.email}</Text>
+        <Text style={styles.line13}>{user.attributes.phone_number}</Text>
       </View>
 
       <DrawerItem
@@ -74,10 +71,41 @@ export default function SideBar({ props }) {
         )}
       />
       <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 10 }}>
-        <Text style={{ color: '#000', fontSize: 18 }}><AntDesign name="copyright" color='#000' size={12} /> 2022 PSI-SOFTWARE</Text>
-        <Text style={{ color: '#000', fontSize: 14 }}>Direitos Reservados</Text>
+        <Text style={styles.line18}><AntDesign name="copyright" color='#000' size={12} /> 2022 PSI-SOFTWARE</Text>
+        <Text style={styles.line13}>Direitos Reservados</Text>
       </View>
 
     </DrawerContentScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  hearder:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 50,
+  },
+  logo:{ 
+    width: 120, 
+    height: 120 
+  },
+  title:{ 
+    color: '#5D5D5D',
+    fontSize: 18,
+    marginTop: 25
+  },
+  subtitle:{
+    color: '#000',
+    fontSize: 15,
+    fontWeight: 'bold'
+  },
+  line13:{
+    color: '#000',
+    fontSize: 13,
+    marginBottom: 10
+  },
+  line18:{ 
+    color: '#000', 
+    fontSize: 18 
+  },
+});
