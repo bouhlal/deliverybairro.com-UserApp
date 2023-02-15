@@ -5,12 +5,11 @@ import { FontAwesome5, Fontisto, AntDesign, Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { authContext } from '../../context/Auth';
 
-
 import logo_png from '../../../assets/logo.png';
 
 export default function SideBar({ props }) {
   const navigation = useNavigation();
-  const { user, user_authorized, signOut } = authContext();
+  const { user, signOut } = authContext();
   
   function GoToLink(link) {
     return (
@@ -65,7 +64,7 @@ export default function SideBar({ props }) {
       />
       <DrawerItem
         label="SAIR (LogOut)"
-        onPress={() => signOut()}
+        onPress={() => signOut}
         activeTintColor='#FFF'
         activeBackgroundColor='#FF0000'
         inactiveTintColor='#FFF'
