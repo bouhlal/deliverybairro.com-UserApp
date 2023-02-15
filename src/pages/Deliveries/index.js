@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-import { API, graphqlOperation, DataStore } from 'aws-amplify';
+import { DataStore } from 'aws-amplify';
 import { Delivery } from "../../models";
 
 import Header from '../../components/Header';
+import NO_IMAGE from "../../../assets/no-image.jpg";
 
 export default function Deliveries({ route }) {
   const navigation = useNavigation();
   const [deliveries, setDeliveries] = useState([]);
 
-  const DEFAULT_IMAGE = "https://deliverybairro-storage-25990171215340-staging.s3.amazonaws.com/images/sem-imagem.png";
-  // console.warn(route.params?.id);
-  const id = route.params?.id;
+  const id = route.params?.id; console.log("Categoria ID: ", route.params?.id);
 
   useEffect(() => {
     (async function() {
       try {
-        // await DataStore.query(Delivery).then(setDeliveries);
         await DataStore.query(Delivery, (delivery) => delivery.Categorias?.categoriaId.eq(id)).then(setDeliveries)
         console.log("deliveries: ", deliveries);
       } catch(error) {
@@ -49,12 +46,9 @@ export default function Deliveries({ route }) {
           data={deliveries}
           keyExtractor={(item) => item?.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={()=>LinkTo('Delivery', { id: item?.id })}>
+            <TouchableOpacity onPress={()=>LinkTo("DeliveryInfo", { id: item?.id })}>
               <Text style={styles.delivery_title}>{item?.nome}</Text>
-              <Image 
-                source={{ uri: (!item?.url_imagem) ? DEFAULT_IMAGE : item?.url_imagem }} 
-                style={styles.imagem} 
-              />
+              <Image source={!item?.url_imagem ? NO_IMAGE : {uri: item?.url_imagem}} style={styles.imagem} />
               <View style={styles.row}>
                 <Text style={styles.subtitle}>
                   Taxa de Entrega R$ {item?.taxa_entrega.toFixed(2)} &#8226;{" "}
@@ -66,7 +60,7 @@ export default function Deliveries({ route }) {
               </View>
             </TouchableOpacity>
           )}
-          ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há Deliveries cadastrados nesta categoria.</Text>}
+          ListEmptyComponent={() => <Text style={styles.empty}>Não há Deliveries disponíveis nesta categoria.</Text>}
           showsVerticalScrollIndicator={true}
         />
 
@@ -76,10 +70,9 @@ export default function Deliveries({ route }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container:{
     flex: 1,
-    width: "100%",
-    marginVertical: 10,
+    backgroundColor: "#FFF",
   },
   label:{
     fontSize: 21,
@@ -134,6 +127,7 @@ const styles = StyleSheet.create({
 // renderItem={({delivery}) => <DeliveryCard card={delivery} />} 
 
 /** 
+
   <View>
     {deliveries.map((delivery) => (
       <ScrollView key={delivery.id}>

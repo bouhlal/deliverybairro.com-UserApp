@@ -2,10 +2,9 @@ import React, { useContext } from 'react';
 import { useState, useEffect, createContext } from 'react';
 import { Alert } from 'react-native';
 import { Auth, DataStore } from "aws-amplify";
-
 import { User } from "../models";
 
-export const AuthContext = createContext({});
+const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false);

@@ -6,10 +6,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
-import Cart from '../pages/Cart';
+import CartInfo from '../pages/CartInfo';
 import Categorias from '../pages/Categorias';
 import Deliveries from '../pages/Deliveries';
-import Delivery from '../pages/Delivery';
+import DeliveryInfo from '../pages/DeliveryInfo';
 import Pedidos from '../pages/Pedidos';
 import Perfil from '../pages/User';
 
@@ -68,9 +68,10 @@ export default function AppRoutes() {
     const getHeaderTitle = (route) => {
       const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
       switch (routeName) {
-        case "Home": return "Categorias";
+        case "CartInfo": return "Cart";
+        case "Categorias": return "Categorias";
         case "Deliveries": return "Deliveries";
-        case "Delivery": return "Delivery";
+        case "DeliveryInfo": return "Delivery";
         case "Pedidos": return "Pedidos";
         case "Perfil": return "Perfil";
       }
@@ -133,7 +134,7 @@ export default function AppRoutes() {
       />
 
       <Stack.Screen
-        name="Home"
+        name="Categorias"
         component={ Categorias }
         options={() => ({
           headerShown: true,
@@ -161,8 +162,8 @@ export default function AppRoutes() {
       />
 
       <Stack.Screen
-        name="Delivery"
-        component={ Delivery }
+        name="DeliveryInfo"
+        component={ DeliveryInfo }
         options={() => ({
           headerShown: true,
           headerTitle: 'Delivery (Cardápio de Produtos)',
@@ -176,7 +177,7 @@ export default function AppRoutes() {
 
       <Stack.Screen
         name="Cart"
-        component={ Cart }
+        component={ CartInfo }
         options={() => ({
           headerShown: true,
           headerTitle: 'Minhas Compras',
@@ -191,4 +192,3 @@ export default function AppRoutes() {
     </Stack.Navigator>
   );
 }
-
