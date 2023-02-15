@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, Alert, SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Image, FlatList, ScrollView, TouchableOpacity, Alert, SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { DataStore } from 'aws-amplify';
@@ -40,6 +40,7 @@ export default function Home() {
       <View style={styles.container}>
         <Header />
         <Text style={styles.title}>CATEGORIAS</Text>
+
         <FlatList
           data={categorias}
           showsVerticalScrollIndicator={true}
@@ -55,6 +56,7 @@ export default function Home() {
             </View>
           )}
         />
+
       </View>
     </SafeAreaView>
   );
@@ -66,11 +68,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   title:{
-    fontSize: 32,
+    fontSize: 21,
     fontWeight: 'bold',
     textAlign: 'center',
     borderBottomColor: '#E2E2E2',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    paddingBottom: 10
   },
   card:{
     flex: 1,
@@ -101,5 +104,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 })
+
+        {/* <View>
+          {categorias.map((categoria) => (
+            <ScrollView key={categoria.ordem}>
+              <TouchableOpacity onPress={()=>LinkTo('Deliveries', { id: categoria.id, descricao: categoria.descricao })}>
+                <View style={styles.card}>
+                  <Image source={{ uri: categoria.url_imagem }} style={styles.imagem} />
+                  <Text style={styles.label}>{categoria.descricao}</Text>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
+          ))}
+        </View> */}
 
 // console.warn("lista está vazia...");
