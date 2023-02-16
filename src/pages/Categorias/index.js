@@ -15,7 +15,8 @@ export default function Home() {
     (async function() {
       try {
         const result = await DataStore.query(Categoria);
-        setCategorias(result);
+        const listaordenada = [...result].sort((a, b) => a.ordem.localeCompare(b.ordem));
+        setCategorias(listaordenada);
         console.log("categorias: ", categorias);
       } catch (error) {
         console.error("Error (query: Categoria): ", error);
