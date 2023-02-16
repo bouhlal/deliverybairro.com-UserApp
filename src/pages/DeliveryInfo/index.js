@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, FlatList, Modal, SafeAreaView, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, FlatList, Modal, SafeAreaView, ActivityIndicator } from "react-native";
 import { DataStore } from "aws-amplify";
 import { Delivery, Produto } from "../../models";
 import { cartContext } from "../../context/Cart";
@@ -15,6 +15,7 @@ export default function DeliveryInfo({ route }) {
   const [delivery, setDelivery] = useState(null);
   const [listadeprodutos, setListaDeProdutos] = useState([]);
   const [produto, setProduto] = useState({});
+  const [isAscending, setIsAscending] = useState(true);
 
   const id = route.params?.id; console.log('Delivery ID: ', id);
 
@@ -27,56 +28,50 @@ export default function DeliveryInfo({ route }) {
     setBasketDelivery(null);
     DataStore.query(Delivery, id).then(setDelivery);
     DataStore.query(Produto, (produto) => produto.deliverys?.deliveryId.eq(id)).then(setListaDeProdutos);
-    // DataStore.query(Produto, (produto) => produto.deliveryID.eq(id)).then(setListaDeProdutos);
   }, [id]);
 
   useEffect(() => {
     setBasketDelivery(delivery);
   }, [delivery]);
 
+  function listByAZ() {
+    const listaordenada = [...listadeprodutos].sort((a, b) => {
+      if (a.nome < b.nome) { return isAscending ? -1 : 1 }
+      if (a.nome > b.nome) { return isAscending ? 1 : -1 }
+      return 0;
+    });
+    setListaDeProdutos(listaordenada);
+    setIsAscending(!isAscending);
+    console.log("Lista de Produtos (A..Z)", listadeprodutos);
+  }
+
   if (!delivery) {
     return <ActivityIndicator size={"large"} color="#145E7D" />
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Modal animationType="slide" transparent={true} visible={show} >
-        <DeliveryItemToSelect item={produto} fechar={()=>showModal(false)}/>
-      </Modal>
-      <Header />
-      <FlatList
-        data={listadeprodutos}
-        ListHeaderComponent={() => <DeliveryHeader delivery={delivery} />}
-        ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há produtos deste Delivery!</Text>}
-        keyExtractor={(item) => item.nome}
-        renderItem={({item}) => <DeliveryListItem item={item} selectItem={()=>SelectItem(item)}/>}
-      />
+    <SafeAreaView style={{flex: 1}}>
+      <View style={styles.container}>
+        <Header />
+        <FlatList
+          data={listadeprodutos}
+          ListHeaderComponent={() => <DeliveryHeader delivery={delivery} listbyaz={()=>listByAZ()}/>}
+          ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há produtos deste Delivery!</Text>}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({item}) => <DeliveryListItem item={item} selectItem={()=>SelectItem(item)}/>}
+        />
+        <Modal animationType="slide" transparent={true} visible={show} >
+          <DeliveryItemToSelect item={produto} fechar={()=>showModal(false)}/>
+        </Modal>
+      </View>
     </SafeAreaView>
-/*
-    <SafeAreaView style={styles.container}>
-      <Modal animationType="slide" transparent={true} visible={show} >
-        <DeliveryItemToSelect item={produto} fechar={showModal(false)}/>
-      </Modal>
-      <Header />
-      <FlatList
-        data={listadeprodutos}
-        ListHeaderComponent={() => <DeliveryHeader delivery={delivery} />}
-        ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há produtos deste Delivery!</Text>}
-        keyExtractor={(produto) => produto.id}
-        renderItem={({produto}) => <DeliveryListItem item={produto} selectItem={SelectItem(produto)}/>}
-      />
-    </SafeAreaView>
-**/
-
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  container:{
     flex: 1,
-    width: "100%",
-    paddingVertical: 10,
-    padding: 10
+    backgroundColor: "#FFF",
   },
   empty:{
     fontSize: 18,
@@ -99,31 +94,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   }
 });
-
-/*
-  const [delivery, setDelivery] = useState(null);
-  const [listadeprodutos, setListaDeProdutos] = useState([]);
-  const [produto, setProduto] = useState({});
-  const [show, showModal] = useState(false);
-
-  const id = route.params?.id;
-  console.warn("Delivery ID: ", id);
-
-  useEffect(() => {
-    (async function() {
-      try {
-        DataStore.query(Delivery, id).then(setDelivery);
-        DataStore.query(Produto, (produto) => produto.deliverys?.deliveryId.eq(id)).then(setListaDeProdutos);
-        console.log("Lista de Produtos: ", listadeprodutos);
-      } catch(error) {
-        console.error("Error (query: Delivery): ", error);
-      }
-    })();
-  }, [route.params?.id]);
-
-  async function SelectItem({ item }) {
-    setProduto(item); 
-    showModal(true);
-  }
-
-**/
