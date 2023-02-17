@@ -38,13 +38,12 @@ export default function Deliveries({ route }) {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      <Header />
       <View style={styles.container}>
-        <Header />
         <Text style={styles.categoria_title}>{route.params.descricao}</Text>
-
         <FlatList
           data={deliveries}
-          keyExtractor={(item) => item?.id}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={()=>LinkTo("DeliveryInfo", { id: item?.id })}>
               <Text style={styles.delivery_title}>{item?.nome}</Text>
@@ -73,6 +72,7 @@ const styles = StyleSheet.create({
   container:{
     flex: 1,
     backgroundColor: "#FFF",
+    padding: 10,
   },
   label:{
     fontSize: 21,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   categoria_title:{
-    fontSize: 21,
+    fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
     borderBottomColor: "#E2E2E2",
@@ -122,8 +122,6 @@ const styles = StyleSheet.create({
   }
 })
 
-// <Text style={styles.subtitle}>{delivery.horario}</Text>
-// <Text style={styles.subtitle}><Fontisto color="#FF0000" name='map-marker-alt' size={18}/> -19.99999,-43.99999</Text>
 // renderItem={({delivery}) => <DeliveryCard card={delivery} />} 
 
 /** 

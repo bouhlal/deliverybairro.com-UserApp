@@ -38,8 +38,8 @@ export default function Home() {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      <Header />
       <View style={styles.container}>
-        <Header />
         <Text style={styles.title}>CATEGORIAS</Text>
 
         <FlatList
@@ -67,9 +67,10 @@ const styles = StyleSheet.create({
   container:{
     flex: 1,
     backgroundColor: "#FFF",
+    padding: 10,
   },
   title:{
-    fontSize: 21,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
     borderBottomColor: '#E2E2E2',

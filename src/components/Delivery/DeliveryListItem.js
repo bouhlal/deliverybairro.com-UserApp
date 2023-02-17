@@ -14,7 +14,7 @@ export default function DeliveryListItem({ item, selectItem }) {
         <Text style={styles.description} numberOfLines={2}>
           {produto.descricao}
         </Text>
-        <Text style={styles.price}>R$ {(produto.vr_unitario > 0) ? produto.vr_unitario.toFixed(2) : "0,00"}</Text>
+        <Text style={styles.price}>R$ {(produto.vr_unitario > 0) ? parseFloat(produto.vr_unitario).toFixed(2) : "0,00"}</Text>
       </View>
       <Image style={styles.image} source={!produto.url_imagem ? NO_IMAGE : {uri: produto.url_imagem}} />
     </TouchableOpacity>

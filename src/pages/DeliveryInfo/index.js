@@ -10,8 +10,9 @@ import DeliveryItemToSelect from '../../components/Delivery/DeliveryItemToSelect
 import DeliveryListItem from '../../components/Delivery/DeliveryListItem';
 
 export default function DeliveryInfo({ route }) {
-  const [show, showModal] = useState(false);
+  const { GetDelivery } = cartContext();
 
+  const [show, showModal] = useState(false);
   const [delivery, setDelivery] = useState(null);
   const [listadeprodutos, setListaDeProdutos] = useState([]);
   const [produto, setProduto] = useState({});
@@ -19,19 +20,18 @@ export default function DeliveryInfo({ route }) {
 
   const id = route.params?.id; console.log('Delivery ID: ', id);
 
-  const { setDelivery: setBasketDelivery } = cartContext();
-
+  
   useEffect(() => {
     if (!id) {
       return;
     }
-    setBasketDelivery(null);
+    GetDelivery(null);
     DataStore.query(Delivery, id).then(setDelivery);
     DataStore.query(Produto, (produto) => produto.deliverys?.deliveryId.eq(id)).then(setListaDeProdutos);
   }, [id]);
 
   useEffect(() => {
-    setBasketDelivery(delivery);
+    GetDelivery(delivery);
   }, [delivery]);
 
   function listByAZ() {
@@ -44,6 +44,15 @@ export default function DeliveryInfo({ route }) {
     setIsAscending(!isAscending);
     console.log("Lista de Produtos (A..Z)", listadeprodutos);
   }
+  
+  async function SelectItem(item) {
+    setProduto(item);
+    showModal(true);
+  }
+
+  async function CloseModal() {
+    showModal(false);
+  }
 
   if (!delivery) {
     return <ActivityIndicator size={"large"} color="#145E7D" />
@@ -52,17 +61,17 @@ export default function DeliveryInfo({ route }) {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
+        <Modal animationType="slide" transparent={true} visible={show} >
+          <DeliveryItemToSelect item={produto} CloseModal={()=>CloseModal()}/>
+        </Modal>
         <Header />
         <FlatList
           data={listadeprodutos}
           ListHeaderComponent={() => <DeliveryHeader delivery={delivery} listbyaz={()=>listByAZ()}/>}
           ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há produtos deste Delivery!</Text>}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({item}) => <DeliveryListItem item={item} selectItem={()=>SelectItem(item)}/>}
+          renderItem={({item}) => <DeliveryListItem item={item} dlvry={delivery} selectItem={()=>SelectItem(item)}/>}
         />
-        <Modal animationType="slide" transparent={true} visible={show} >
-          <DeliveryItemToSelect item={produto} fechar={()=>showModal(false)}/>
-        </Modal>
       </View>
     </SafeAreaView>
   );

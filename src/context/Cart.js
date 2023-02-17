@@ -11,7 +11,7 @@ export default function CartProvider({ children }) {
   
   const [basket, setBasket] = useState(null);
   const [basketItens, setBasketItens] = useState([]);
-  const [delivery, setDelivery] = useState([]);
+  const [delivery, setDelivery] = useState(null);
   const [cart, setCart] = useState([]);
   const [subtotal, setSubTotal] = useState(0);
 
@@ -29,8 +29,8 @@ export default function CartProvider({ children }) {
     }
   }, [basket]);
 
-  async function AddToCart(delivery, new_item, qty, total) {
-    console.log(new_item);
+  async function AddToCart(new_item, qty, total) {
+    console.log("Item adicionado à Cesta:", new_item, qty, total);
     const i = cart.findIndex(item => item.produtoID === new_item.produtoID);
     if(i !== -1){
       let cList = cart;
@@ -77,8 +77,12 @@ export default function CartProvider({ children }) {
     setCart(newList);
     setCartTotal(newList);
     // testar ou desabilitar as linhas abaixo
-    const ItemToDelete = await DataStore.query(BasketItem, item_selected.id);
-    DataStore.delete(ItemToDelete);
+    try {
+      const ItemToDelete = await DataStore.query(BasketItem, item_selected.id);
+      DataStore.delete(ItemToDelete);
+    } catch(error) {
+      console.log("Error: ", error.message);
+    }
   }
 
   function setCartTotal(items) {
@@ -91,15 +95,23 @@ export default function CartProvider({ children }) {
     setCart([]);
     setSubTotal(0);
     // testar ou desabilitar as linhas abaixo
-    const BasketToDelete = await DataStore.query(Basket, basket.id);
-    DataStore.delete(BasketToDelete);
+    try {
+      const BasketToDelete = await DataStore.query(Basket, basket.id);
+      DataStore.delete(BasketToDelete);
+    } catch(error) {
+      console.log("Error: ", error.message);
+    }
+  }
+
+  function GetDelivery(dlvry) {
+    setDelivery(dlvry)
   }
 
   return(
     <CartContext.Provider 
       value={{
-        cart, basket, basketItens, subtotal,
-        setDelivery, cleanCart, AddToCart, RemoveFromCart
+        delivery, cart, subtotal, 
+        GetDelivery, cleanCart, AddToCart, RemoveFromCart
       }}
     >
       { children }

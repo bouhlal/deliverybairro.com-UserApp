@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
 import { View, Text, Image, Alert, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { CartContext } from "../../context/Cart";
+import { cartContext } from "../../context/Cart";
+
 import { DataStore } from "aws-amplify";
 import { Produto } from "../../models";
 
 import NO_IMAGE from "../../../assets/sem-imagem.jpg";
 
-export default function DeliveryItemToSelect({ props }) {
+export default function DeliveryItemToSelect({ item, CloseModal }) {
   const [produto, setProduto] = useState([]);
   const [qtd, setQtd] = useState(1);
-  const [total, setTotal] = useState(props.item.vr_unitario);
+  const [total, setTotal] = useState(item.vr_unitario);
 
-  const { AddToCart } = useContext(CartContext);
+  const { AddToCart } = cartContext();
 
-  const id = props.item.id;
-  console.log("Produto ID: ", id);
+  const id = item.id; console.log("Produto ID: ", id);
 
   useEffect(() => {
     if (id) {
@@ -38,44 +38,40 @@ export default function DeliveryItemToSelect({ props }) {
 
   async function AddItemToCart() {
     await AddToCart(produto, qtd, total);
-    props.fechar(true);
-  }
-
-  async function close() {
-    props.fechar(true);
+    CloseModal();
   }
 
   return (
     <View style={styles.shadow}>
       <View style={styles.modal}>
-  
+
         <View style={styles.indicator} />
         <View style={styles.card}>
-          <Text style={styles.title}>item.nome</Text>
           <Image style={styles.image} source={!produto.url_imagem ? NO_IMAGE : { uri: produto.url_imagem }} />
-          <Text style={styles.summary}>{qtd} x R$ {produto.vr_unitario.toFixed(2)} = R$ {total.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}</Text>
+          <Text style={styles.title}>{produto.nome}</Text>
           <Text style={styles.description}>{produto.descricao}</Text>
+          <Text style={styles.summary}>{qtd} x R$ {parseFloat(produto.vr_unitario).toFixed(2)} = R$ {total.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}</Text>
         </View>
-  
+
         <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
           <View style={{width: 150, flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
-            <TouchableOpacity onPress={add}>
-              <Ionicons name="ios-add-circle-outline" size={50} color="green" />
-            </TouchableOpacity>
-            <Text style={styles.title}>{qtd}</Text>
             <TouchableOpacity onPress={remove}>
               <Ionicons name="md-remove-circle-outline" size={50} color="red"/>
             </TouchableOpacity>
+            <Text style={styles.title}>{qtd}</Text>
+            <TouchableOpacity onPress={add}>
+              <Ionicons name="ios-add-circle-outline" size={50} color="green" />
+            </TouchableOpacity>
           </View>
-  
+
           <TouchableOpacity style={styles.btnAdd} onPress={AddItemToCart}>
             <Text style={{ color: '#FFF', fontSize: 18 }}>Adiciona item ao Pedido</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btnClose} onPress={close}>
+          <TouchableOpacity style={styles.btnClose} onPress={CloseModal}>
             <Text style={{ color: '#FFF', fontSize: 18 }}>FECHAR</Text>
           </TouchableOpacity>
         </View>
-  
+
       </View>
     </View>
   )
@@ -91,7 +87,7 @@ const styles = StyleSheet.create({
   modal: {
     bottom: 0,
     position: 'absolute',
-    height: '70%',
+    height: '80%',
     backgroundColor: '#FFF',
     width: '100%',
     borderTopLeftRadius: 20,
@@ -123,8 +119,8 @@ const styles = StyleSheet.create({
     color: "#525252",
   },
   image:{
-    width: 150, 
-    height: 150, 
+    width: 200, 
+    height: 200, 
     marginTop: 10
   },
   summary:{

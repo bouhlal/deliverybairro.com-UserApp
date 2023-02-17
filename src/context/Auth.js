@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useState, useEffect, createContext } from 'react';
 import { Alert } from 'react-native';
+
 import { Auth, DataStore } from "aws-amplify";
 import { User } from "../models";
 
@@ -11,15 +12,15 @@ export default function AuthProvider({ children }) {
   const [user_authorized, setAuthorized] = useState(null);
   const [user, setUser] = useState(null);
   const [msg_error, setMsgError] = useState("");
-
-  const token = user_authorized?.attributes?.sub; 
+  
+  const token = user_authorized?.attributes?.token; 
 
   useEffect(() => {
     Auth.currentAuthenticatedUser({ bypassCache: true }).then(setAuthorized);
   }, [])
 
   useEffect(() => {
-    DataStore.query(User, (usuario) => usuario.sub.eq(token)).then((usuarios) => {
+    DataStore.query(User, (usuario) => usuario.token.eq(token)).then((usuarios) => {
       setUser(usuarios[0]);
       console.log(user);
     });
@@ -82,7 +83,7 @@ export default function AuthProvider({ children }) {
       await Auth.signOut();
     } catch (error) {
       console.error('Error (signOut): ', error);
-      setMsgError(error.message);
+      setError(error.message);
     }
   }
 

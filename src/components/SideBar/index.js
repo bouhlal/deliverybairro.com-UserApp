@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold'
   },
+  line18:{ 
+    color: '#000', 
+    fontSize: 18 
+  },
   line13:{
     color: '#000',
     fontSize: 13,
     marginBottom: 10
-  },
-  line18:{ 
-    color: '#000', 
-    fontSize: 18 
   },
 });
