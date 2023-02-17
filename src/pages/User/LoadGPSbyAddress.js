@@ -13,7 +13,6 @@ export default function App() {
       bairro: 'Santa Mônica',
       cidade: 'Belo Horizonte',
       cep: '31530-250',
-      uf: 'MG',
       ...data, // assume que o objeto JSON é passado como o parâmetro `data`
     };
     const formattedAddress = `${endereco}${numero ? `, ${numero}` : ''}, ${bairro}, ${cidade} - ${uf}, ${cep}`.replace(/ /g, '+');
