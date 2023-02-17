@@ -8,7 +8,7 @@ import Header from '../../components/Header';
 import LoadGPS from './LoadGPS';
 
 export default function Perfil() { 
-  const { user } = authContext();
+  const { user } = authContext(); 
   const { gps, error_msg } = LoadGPS();
 
   function LoadGPSbyAddress() {

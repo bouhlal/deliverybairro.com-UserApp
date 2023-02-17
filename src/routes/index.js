@@ -16,7 +16,7 @@ export default function Routes() {
       </View>
     )
   }
-
+  // tratar msg 'The user is not authenticated'
   return (
     user ? <AppRoutes/> : <AuthRoutes/>
   )
