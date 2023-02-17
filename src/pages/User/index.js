@@ -3,10 +3,11 @@ import { authContext } from '../../context/Auth';
 import { Auth } from "aws-amplify";
 
 import Header from '../../components/Header';
+import LoadGPS from './LoadGPS';
 
 export default function Perfil() { 
-  const { user, signOut } = authContext();
-
+  const { user } = authContext();
+  const { gps, error_msg } = LoadGPS();
   return (
     <View style={styles.background}>
       <Header/>
@@ -14,7 +15,14 @@ export default function Perfil() {
         <Text style={styles.subtitle}>Dados do Usuário (Perfil)</Text>
         <Text style={styles.line18}>{user.attributes.email}</Text>
         <Text style={styles.line13}>{user.attributes.phone_number}</Text>
-        <TouchableOpacity style={styles.btnClose} onPress={() => signOut()} >
+        {(error_msg) ? (
+          <Text style={styles.line13}>{error_msg}</Text>
+        ) : (
+          <Text style={styles.line13}>
+            Localização GPS ( {gps.coords.latitude} {gps.coords.longitude} )
+          </Text>
+        )}
+        <TouchableOpacity style={styles.btnClose} onPress={() => Auth.signOut()} >
           <Text style={styles.btnTxt}>Sign Out</Text>
         </TouchableOpacity>
       </View>
@@ -66,3 +74,5 @@ const styles = StyleSheet.create({
   },
 })
 
+/**
+*/
