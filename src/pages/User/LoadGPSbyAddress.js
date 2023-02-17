@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import * as Location from 'expo-location';
 
-export default function App() {
+export default function LoadGPSbyAddress() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  const getCoordinates = async () => {
+  async function getCoordinates() {
     const { endereco, numero, bairro, cidade, cep, uf } = {
       endereco: 'Rua dos Comanches',
       numero: '870',
@@ -29,7 +29,7 @@ export default function App() {
     }
   };
 
-  const getLocation = async () => {
+  async function getLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       setErrorMsg('Permissão para acessar a localização foi negada');
@@ -40,7 +40,7 @@ export default function App() {
     setLocation(coords);
   };
 
-  const handleGetLocation = async () => {
+  async function handleGetLocation() {
     if (location) {
       setLocation(null);
     } else {
@@ -49,16 +49,16 @@ export default function App() {
     }
   };
 
-  let text = 'Toque no botão para obter as coordenadas';
+  let info = 'Toque no botão para obter as coordenadas';
   if (errorMsg) {
-    text = errorMsg;
+    info = errorMsg;
   } else if (location) {
-    text = `Latitude: ${location.latitude}, Longitude: ${location.longitude}`;
+    info = `Latitude: ${location.latitude}, Longitude: ${location.longitude}`;
   }
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>{text}</Text>
+      <Text>{info}</Text>
       <Button title={location ? 'Obter novamente' : 'Obter coordenadas'} onPress={handleGetLocation} />
     </View>
   );
