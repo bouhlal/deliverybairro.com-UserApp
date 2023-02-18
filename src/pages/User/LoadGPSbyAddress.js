@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { useState } from 'react';
 import * as Location from 'expo-location';
 
 export default function LoadGPSbyAddress() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [info, setInfo] = useState("");
+  const [address, setAddress] = useState("");
 
   async function getCoordinates() {
     const { endereco, numero, bairro, cidade, cep, uf } = {
-      endereco: 'Rua dos Comanches',
-      numero: '870',
-      bairro: 'Santa Mônica',
-      cidade: 'Belo Horizonte',
-      cep: '31530-250',
+      endereco: "Rua dos Comanches",
+      numero: "870",
+      bairro: "Santa Mônica",
+      cidade: "Belo Horizonte",
+      uf: "MG",
+      cep: "31530-250",
       ...data, // assume que o objeto JSON é passado como o parâmetro `data`
     };
+
     const formattedAddress = `${endereco}${numero ? `, ${numero}` : ''}, ${bairro}, ${cidade} - ${uf}, ${cep}`.replace(/ /g, '+');
+    const address_formatated = endereco+", "+numero+", "+bairro+", "+cidade+"/"+uf+" CEP "+cep;
+    console.log(address_formatated); setAddress(address_formatated);
+
     const apiKey = 'AIzaSyAlhrqxSDSZUBvWgwz5Xh43tpnn3PcJj4M'; // proteger essa chave usando biblioteca dot.env
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${apiKey}`;
 
@@ -49,17 +55,15 @@ export default function LoadGPSbyAddress() {
     }
   };
 
-  let info = 'Toque no botão para obter as coordenadas';
+  setInfo("Toque no botão para obter as coordenadas");
+
   if (errorMsg) {
-    info = errorMsg;
+    setInfo(errorMsg);
   } else if (location) {
-    info = `Latitude: ${location.latitude}, Longitude: ${location.longitude}`;
+    setInfo(`Latitude: ${location.latitude}, Longitude: ${location.longitude}`);
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>{info}</Text>
-      <Button title={location ? 'Obter novamente' : 'Obter coordenadas'} onPress={handleGetLocation} />
-    </View>
-  );
+    { info, address, location, handleGetLocation }
+  )
 }

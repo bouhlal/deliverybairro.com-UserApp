@@ -5,6 +5,7 @@ import { Delivery, Produto } from "../../models";
 import { cartContext } from "../../context/Cart";
 
 import Header from "../../components/Header";
+
 import DeliveryHeader from '../../components/Delivery/DeliveryHeader';
 import DeliveryItemToSelect from '../../components/Delivery/DeliveryItemToSelect';
 import DeliveryListItem from '../../components/Delivery/DeliveryListItem';
@@ -14,13 +15,12 @@ export default function DeliveryInfo({ route }) {
 
   const [show, showModal] = useState(false);
   const [delivery, setDelivery] = useState(null);
-  const [listadeprodutos, setListaDeProdutos] = useState([]);
+  const [listaDeProdutos, setListaDeProdutos] = useState([]);
   const [produto, setProduto] = useState({});
   const [isAscending, setIsAscending] = useState(true);
 
-  const id = route.params?.id; console.log('Delivery ID: ', id);
+  const { id } = route.params ?? {}; console.log('Delivery ID: ', id);
 
-  
   useEffect(() => {
     if (!id) {
       return;
@@ -35,14 +35,11 @@ export default function DeliveryInfo({ route }) {
   }, [delivery]);
 
   function listByAZ() {
-    const listaordenada = [...listadeprodutos].sort((a, b) => {
-      if (a.nome < b.nome) { return isAscending ? -1 : 1 }
-      if (a.nome > b.nome) { return isAscending ? 1 : -1 }
-      return 0;
-    });
+    const listaordenada = [...listaDeProdutos].sort((a, b) => (
+      isAscending ? a.nome.localeCompare(b.nome) : b.nome.localeCompare(a.nome)
+    ));
     setListaDeProdutos(listaordenada);
     setIsAscending(!isAscending);
-    console.log("Lista de Produtos (A..Z)", listadeprodutos);
   }
   
   async function SelectItem(item) {
@@ -66,7 +63,7 @@ export default function DeliveryInfo({ route }) {
         </Modal>
         <Header />
         <FlatList
-          data={listadeprodutos}
+          data={listaDeProdutos}
           ListHeaderComponent={() => <DeliveryHeader delivery={delivery} listbyaz={()=>listByAZ()}/>}
           ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há produtos deste Delivery!</Text>}
           keyExtractor={(item) => item.id.toString()}

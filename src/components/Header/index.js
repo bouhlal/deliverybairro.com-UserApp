@@ -31,7 +31,7 @@ export default function Header() {
           <Image source={marca_png} style={{ width: 195, height: 85 }} resizeMode="contain" />
         </View>
 
-        <TouchableOpacity onPress={()=>GoToLink('Cart')}>
+        <TouchableOpacity onPress={()=>GoToLink("CartInfo")}>
           <Image source={cart_png} style={{ width: 85, height: 85 }} resizeMode="contain" />
           { cart.length >= 1 &&
             <View style={styles.dot}>

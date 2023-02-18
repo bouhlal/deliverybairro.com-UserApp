@@ -68,7 +68,7 @@ export default function AppRoutes() {
     const getHeaderTitle = (route) => {
       const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
       switch (routeName) {
-        case "CartInfo": return "Cart";
+        case "CartInfo": return "Carrinho de Compras";
         case "Categorias": return "Categorias";
         case "Deliveries": return "Deliveries";
         case "DeliveryInfo": return "Delivery";
@@ -176,7 +176,7 @@ export default function AppRoutes() {
       />
 
       <Stack.Screen
-        name="Cart"
+        name="CartInfo"
         component={ CartInfo }
         options={() => ({
           headerShown: true,
