@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import * as Location from 'expo-location';
 
+import { GOOGLE_APIKEY } from '@env';
+
 export default function LoadGPSbyAddress() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -22,7 +24,7 @@ export default function LoadGPSbyAddress() {
     const address_formatated = endereco+", "+numero+", "+bairro+", "+cidade+"/"+uf+" CEP "+cep;
     console.log(address_formatated); setAddress(address_formatated);
 
-    const apiKey = 'AIzaSyAlhrqxSDSZUBvWgwz5Xh43tpnn3PcJj4M'; // proteger essa chave usando biblioteca dot.env
+    const apiKey = GOOGLE_APIKEY; 
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${apiKey}`;
 
     try {

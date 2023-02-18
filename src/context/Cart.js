@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, createContext } from 'react';
+import { useState, useEffect, useContext, useMemo, createContext } from 'react';
 import { authContext } from './Auth';
 import { DataStore } from 'aws-amplify';
 import { Basket, BasketItem } from '../models';
@@ -20,7 +20,7 @@ export default function CartProvider({ children }) {
   
   useEffect(() => {
     async function fetchBasket() {
-      const baskets = await DataStore.query(Basket, (basket) => basket.clienteID.eq(user.id));
+      const baskets = await DataStore.query(Basket, (basket) => basket.clienteID.eq(user.uid));
       setBasket(baskets[0]);
     }
     fetchBasket();
@@ -183,7 +183,7 @@ export default function CartProvider({ children }) {
 
   useEffect(() => {
     DataStore.query(
-      Basket, (basket) => basket.clienteID.eq(user.id)).then((baskets) => setBasket(baskets[0])
+      Basket, (basket) => basket.clienteID.eq(user.uid)).then((baskets) => setBasket(baskets[0])
     );
   }, [user, delivery]); 
 

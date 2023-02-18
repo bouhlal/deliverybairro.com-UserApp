@@ -9,7 +9,7 @@ import marca_png from '../../../assets/marca.png';
 
 export default function SignIn() {
   const navigation = useNavigation();
-  const { signIn, msg_error, loading } = authContext();
+  const { signIn, msg_error, loadingAuth } = authContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');  
 
@@ -50,10 +50,8 @@ export default function SignIn() {
         </AreaInput>
 
         <BtnSubmit onPress={login}>
-          {loading ? (
-            <View style={styles.indicator}>
-              <ActivityIndicator size={"large"} color="#000" />
-            </View>
+          {loadingAuth ? (
+            <ActivityIndicator size={20} color='#FFF' />
           ) : (
             <BtnTxt>ACESSAR</BtnTxt>
           )}
@@ -86,13 +84,20 @@ const styles = StyleSheet.create({
     color: 'red'
   },
   indicator:{
-    flex:1, 
-    position: 'absolute', 
-    backgroundColor: '#000', 
-    opacity: 0.7, 
-    width: '100%', 
-    height: '100%', 
-    alignItems: 'center', 
-    justifyContent: 'center'
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
+
+/**
+<BtnSubmit onPress={login}>
+{loadingAuth ? (
+  <View style={styles.indicator}>
+    <ActivityIndicator size={"large"} color="#000" />
+  </View>
+) : (
+  <BtnTxt>ACESSAR</BtnTxt>
+)}
+</BtnSubmit>
+**/

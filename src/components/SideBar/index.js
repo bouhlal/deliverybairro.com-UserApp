@@ -9,6 +9,8 @@ import logo_png from '../../../assets/logo.png';
 export default function SideBar({ props }) {
   const navigation = useNavigation();
   const { user, signOut } = authContext();
+
+  console.log(user);
   
   function GoToLink(link) {
     return (
@@ -22,8 +24,7 @@ export default function SideBar({ props }) {
       <View style={styles.hearder}>
         <Image style={styles.logo} source={logo_png} resizeMode="contain" />
         <Text style={styles.title}>Bem vindo!</Text>
-        <Text style={styles.subtitle}>{user.attributes.email}</Text>
-        <Text style={styles.line13}>{user.attributes.phone_number}</Text>
+        <Text style={styles.subtitle}>{user.email}</Text>
       </View>
 
       <DrawerItem
@@ -61,7 +62,7 @@ export default function SideBar({ props }) {
       />
       <DrawerItem
         label="SAIR (LogOut)"
-        onPress={() => signOut}
+        onPress={() => signOut()}
         activeTintColor='#FFF'
         activeBackgroundColor='#FF0000'
         inactiveTintColor='#FFF'
@@ -97,7 +98,8 @@ const styles = StyleSheet.create({
   subtitle:{
     color: '#000',
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginBottom: 20
   },
   line18:{ 
     color: '#000', 

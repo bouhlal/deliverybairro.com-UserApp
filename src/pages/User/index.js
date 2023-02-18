@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Auth } from "aws-amplify";
 import { authContext } from '../../context/Auth';
 import * as Location from 'expo-location';
 
+import { GOOGLE_APIKEY } from '@env';
+
 import Header from '../../components/Header';
+import LoadGPS from './LoadGPS';
 
 export default function Perfil() {
-  const { user } = authContext();
+  const { user, signOut } = authContext();
+  const { gps, error_msg } = LoadGPS();
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -36,7 +39,7 @@ export default function Perfil() {
   };
 
   async function getCoordinates(data) {
-    const apiKey = "AIzaSyAlhrqxSDSZUBvWgwz5Xh43tpnn3PcJj4M"; // proteger essa chave usando biblioteca dot.env
+    const apiKey = GOOGLE_APIKEY;
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${getFormattedAddress(data)}&key=${apiKey}`;
 
     try {
@@ -78,8 +81,7 @@ export default function Perfil() {
   function LoadGPSbyAddress() {
     return (
       <View style={{justifyContent: "center", alignItems: "center" }}>
-        <Text style={styles.line18}>{user.attributes.email}</Text>
-        <Text style={styles.line13}>{user.attributes.phone_number}</Text>
+        <Text style={styles.line18}>{user.email}</Text>
         <Text style={styles.address}>{address}</Text>
         <Text style={styles.line13}>{info}</Text>
       </View>
@@ -92,10 +94,19 @@ export default function Perfil() {
       <View style={styles.container}>
         <Text style={styles.subtitle}>Dados do Usuário (Perfil)</Text>
         <LoadGPSbyAddress/>
+
+        {(!gps) ? (
+          <Text style={styles.line13}>{error_msg}</Text>
+        ) : (
+          <Text style={styles.line13}>
+            Localização Atual (via GPS): ( {gps.coords.latitude} {gps.coords.longitude} )
+          </Text>
+        )} 
+
         <TouchableOpacity style={styles.btnInfo} onPress={handleGetLocation} >
           <Text style={styles.btnTxt}>{!location ? 'OBTER NOVAMENTE' : 'OBTER COORDENADAS GPS'}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btnClose} onPress={() => Auth.signOut()} >
+        <TouchableOpacity style={styles.btnClose} onPress={() => signOut()} >
           <Text style={styles.btnTxt}>SAIR (LOGOUT)</Text>
         </TouchableOpacity>
       </View>

@@ -1,1 +1,15 @@
+# AWS Amplify
 src\models
+
+# node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Expo
+.expo/*
+web-build/
+
+# Enviroment (Variáveis de Ambiente)
+.env
+src/services/Firebase.js

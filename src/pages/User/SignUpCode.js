@@ -9,7 +9,7 @@ import marca_png from '../../../assets/marca.png';
 
 export default function SignUpCode({ route }) {
   // const navigation = useNavigation();
-  const { msg_error, loading, confirmSignUp, resendConfirmationCode } = authContext();
+  const { msg_error, loadingAuth, confirmSignUp, resendConfirmationCode } = authContext();
   const [code, setCode] = useState('');  
 
   const email = route.params?.email;
@@ -40,7 +40,7 @@ export default function SignUpCode({ route }) {
         </AreaInput>
 
         <BtnSubmit onPress={()=>SendCode()}>
-          {loading ? (
+          {loadingAuth ? (
             <View style={styles.indicator}>
               <ActivityIndicator size={"large"} color="#FF0000" />
             </View>

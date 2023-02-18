@@ -9,13 +9,15 @@ import marca_png from '../../../assets/marca.png';
 
 export default function SignUp() {
   const navigation = useNavigation();
-  const { signUp, msg_error, loading } = authContext();
+  const { signUp, msg_error, loadingAuth } = authContext();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [nome, setNome] = useState('');
+  const [sobrenome, setSobrenome] = useState('');
 
   function RegisterUser() {
-    signUp(email.trim(), password.trim());
+    signUp(email.trim(), password.trim(), nome.trim(), sobrenome.trim());
     Alert.alert("Atenção", "Um código de confirmação foi enviado para o seu e-mail.");
     navigation.navigate('SignUpCode', {email: email});
   }
@@ -29,6 +31,26 @@ export default function SignUp() {
           <Image source={marca_png} style={styles.mark} resizeMode="contain" />
           <Text style={styles.subtitle}>Cadastre-se, é simples e rápido!</Text>
         </View>
+
+        <AreaInput>
+          <Input
+          placeholder="Nome"
+          autoCorrect={false}
+          autoCapitalize="none"
+          value={nome}
+          onChangeText={ (input) => setNome(input) }
+          />
+        </AreaInput>
+
+        <AreaInput>
+          <Input
+          placeholder="Sobrenome"
+          autoCorrect={false}
+          autoCapitalize="none"
+          value={sobrenome}
+          onChangeText={ (input) => setSobrenome(input) }
+          />
+        </AreaInput>
 
         <AreaInput>
           <Text>Email:</Text>
@@ -62,7 +84,7 @@ export default function SignUp() {
         </View>
 
         <BtnSubmit onPress={()=>RegisterUser()}>
-          {loading ? (
+          {loadingAuth ? (
             <View style={styles.indicator}>
               <ActivityIndicator size={"large"} color="#4DCE4D" />
             </View>
