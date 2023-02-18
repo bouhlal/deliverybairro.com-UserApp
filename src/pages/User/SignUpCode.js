@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, Platform, ActivityIndicator, Alert } from 'react-native';
 import { Background, Container, AreaInput, Input, BtnSubmit, BtnTxt, Link, LinkTxt } from './styles';
-// import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { authContext } from '../../context/Auth';
 
 import logo_png from '../../../assets/logo.png';
 import marca_png from '../../../assets/marca.png';
 
 export default function SignUpCode({ route }) {
-  // const navigation = useNavigation();
-  const { msg_error, loadingAuth, confirmSignUp, resendConfirmationCode } = authContext();
+  const navigation = useNavigation();
+  const { loadingAuth, confirmSignUp, resendConfirmationCode } = authContext();
   const [code, setCode] = useState('');  
 
   const email = route.params?.email;
@@ -29,7 +29,7 @@ export default function SignUpCode({ route }) {
           <Text>Informe o código de confirmação:</Text>
           <Input
             value={code}
-            placeholder='------'
+            placeholder='123456'
             autoCapitalize='none'
             autoCorrect={false}
             keyboardType='numeric'
@@ -49,12 +49,12 @@ export default function SignUpCode({ route }) {
           )}
         </BtnSubmit>
 
-        {msg_error && 
-          <Text style={styles.error}>{msg_error}</Text>
-        }
-
         <Link onPress={()=>resendConfirmationCode()}>
-          <LinkTxt>Reenviar Código?</LinkTxt>
+          <LinkTxt>Enviar Código novamente?</LinkTxt>
+        </Link>
+
+        <Link onPress={()=>navigation.navigate('SignIn')}>
+          <LinkTxt>EFETUAR LOGIN</LinkTxt>
         </Link>
 
       </Container>

@@ -2,7 +2,7 @@
   "version": "1",
   "cognitoConfig": {
     "identityPoolName": "testAuthIdentityPool",
-    "allowUnauthenticatedIdentities": true,
+    "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "delivea4eaa783",
     "userPoolName": "deliverybairrocom",
     "autoVerifiedAttributes": [
@@ -14,8 +14,8 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Verification code: {####}",
-    "emailVerificationMessage": "Verification code: {####}",
+    "emailVerificationSubject": "DeliveryBairro UserApp - CÃ³digo de VerificaÃ§Ã£o: {####}",
+    "emailVerificationMessage": "O seu CÃ³digo de VerificaÃ§Ã£o no Delivery Bairro \nUserApp Ã©: {####}\n\nDeliveryBairro.com\nÂ© 1999-2023 PSI-SOFTWARE\nhttps://deliverybairro.com",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 6,
     "passwordPolicyCharacters": [

@@ -9,7 +9,7 @@ import marca_png from '../../../assets/marca.png';
 
 export default function SignIn() {
   const navigation = useNavigation();
-  const { signIn, msg_error, loadingAuth } = authContext();
+  const { signIn, loadingAuth } = authContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');  
 
@@ -56,10 +56,6 @@ export default function SignIn() {
             <BtnTxt>ACESSAR</BtnTxt>
           )}
         </BtnSubmit>
-
-        {msg_error && 
-          <Text style={styles.error}>{msg_error}</Text>
-        }
 
         <Link onPress={() => navigation.navigate('SignUp')}>
           <LinkTxt>Ainda não possui Conta? Junte-se a Nós!</LinkTxt>

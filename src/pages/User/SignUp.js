@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, Keyboard, Alert, Platform } from 'react-native';
-import { Background, Container, AreaInput, Input, BtnSubmit, BtnTxt, Link, LinkTxt } from './styles';
+import { ScrollView, View, Text, Image, TextInput, TouchableOpacity, Keyboard, Alert, StyleSheet, ActivityIndicator, SafeAreaView } from 'react-native';
+import { Background, Container } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { authContext } from '../../context/Auth';
 
@@ -9,12 +9,12 @@ import marca_png from '../../../assets/marca.png';
 
 export default function SignUp() {
   const navigation = useNavigation();
-  const { signUp, msg_error, loadingAuth } = authContext();
+  const { signUp, loadingAuth } = authContext();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [nome, setNome] = useState('');
-  const [sobrenome, setSobrenome] = useState('');
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [nome, setNome] = useState(null);
+  const [sobrenome, setSobrenome] = useState(null);
 
   function RegisterUser() {
     signUp(email.trim(), password.trim(), nome.trim(), sobrenome.trim());
@@ -26,120 +26,160 @@ export default function SignUp() {
     <Background>
       <Container behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled >
 
-        <View style={styles.header}>
-          <Image source={logo_png} style={styles.logo} resizeMode="contain" />
-          <Image source={marca_png} style={styles.mark} resizeMode="contain" />
-          <Text style={styles.subtitle}>Cadastre-se, é simples e rápido!</Text>
-        </View>
+        <ScrollView style={styles.container}>
 
-        <AreaInput>
-          <Input
-          placeholder="Nome"
-          autoCorrect={false}
-          autoCapitalize="none"
-          value={nome}
-          onChangeText={ (input) => setNome(input) }
-          />
-        </AreaInput>
+          <View style={styles.header}>
+            <Image source={logo_png} style={styles.logo} resizeMode="contain" />
+            <Image source={marca_png} style={styles.mark} resizeMode="contain" />
+            <Text style={styles.subtitle}>Cadastre-se, é simples e rápido!</Text>
+          </View>
 
-        <AreaInput>
-          <Input
-          placeholder="Sobrenome"
-          autoCorrect={false}
-          autoCapitalize="none"
-          value={sobrenome}
-          onChangeText={ (input) => setSobrenome(input) }
-          />
-        </AreaInput>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Nome:</Text>
+            <TextInput
+              value={nome}
+              placeholder="Nome"
+              autoCorrect={false}
+              autoCapitalize="true"
+              onChangeText={(input) => setNome(input)}
+              style={styles.input}
+            />
+          </View>
 
-        <AreaInput>
-          <Text>Email:</Text>
-          <Input
-            value={email}
-            placeholder='username@email.com'
-            autoCapitalize='none'
-            autoCorrect={false}
-            onChangeText={(input)=>setEmail(input)}
-          />
-        </AreaInput>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Sobrenome:</Text>
+            <TextInput
+              value={sobrenome}
+              placeholder="Sobrenome"
+              autoCapitalize="true"
+              autoCorrect={false}
+              onChangeText={(input) => setSobrenome(input)}
+              style={styles.input}
+            />
+          </View>
 
-        <AreaInput>
-          <Text>Senha:</Text>
-          <Input
-            value={password}
-            placeholder='Senha'
-            autoCapitalize='none'
-            autoCorrect={false}
-            keyboardType='numeric'
-            onChangeText={(input)=>setPassword(input)}
-            onSubmitEditing={() => Keyboard.dismiss()}
-            secureTextEntry={true}
-          />
-        </AreaInput>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Email:</Text>
+            <TextInput
+              value={email}
+              placeholder='username@email.com'
+              autoCapitalize='none'
+              autoCorrect={false}
+              onChangeText={(input) => setEmail(input)}
+              style={styles.input}
+            />
+          </View>
 
-        <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
-          <Text style={{fontSize: 14, textAlign: 'center', marginLeft: 25, marginRight: 25}} >
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Senha:</Text>
+            <TextInput
+              value={password}
+              placeholder='Senha'
+              autoCapitalize='none'
+              autoCorrect={false}
+              keyboardType='numeric'
+              onChangeText={(input)=>setPassword(input)}
+              onSubmitEditing={() => Keyboard.dismiss()}
+              secureTextEntry={true}
+              style={styles.input}
+            />
+          </View>
+
+          <Text style={{fontSize: 14, textAlign: 'center', margin: 10}} >
             *Ao clicar em "Registrar Usuário", você estará concordando com nossa Política de Uso e Privacidade.
           </Text>
-        </View>
 
-        <BtnSubmit onPress={()=>RegisterUser()}>
-          {loadingAuth ? (
-            <View style={styles.indicator}>
-              <ActivityIndicator size={"large"} color="#4DCE4D" />
-            </View>
-          ) : (
-            <BtnTxt>REGISTRAR USUÁRIO</BtnTxt>
-          )}
-        </BtnSubmit>
+          <TouchableOpacity style={styles.btnSubmit} onPress={()=>RegisterUser()}>
+            {loadingAuth ? (
+              <View style={styles.indicator}>
+                <ActivityIndicator size={"large"} color="#4DCE4D" />
+              </View>
+            ) : (
+              <Text style={styles.btnText}>REGISTRAR USUÁRIO</Text>
+            )}
+          </TouchableOpacity>
 
-        {msg_error && 
-          <Text style={styles.error}>{msg_error}</Text>
-        }
-
-        <Link onPress={()=>navigation.navigate('SignIn')}>
-          <LinkTxt>Já tenho uma Conta!</LinkTxt>
-        </Link>
+          <TouchableOpacity style={styles.link} onPress={()=>navigation.navigate('SignIn')}>
+            <Text style={styles.linkTxt}>Já tenho uma Conta!</Text>
+          </TouchableOpacity>
+        </ScrollView>
 
       </Container>
-   </Background>
+    </Background>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollview:{
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   header:{
+    flex: 1,
     justifyContent: 'center', 
     alignItems: 'center', 
-    marginBottom: 10
+    marginBottom: 10,
   },
   logo:{
     width: 50, 
-    height: 50
+    height: 50,
   },
   mark:{
     width: 150, 
     height: 50, 
-    marginBottom: 15
+    marginBottom: 15,
   },
   title:{
     fontSize: 21, 
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   subtitle:{
-    fontSize: 18
+    fontSize: 18,
   },
   error: {
     color: 'red'
   },
   indicator:{
     flex:1, 
-    position: 'absolute', 
-    backgroundColor: '#000', 
-    opacity: 0.7, 
-    width: '100%', 
-    height: '100%', 
-    alignItems: 'center', 
-    justifyContent: 'center'
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  areaInput:{
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-start",
+    marginBottom: 10,
+  },
+  input:{
+    width: "100%",
+    height: 50,
+    backgroundColor: "#FFF",
+    fontSize: 17,
+    color: "#000",
+    padding: 10,
+    borderColor: "#000",
+    borderWidth: 1,
+    borderRadius: 7,
+  },
+  btnSubmit:{
+    width: "100%",
+    height: 45,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000",
+    borderRadius: 7,
+  },
+  btnText:{
+    fontSize: 20,
+    color: "#FFF"
+  },
+  link: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  linkTxt:{
+    textAlign: "center",
+    color: "#000",
   }
 })
-
