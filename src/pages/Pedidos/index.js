@@ -11,8 +11,8 @@ export default function Pedidos() {
       <Header/>
       <View style={styles.container}>
         <Text style={styles.subtitle}>Meus Pedidos</Text>
-        <Text style={styles.line18}>{user?.attributes?.email}</Text>
-        <Text style={styles.line13}>{user?.attributes?.token}</Text>
+        <Text style={styles.line18}>{user.email}</Text>
+        <Text style={styles.line13}>{token}</Text>
       </View>
     </View>
   );

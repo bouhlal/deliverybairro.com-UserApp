@@ -9,24 +9,26 @@ const AuthContext = createContext({});
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [user_authorized, setAuthorized] = useState(null);
+  const [token, setToken] = useState("");
   const [loadingAuth, setLoadingAuth] = useState(false);
   const [loading, setLoading] = useState(false);
-  
-  const token = user_authorized?.attributes?.token; 
+
+  const sub = user_authorized?.attributes?.sub; 
 
   useEffect(() => {
     Auth.currentAuthenticatedUser({ bypassCache: false }).then(setAuthorized);
+    setToken(sub); console.log("Token: ", token);
   }, [])
 
   useEffect(() => {
-    DataStore.query(User, (usuario) => usuario.token.eq(token)).then((usuarios) => {
+    DataStore.query(User, (usuario) => usuario.token.eq(sub)).then((usuarios) => {
       setUser(usuarios[0]);
-      console.log(user);
     });
-  }, [token]);
+  }, [sub]);
 
   useEffect(() => {
     async function loadStorage() {
+      console.log(showAsyncStorageContentInDev())
       setLoading(true);
       const storageUser = await AsyncStorage.getItem('Auth_user');
       if (storageUser) {

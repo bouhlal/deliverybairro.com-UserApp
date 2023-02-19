@@ -10,8 +10,6 @@ export default function SideBar({ props }) {
   const navigation = useNavigation();
   const { user, signOut } = authContext();
 
-  console.log(user);
-  
   function GoToLink(link) {
     return (
       navigation.navigate(link)
@@ -24,7 +22,8 @@ export default function SideBar({ props }) {
       <View style={styles.hearder}>
         <Image style={styles.logo} source={logo_png} resizeMode="contain" />
         <Text style={styles.title}>Bem vindo!</Text>
-        <Text style={styles.subtitle}>{user.email}</Text>
+        <Text style={styles.subtitle}>{user?.attributes?.given_name} {user?.attributes.family_name}</Text>
+        <Text style={styles.line13}>{user?.attributes?.email}</Text>
       </View>
 
       <DrawerItem
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 15,
     fontWeight: 'bold',
-    marginBottom: 20
+    // marginBottom: 20
   },
   line18:{ 
     color: '#000', 
