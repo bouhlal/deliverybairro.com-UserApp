@@ -1,10 +1,11 @@
 import React from 'react';
 import { FontAwesome5, Fontisto, Entypo } from '@expo/vector-icons';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
-
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+
+import { authContext } from '../context/Auth';
 
 import SideBar from '../components/SideBar';
 import Categorias from '../pages/Categorias';
@@ -19,7 +20,7 @@ import OrderDetailsNavigator from './OrderDetailsNavigator';
 const Stack = createStackNavigator();
 
 export default function AppRoutes() {
-  const { user } = useAuthContext();
+  const { user } = authContext();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -143,7 +144,6 @@ function HomeStackNavigator() {
       <HomeStack.Screen name="Home" component={Categorias} />
       <HomeStack.Screen name="Deliveries" component={Deliveries} />
       <HomeStack.Screen name="Delivery" component={DeliveryInfo}  options={{ headerShown: false }} />
-      <HomeStack.Screen name="Produto" component={ProdutoInfo} />
       <HomeStack.Screen name="Cart" component={CartInfo} />
     </HomeStack.Navigator>
   );

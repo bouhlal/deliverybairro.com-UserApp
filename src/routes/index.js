@@ -11,7 +11,7 @@ export default function Routes() {
   if (loading) {
     return(
       <View style={styles.indicator}>
-        <ActivityIndicator size='large' color='#131313'/>
+        <ActivityIndicator size={100} color="#FF0000"/>
       </View>
     )
   }
