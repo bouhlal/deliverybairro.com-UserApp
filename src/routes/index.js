@@ -2,17 +2,17 @@ import React from 'react';
 import { View, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { authContext } from '../context/Auth';
 
-import AuthRoutes from './Auth.Routes';
 import AppRoutes from './App.Routes';
+import AuthRoutes from './Auth.Routes';
 
 export default function Routes() {
-  const { signed, loading } = authContext();  // tratar msg 'The user is not authenticated'
-  Alert.alert("Is signed?", signed);
+  const { signed, loading } = authContext();
+  console.log(signed); // !signed ? Alert.alert("Info", "User is not authenticated!") : Alert.alert("Info", "User signed.");
 
   if (loading) {
     return(
       <View style={styles.indicator}>
-        <ActivityIndicator size={100} color="#FF0000"/>
+        <ActivityIndicator size={50} color="#FFCC00"/>
       </View>
     )
   }

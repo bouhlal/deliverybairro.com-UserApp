@@ -10,7 +10,7 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [user_authorized, setAuthorized] = useState(null);
   const [loadingAuth, setLoadingAuth] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   
   const token = user_authorized?.attributes?.token; 
 
@@ -27,6 +27,7 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     async function loadStorage() {
+      setLoading(true);
       const storageUser = await AsyncStorage.getItem('Auth_user');
       if (storageUser) {
         setUser(JSON.parse(storageUser));
@@ -130,25 +131,3 @@ export default function AuthProvider({ children }) {
 export function authContext() {
   return useContext(AuthContext);
 }
-
-
-/**
-
-  return (
-    <AuthContext.Provider 
-      value={{ 
-        token, user, user_authorized, loading, msg_error,
-        signIn, signUp, signOut, confirmSignUp, resendConfirmationCode,
-      }}
-    >
-      { children }
-    </AuthContext.Provider>
-  );
-
-};
-
-export function authContext() {
-  return useContext(AuthContext);
-}
-
-**/

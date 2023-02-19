@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { FontAwesome5, Fontisto, Entypo } from '@expo/vector-icons';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -21,11 +22,12 @@ const Stack = createStackNavigator();
 
 export default function AppRoutes() {
   const { user } = authContext();
+  console.log(user); // Alert.alert("UserID: ", user.uid);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       { user ? (
-        <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        <Stack.Screen name="HomeTabs" component={TabNavigator} />
       ) : (
         <Stack.Screen name="Perfil" component={Perfil} />
       )}

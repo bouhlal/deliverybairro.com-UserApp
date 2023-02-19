@@ -66,13 +66,14 @@ export default function Perfil() {
     if (location) {
       setLocation(null);
     } else {
-      await getCoordinates({ // assume que o objeto JSON é passado como o parâmetro `data`
-        endereco: "Rua dos Comanches",
-        numero: "870",
-        bairro: "Santa Mônica",
-        cidade: "Belo Horizonte",
-        uf: "MG",
-        cep: "31530-250",
+      await getCoordinates({
+        "endereco": "Rua dos Comanches",
+        "numero": "870",
+        "bairro": "Santa Mônica",
+        "cidade": "Belo Horizonte",
+        "uf": "MG",
+        "cep": "31530-250",
+        ...data, // assume que o objeto JSON é passado como o parâmetro `data`
       });
       getLocation();
     }
