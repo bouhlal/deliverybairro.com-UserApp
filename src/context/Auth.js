@@ -17,22 +17,22 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     Auth.currentAuthenticatedUser({ bypassCache: false }).then(setAuthorized);
-    setToken(sub); console.log("Token: ", token);
+    setToken(sub); 
   }, [])
 
   useEffect(() => {
     DataStore.query(User, (usuario) => usuario.token.eq(sub)).then((usuarios) => {
-      setUser(usuarios[0]);
+      setUser(usuarios[0])
     });
   }, [sub]);
 
   useEffect(() => {
     async function loadStorage() {
-      console.log(showAsyncStorageContentInDev())
       setLoading(true);
       const storageUser = await AsyncStorage.getItem('Auth_user');
       if (storageUser) {
         setUser(JSON.parse(storageUser));
+        console.log(JSON.parse(storageUser));
         setLoading(false);
       } else {
         setLoading(false);
@@ -47,7 +47,7 @@ export default function AuthProvider({ children }) {
       const user = await Auth.signIn(email, password);
       console.log(user.attributes);
       Alert.alert("Info", "Confira os dados do Usuário no Console.LOG");
-      const userData = { uid: user.username, email: user.attributes.email };
+      const userData = { uid: user?.attributes.sub, email: user?.attributes.email };
       setUser(userData);
       storageUser(userData);
       setLoadingAuth(false);
