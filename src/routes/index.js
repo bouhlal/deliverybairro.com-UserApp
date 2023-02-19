@@ -6,9 +6,8 @@ import AuthRoutes from './Auth.Routes';
 import AppRoutes from './App.Routes';
 
 export default function Routes() {
-  const { signed, loading } = authContext();
-  // console.log(signed);
-  // tratar msg 'The user is not authenticated'
+  const { signed, loading } = authContext();  // tratar msg 'The user is not authenticated'
+
   if (loading) {
     return(
       <View style={styles.indicator}>

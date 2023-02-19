@@ -1,6 +1,7 @@
-import { StatusBar } from "expo-status-bar";
+import 'react-native-gesture-handler';
 import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 import AuthProvider from "./src/context/Auth";
 import CartProvider from "./src/context/Cart";
@@ -15,6 +16,8 @@ Amplify.configure({
     disabled: true
   },
 });
+
+console.disableYellowBox=true;
 
 LogBox.ignoreLogs(['Warning: Possible Unhandled Promise Rejection (id: 1):']);
 LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core and will be removed in a future release.']);
