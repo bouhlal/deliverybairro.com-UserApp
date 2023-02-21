@@ -12,4 +12,3 @@ web-build/
 
 # Enviroment (Variáveis de Ambiente)
 .env
-src/services/Firebase.js

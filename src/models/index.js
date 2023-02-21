@@ -60,15 +60,15 @@ const Transporte = {
   "BICYCLING": "BICYCLING"
 };
 
-const { User, Basket, BasketItem, Categoria, Delivery, Produto, Pedido, Item, Courier, DeliveryCategoria, DeliveryProduto } = initSchema(schema);
+const { BasketItem, Basket, Categoria, Delivery, Produto, User, Pedido, Item, Courier, DeliveryCategoria, DeliveryProduto } = initSchema(schema);
 
 export {
-  User,
-  Basket,
   BasketItem,
+  Basket,
   Categoria,
   Delivery,
   Produto,
+  User,
   Pedido,
   Item,
   Courier,
