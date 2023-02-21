@@ -1,13 +1,25 @@
-import React from 'react';
-import { View, ActivityIndicator, Alert, StyleSheet } from 'react-native';
-import { authContext } from '../context/Auth';
+import React, { useState, useEffect } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { authContext } from '../context/Auth';
 
 import AppRoutes from './App.Routes';
 import AuthRoutes from './Auth.Routes';
 
 export default function Routes() {
-  const { signed, loading } = authContext();
-  console.log(signed); // !signed ? Alert.alert("Info", "User is not authenticated!") : Alert.alert("Info", "User signed.");
+  const [loading, setLoading] = useState(true);
+  const [dbUser, setDbUser] = useState(null);
+  
+  useEffect(() => {
+    async function loadStorage() {
+      const storageUser = await AsyncStorage.getItem('Auth_user');
+      if (storageUser) {
+        setDbUser(JSON.parse(storageUser));
+      }
+      setLoading(false);
+    }
+    loadStorage();
+  }, []);
 
   if (loading) {
     return(
@@ -18,7 +30,7 @@ export default function Routes() {
   }
 
   return (
-    signed ? <AppRoutes/> : <AuthRoutes/>
+    dbUser ? <AppRoutes/> : <AuthRoutes/>
   )
 }
 
@@ -29,4 +41,3 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
-

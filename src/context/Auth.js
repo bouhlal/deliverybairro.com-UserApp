@@ -9,7 +9,6 @@ const AuthContext = createContext({});
 export default function AuthProvider({ children }) {
   const [dbUser, setDbUser] = useState(null);
   const [user_authorized, setAuthorized] = useState(null);
-  const [loadingAuth, setLoadingAuth] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const sub = user_authorized?.attributes?.sub; 
@@ -19,8 +18,8 @@ export default function AuthProvider({ children }) {
   }, [])
 
   useEffect(() => {
-    DataStore.query(User, (usuario) => usuario.token.eq(sub)).then((usuarios) => {
-      setDbUser(usuarios[0]);
+    DataStore.query(User, (user) => user.token.eq(sub)).then((users) => {
+      setDbUser(users[0]);
     });
   }, [sub]);
 
@@ -28,9 +27,9 @@ export default function AuthProvider({ children }) {
     async function loadStorage() {
       setLoading(true);
       const storageUser = await AsyncStorage.getItem('Auth_user');
+      console.log(JSON.parse(storageUser));
       if (storageUser) {
         setDbUser(JSON.parse(storageUser));
-        console.log(JSON.parse(storageUser));
         setLoading(false);
       } else {
         setLoading(false);
@@ -40,55 +39,50 @@ export default function AuthProvider({ children }) {
   }, []);
 
   async function signIn(email, password) {
-    setLoadingAuth(true);
+    setLoading(true);
     try {
-      const user = await Auth.signIn(email, password);
-      console.log(user.attributes);
-      Alert.alert("Info", "Confira os dados do Usuário no Console.LOG");
-      const userData = { uid: user?.attributes.sub, email: user?.attributes.email };
-      setDbUser(userData);
-      storageUser(userData);
-      setLoadingAuth(false);
+      const { user } = await Auth.signIn({email: email, password: password});
+      console.log("signIn: ",user);
+      setDbUser(user);
+      storageUser(user);
+      setLoading(false);
     } catch (error) {
-      alert(error.message);
-      setLoadingAuth(false);
+      Alert.alert("Erro!", error.message);
+      setLoading(false);
     }
   }
 
-  async function signUp(email, password, nome, sobrenome) {
-    setLoadingAuth(true);
-    await Auth.signUp({
-      username: email,
-      password: password,
-      attributes: {
-        email: email,
-        given_name: nome,
-        family_name: sobrenome
-      }
-    })
-    .then((response) => {
-      let data = {
-        uid: response.userSub,
-        nome: response.user.attributes.given_name,
-        sobrenome: response.user.attributes.family_name,
-        email: response.user.attributes.email,
-        sub: response.user.attributes.sub
-      };
-      console.log("data: ", data);
-      setDbUser(data);
-      storageUser(data);
-      setLoadingAuth(false);
-    })
-    .catch((error) => {
+  async function signUp(email, password, nome, sobrenome, telefone) {
+    setLoading(true);
+    try {
+      const { user } = await Auth.signUp({
+        username: email,
+        password: password,
+        attributes: {
+          email: email, // opcional
+          'custom:nome': nome,
+          'custom:sobrenome': sobrenome,
+          phone_number: telefone, // opcional - Convenção de número E.164
+          // outros atributos personalizados
+        },
+        autoSignIn: { // optional - enables auto sign in after user is confirmed
+          enabled: true,
+        },
+      });
+      console.log("signUp: ",user);
+      setDbUser(user);
+      storageUser(user);
+      setLoading(false); 
+    } catch(error) {
       Alert.alert("Erro!", error.message);
-      setLoadingAuth(false);
-    });
+      setLoading(false);
+    }
   }
 
   async function confirmSignUp(email, code) {
     try {
-      await Auth.confirmSignUp(email, code);
-      Alert.alert("Info","Código enviado com sucesso!");
+      const { user } =  await Auth.confirmSignUp({username: email, code: code});
+      Alert.alert("Info",`Código enviado com sucesso! Confira o email enviado para: ${user.email}`);
     } catch (error) {
       Alert.alert("Erro!", error.message);
     }
@@ -96,8 +90,8 @@ export default function AuthProvider({ children }) {
 
   async function resendConfirmationCode(email) {
     try {
-      await Auth.resendSignUp(email);
-      Alert.alert("Info","Código reenviado com sucesso!");
+      const { user } =  await Auth.resendSignUp(email);
+      Alert.alert("Info",`Código reenviado com sucesso! Confira novamente o email enviado para: ${user.email}`);
       console.log('code resent successfully');
     } catch (error) {
       Alert.alert("Erro!", error.message);
@@ -106,8 +100,8 @@ export default function AuthProvider({ children }) {
 
   async function signOut() {
     try {
-      await Auth.signOut();
       await AsyncStorage.clear();
+      await Auth.signOut();
       setDbUser(null);
     } catch (error) {
       Alert.alert("Erro!", error.message);
