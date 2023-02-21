@@ -4,15 +4,15 @@ import { authContext } from '../../context/Auth';
 import Header from '../../components/Header';
 
 export default function Pedidos() { 
-  const { user, token } = authContext();
+  const { dbUser } = authContext();
 
   return (
     <View style={styles.background}>
       <Header/>
       <View style={styles.container}>
         <Text style={styles.subtitle}>Meus Pedidos</Text>
-        <Text style={styles.line18}>{user.email}</Text>
-        <Text style={styles.line13}>{token}</Text>
+        <Text style={styles.line18}>{dbUser.email}</Text>
+        <Text style={styles.line13}>{dbUser.token}</Text>
       </View>
     </View>
   );

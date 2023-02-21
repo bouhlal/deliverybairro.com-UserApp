@@ -8,7 +8,7 @@ import logo_png from '../../../assets/logo.png';
 
 export default function SideBar({ props }) {
   const navigation = useNavigation();
-  const { user, signOut } = authContext();
+  const { dbUser, signOut } = authContext();
 
   function GoToLink(link) {
     return (
@@ -22,8 +22,8 @@ export default function SideBar({ props }) {
       <View style={styles.hearder}>
         <Image style={styles.logo} source={logo_png} resizeMode="contain" />
         <Text style={styles.title}>Bem vindo!</Text>
-        <Text style={styles.subtitle}>{user?.attributes?.given_name} {user?.attributes.family_name}</Text>
-        <Text style={styles.line13}>{user?.attributes?.email}</Text>
+        <Text style={styles.subtitle}>{dbUser?.attributes?.given_name} {dbUser?.attributes.family_name}</Text>
+        <Text style={styles.line13}>{dbUser?.attributes?.email}</Text>
       </View>
 
       <DrawerItem

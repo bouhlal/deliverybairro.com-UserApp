@@ -3,25 +3,25 @@ import * as Location from 'expo-location';
 
 import { GOOGLE_APIKEY } from '@env';
 
-export default function LoadGPSbyAddress() {
+export default function LoadGPSbyAddress({ props }) {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [info, setInfo] = useState("");
   const [address, setAddress] = useState("");
 
   async function getCoordinates() {
-    const { endereco, numero, bairro, cidade, cep, uf } = {
-      endereco: "Rua dos Comanches",
-      numero: "870",
-      bairro: "Santa Mônica",
-      cidade: "Belo Horizonte",
-      uf: "MG",
-      cep: "31530-250",
+    const { endereco, complemento, bairro, cidade, cep, uf } = {
+      endereco: props.endereco,
+      complemento: props.complemento,
+      bairro: props.bairro,
+      cidade: props.cidade,
+      uf: props.uf,
+      cep: props.cep,
       ...data, // assume que o objeto JSON é passado como o parâmetro `data`
     };
 
-    const formattedAddress = `${endereco}${numero ? `, ${numero}` : ''}, ${bairro}, ${cidade} - ${uf}, ${cep}`.replace(/ /g, '+');
-    const address_formatated = endereco+", "+numero+", "+bairro+", "+cidade+"/"+uf+" CEP "+cep;
+    const formattedAddress = `${endereco}${complemento ? `, ${complemento}` : ''}, ${bairro}, ${cidade} - ${uf}, ${cep}`.replace(/ /g, '+');
+    const address_formatated = endereco+", "+complemento+", "+bairro+", "+cidade+"/"+uf+" CEP "+cep;
     console.log(address_formatated); setAddress(address_formatated);
 
     const apiKey = GOOGLE_APIKEY; 
@@ -66,6 +66,11 @@ export default function LoadGPSbyAddress() {
   }
 
   return (
-    { info, address, location, handleGetLocation }
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>{address}</Text>
+      <Text>{info}</Text>
+      <Button title={location ? 'Obter novamente' : 'Obter coordenadas'} onPress={handleGetLocation} />
+    </View>
+    // { info, address }
   )
 }

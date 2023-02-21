@@ -21,8 +21,24 @@ export default function LoadGPS() {
   if (error_msg) {
     info = error_msg;
   } else if (gps) {
-    info = `latitude: ${gps.coords.latitude}, longitude: ${gps.coords.longitude}`;
+    info = `(latitude: ${gps.coords.latitude}, longitude: ${gps.coords.longitude})`;
   }
 
-  return { info, gps, error_msg }
+  return { info, error_msg }
 }
+
+
+/*
+  import LoadGPS from './LoadGPS';
+
+  const { gps, error_msg } = LoadGPS();
+
+  {(!gps) ? (
+    <Text style={styles.line13}>{error_msg}</Text>
+  ) : (
+    <Text style={styles.line13}>
+      Localização Atual via GPS: {info}
+    </Text>
+  )} 
+  
+*/

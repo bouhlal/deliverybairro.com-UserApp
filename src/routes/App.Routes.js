@@ -21,12 +21,12 @@ import OrderDetailsNavigator from './OrderDetailsNavigator';
 const Stack = createStackNavigator();
 
 export default function AppRoutes() {
-  const { user } = authContext();
-  console.log(user); // Alert.alert("UserID: ", user.uid);
+  const { dbUser } = authContext();
+  console.log(dbUser); // Alert.alert("UserID: ", dbUser.uid);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      { user ? (
+      { dbUser ? (
         <Stack.Screen name="HomeTabs" component={TabNavigator} />
       ) : (
         <Stack.Screen name="Perfil" component={Perfil} />

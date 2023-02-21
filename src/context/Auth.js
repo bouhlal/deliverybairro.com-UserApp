@@ -7,9 +7,8 @@ import { User } from '../models';
 const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [dbUser, setDbUser] = useState(null);
   const [user_authorized, setAuthorized] = useState(null);
-  const [token, setToken] = useState("");
   const [loadingAuth, setLoadingAuth] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -17,12 +16,11 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     Auth.currentAuthenticatedUser({ bypassCache: false }).then(setAuthorized);
-    setToken(sub); 
   }, [])
 
   useEffect(() => {
     DataStore.query(User, (usuario) => usuario.token.eq(sub)).then((usuarios) => {
-      setUser(usuarios[0])
+      setDbUser(usuarios[0]);
     });
   }, [sub]);
 
@@ -31,7 +29,7 @@ export default function AuthProvider({ children }) {
       setLoading(true);
       const storageUser = await AsyncStorage.getItem('Auth_user');
       if (storageUser) {
-        setUser(JSON.parse(storageUser));
+        setDbUser(JSON.parse(storageUser));
         console.log(JSON.parse(storageUser));
         setLoading(false);
       } else {
@@ -48,7 +46,7 @@ export default function AuthProvider({ children }) {
       console.log(user.attributes);
       Alert.alert("Info", "Confira os dados do Usuário no Console.LOG");
       const userData = { uid: user?.attributes.sub, email: user?.attributes.email };
-      setUser(userData);
+      setDbUser(userData);
       storageUser(userData);
       setLoadingAuth(false);
     } catch (error) {
@@ -74,8 +72,10 @@ export default function AuthProvider({ children }) {
         nome: response.user.attributes.given_name,
         sobrenome: response.user.attributes.family_name,
         email: response.user.attributes.email,
+        sub: response.user.attributes.sub
       };
-      setUser(data);
+      console.log("data: ", data);
+      setDbUser(data);
       storageUser(data);
       setLoadingAuth(false);
     })
@@ -108,7 +108,7 @@ export default function AuthProvider({ children }) {
     try {
       await Auth.signOut();
       await AsyncStorage.clear();
-      setUser(null);
+      setDbUser(null);
     } catch (error) {
       Alert.alert("Erro!", error.message);
     }
@@ -121,8 +121,8 @@ export default function AuthProvider({ children }) {
   return(
     <AuthContext.Provider 
       value={{ 
-        signed: !!user, user, loading, loadingAuth, token,
-        signIn, signUp, confirmSignUp, resendConfirmationCode, signOut 
+        signed: !!dbUser, dbUser, sub, loading, loadingAuth,
+        setDbUser, signIn, signUp, confirmSignUp, resendConfirmationCode, signOut 
       }}
     >
       {children}

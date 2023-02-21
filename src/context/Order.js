@@ -8,20 +8,20 @@ import { Pedido, Item } from "../models";
 const OrderContext = createContext({});
 
 export default function OrderContextProvider({ children }) {
-  const { user } = authContext();
+  const { dbUser } = authContext();
   const { delivery, total, basket, basketItens } = cartContext();
 
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
-    DataStore.query(Pedido, (pedido) => pedido.userID.eq(user.id)).then(setPedidos);
-  }, [user]);
+    DataStore.query(Pedido, (pedido) => pedido.userID.eq(dbUser.id)).then(setPedidos);
+  }, [dbUser]);
 
   async function createOrder() {
     // create the order
     const novoPedido = await DataStore.save(
       new Pedido({
-        userID: user.id,
+        userID: dbUser.id,
         Delivery: delivery,
         status: "NOVO",
         total: total,
