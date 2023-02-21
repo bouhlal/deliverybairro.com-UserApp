@@ -1,7 +1,13 @@
 import 'react-native-gesture-handler';
 import { useEffect } from 'react';
+import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+
+// Ignore log notification by message:
+LogBox.ignoreLogs(['Warning: ...']);
+// Ignore all log notifications:
+// LogBox.ignoreAllLogs();
 
 import AuthProvider from "./src/context/Auth";
 import CartProvider from "./src/context/Cart";
@@ -51,12 +57,12 @@ export default function App() {
 }
 
 /* 
-import { LogBox } from "react-native";
 
-console.disableYellowBox=true;
-LogBox.ignoreLogs(['Warning: Possible Unhandled Promise Rejection (id: 1):']);
-LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core and will be removed in a future release.']);
-LogBox.ignoreLogs(['Warning: Async Storage has been extracted from react-native core']);
+// Ignore log notification by message:
+LogBox.ignoreLogs(['Warning: ...']);
+
+// Ignore all log notifications:
+LogBox.ignoreAllLogs();
 
 import { withAuthenticator } from "aws-amplify-react-native/dist/Auth";
 import OrderProvider from "./src/context/Order";
