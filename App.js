@@ -4,10 +4,7 @@ import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 
-// Ignore log notification by message:
 LogBox.ignoreLogs(['Warning: ...']);
-// Ignore all log notifications:
-// LogBox.ignoreAllLogs();
 
 import AuthProvider from "./src/context/Auth";
 import CartProvider from "./src/context/Cart";
@@ -56,17 +53,8 @@ export default function App() {
   );
 }
 
-/* 
-
 // Ignore log notification by message:
-LogBox.ignoreLogs(['Warning: ...']);
+// LogBox.ignoreLogs(['Warning: ...']);
 
 // Ignore all log notifications:
-LogBox.ignoreAllLogs();
-
-import { withAuthenticator } from "aws-amplify-react-native/dist/Auth";
-import OrderProvider from "./src/context/Order";
-function App() {
-  ...
-export default withAuthenticator(App);
-*/
+// LogBox.ignoreAllLogs();
