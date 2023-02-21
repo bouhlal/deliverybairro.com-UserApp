@@ -31,18 +31,15 @@ Finally, make a new build of your app by <strong>running eas build --platform an
 ## Link para baixar o APK DeliveryBairro v1.0 (MVP) Build #1 (Quinta-feira, 27/10/2022 às 12:07)
 https://expo.dev/artifacts/eas/fByfzoZUQava4UaUjLChQa.apk
 
+## Design and Development Aided by AI via ChatGPT (OpenAi)
+https://openai.com/blog/chatgpt/
+
 ## Contato
 <p>telefone: (31) 98410-7540 WhatsApp</p>
 <p>email: ezequiasmartins@gmail.com</p>
 <p>by <a href="https://ezequiasmartins.blogspot.com/" target="_blank">Ezequias Martins</a> ® 1999-2022 Direitos Reservados</p>
 <p><a href="https://ezequiasmartins.blogspot.com/" target="_blank"><img src=".temp/assinatura.jpg"></a></p>
 
-chat with Open AI
-https://chat.openai.com/auth/login
 
-Dorothy L. Sayers - "As Ferramentas Perdidas da Aprendizagem"
-
-Stephen E. Ambrose
-Band of Brothers (Compahia de Heróis)
 
 
