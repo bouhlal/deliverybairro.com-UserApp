@@ -7,6 +7,11 @@ import AuthProvider from "./src/context/Auth";
 import CartProvider from "./src/context/Cart";
 import Routes from './src/routes';
 
+console.disableYellowBox=true;
+LogBox.ignoreLogs(['Warning: Possible Unhandled Promise Rejection (id: 1):']);
+LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core and will be removed in a future release.']);
+LogBox.ignoreLogs(['Warning: Async Storage has been extracted from react-native core']);
+
 import { Amplify } from "aws-amplify";
 import awsconfig from "./src/aws-exports";
 
@@ -16,12 +21,6 @@ Amplify.configure({
     disabled: true
   },
 });
-
-console.disableYellowBox=true;
-
-LogBox.ignoreLogs(['Warning: Possible Unhandled Promise Rejection (id: 1):']);
-LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core and will be removed in a future release.']);
-LogBox.ignoreLogs(['Warning: Async Storage has been extracted from react-native core']);
 
 export default function App() {
   return (
