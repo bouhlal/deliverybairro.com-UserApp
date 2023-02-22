@@ -72,10 +72,10 @@ export default function OrderLiveUpdates({ id }) {
               style={{
                 padding: 5,
                 backgroundColor: "green",
-                borderRadius: 40,
+                borderRadius: 50,
               }}
             >
-              <Fontisto name="motorcycle" size={24} color="white" />
+              <Fontisto name="motorcycle" size={25} color="white" />
             </View>
           </Marker>
         )}

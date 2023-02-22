@@ -4,14 +4,14 @@ import { Background, Container, AreaInput, Input, BtnSubmit, BtnTxt, Link, LinkT
 import { useNavigation } from '@react-navigation/native';
 import { authContext } from '../../context/Auth';
 
-import logo_png from '../../../assets/logo.png';
-import marca_png from '../../../assets/marca.png';
+import logo from "../../../assets/logo.png"
+import marca from "../../../assets/marca.png"
 
 export default function SignIn() {
+  const { signIn, loading } = authContext();
   const navigation = useNavigation();
-  const { signIn, loadingAuth } = authContext();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");  
 
   function login() {
     signIn(email, password);
@@ -21,8 +21,8 @@ export default function SignIn() {
     <Background>
       <Container behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled >
 
-        <Image source={logo_png} style={styles.logo} resizeMode="contain" />
-        <Image source={marca_png} style={styles.mark} resizeMode="contain" />
+        <Image source={logo} style={styles.logo} resizeMode="contain" />
+        <Image source={marca} style={styles.marca} resizeMode="contain" />
 
         <AreaInput>
           <Text>Email:</Text>
@@ -50,7 +50,7 @@ export default function SignIn() {
         </AreaInput>
 
         <BtnSubmit onPress={login}>
-          {loadingAuth ? (
+          {loading ? (
             <ActivityIndicator size={20} color='#FFF' />
           ) : (
             <BtnTxt>ACESSAR</BtnTxt>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: 100, 
     height: 100
   },
-  mark:{
+  marca:{
     width: 300, 
     height: 100,
     marginBottom: 15
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
 
 /**
 <BtnSubmit onPress={login}>
-{loadingAuth ? (
+{loading ? (
   <View style={styles.indicator}>
     <ActivityIndicator size={"large"} color="#000" />
   </View>

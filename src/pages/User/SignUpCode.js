@@ -4,13 +4,13 @@ import { Background, Container, AreaInput, Input, BtnSubmit, BtnTxt, Link, LinkT
 import { useNavigation } from '@react-navigation/native';
 import { authContext } from '../../context/Auth';
 
-import logo_png from '../../../assets/logo.png';
-import marca_png from '../../../assets/marca.png';
+import logo from '../../../assets/logo.png';
+import marca from '../../../assets/marca.png';
 
 export default function SignUpCode({ route }) {
+  const { loading, confirmSignUp, resendConfirmationCode } = authContext();
   const navigation = useNavigation();
-  const { loadingAuth, confirmSignUp, resendConfirmationCode } = authContext();
-  const [code, setCode] = useState('');  
+  const [code, setCode] = useState("");
 
   const email = route.params?.email;
 
@@ -22,25 +22,24 @@ export default function SignUpCode({ route }) {
     <Background>
       <Container behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled >
 
-        <Image source={logo_png} style={styles.logo} resizeMode="contain" />
-        <Image source={marca_png} style={styles.mark} resizeMode="contain" />
+        <Image source={logo} style={styles.logo} resizeMode="contain" />
+        <Image source={marca} style={styles.marca} resizeMode="contain" />
 
         <AreaInput>
           <Text>Informe o código de confirmação:</Text>
           <Input
             value={code}
             placeholder='123456'
-            autoCapitalize='none'
             autoCorrect={false}
             keyboardType='numeric'
-            onChangeText={(text)=>setCode(text)}
+            onChangeText={(input)=>setCode(input)}
             onSubmitEditing={() => Keyboard.dismiss()}
             secureTextEntry={false}
           />
         </AreaInput>
 
         <BtnSubmit onPress={()=>SendCode()}>
-          {loadingAuth ? (
+          {loading ? (
             <View style={styles.indicator}>
               <ActivityIndicator size={"large"} color="#FF0000" />
             </View>
@@ -67,7 +66,7 @@ const styles = StyleSheet.create({
     width: 100, 
     height: 100
   },
-  mark:{
+  marca:{
     width: 300, 
     height: 100,
     marginBottom: 15

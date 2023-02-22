@@ -1,9 +1,9 @@
 import React from 'react';
 import { Entypo, Fontisto, FontAwesome5 } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { authContext } from '../context/Auth';
 
 import SideBar from "../components/SideBar";

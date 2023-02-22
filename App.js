@@ -1,8 +1,10 @@
 import 'react-native-gesture-handler';
 import { useEffect } from 'react';
 import { LogBox } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { Amplify, Hub } from "aws-amplify";
+import config from "./src/aws-exports";
 
 LogBox.ignoreLogs(['Warning: ...']);
 
@@ -10,17 +12,12 @@ import AuthProvider from "./src/context/Auth";
 import CartProvider from "./src/context/Cart";
 import Routes from './src/routes/index';
 
-import Amplify, { Hub } from "aws-amplify";
-import awsconfig from "./src/aws-exports";
-
 Amplify.configure({
-  ...awsconfig, 
+  ...config, 
   Analytics: {
     disabled: true
   },
 });
-
-Hub.configure(awsconfig);
 
 export default function App() {
 
@@ -53,8 +50,13 @@ export default function App() {
   );
 }
 
+/** 
+// Hub.configure(config);
+
 // Ignore log notification by message:
-// LogBox.ignoreLogs(['Warning: ...']);
+LogBox.ignoreLogs(['Warning: ...']);
 
 // Ignore all log notifications:
-// LogBox.ignoreAllLogs();
+LogBox.ignoreAllLogs();
+
+*/

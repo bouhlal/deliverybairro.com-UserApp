@@ -11,7 +11,7 @@ import * as Location from 'expo-location';
 import Header from '../../components/Header';
 
 export default function Perfil() {
-  const { dbUser, sub, setDbUser, signOut } = authContext();
+  const { sub, dbUser, setDbUser, signOut } = authContext();
 
   const [nome, setNome] = useState('');
   const [sobrenome, setSobrenome] = useState('');

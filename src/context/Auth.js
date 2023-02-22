@@ -41,7 +41,7 @@ export default function AuthProvider({ children }) {
   async function signIn(email, password) {
     setLoading(true);
     try {
-      const { user } = await Auth.signIn({email: email, password: password});
+      const { user } = await Auth.signIn({username: email, password: password});
       console.log("signIn: ",user);
       setDbUser(user);
       storageUser(user);
@@ -59,10 +59,10 @@ export default function AuthProvider({ children }) {
         username: email,
         password: password,
         attributes: {
-          email: email, // opcional
-          'custom:nome': nome,
-          'custom:sobrenome': sobrenome,
+          email: email, 
           phone_number: telefone, // opcional - Convenção de número E.164
+          given_name: nome,
+          family_name:sobrenome,
           // outros atributos personalizados
         },
         autoSignIn: { // optional - enables auto sign in after user is confirmed
@@ -115,7 +115,7 @@ export default function AuthProvider({ children }) {
   return(
     <AuthContext.Provider 
       value={{ 
-        signed: !!dbUser, dbUser, sub, loading, loadingAuth,
+        signed: !!dbUser, dbUser, sub, loading,
         setDbUser, signIn, signUp, confirmSignUp, resendConfirmationCode, signOut 
       }}
     >

@@ -1,25 +1,31 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Image, TextInput, TouchableOpacity, Keyboard, Alert, StyleSheet, ActivityIndicator, SafeAreaView } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
 import { Background, Container } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { authContext } from '../../context/Auth';
 
-import logo_png from '../../../assets/logo.png';
-import marca_png from '../../../assets/marca.png';
+import logo from "../../../assets/logo.png";
+import marca from "../../../assets/marca.png";
 
 export default function SignUp() {
   const navigation = useNavigation();
-  const { signUp, loadingAuth } = authContext();
+  const { signUp, loading } = authContext();
 
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [nome, setNome] = useState(null);
-  const [sobrenome, setSobrenome] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [nome, setNome] = useState("");
+  const [sobrenome, setSobrenome] = useState("");
+  const [telefone, setTelefone] = useState("");
 
   function RegisterUser() {
-    signUp(email.trim(), password.trim(), nome.trim(), sobrenome.trim());
+    signUp(email.trim(), password.trim(), nome.trim(), sobrenome.trim(), telefone);
     Alert.alert("Atenção", "Um código de confirmação foi enviado para o seu e-mail.");
     navigation.navigate('SignUpCode', {email: email});
+  }
+
+  function maskEditPhone(formatted, extracted) {
+    setTelefone(extracted);
   }
 
   return (
@@ -29,8 +35,8 @@ export default function SignUp() {
         <ScrollView style={styles.container}>
 
           <View style={styles.header}>
-            <Image source={logo_png} style={styles.logo} resizeMode="contain" />
-            <Image source={marca_png} style={styles.mark} resizeMode="contain" />
+            <Image source={logo} style={styles.logo} resizeMode="contain" />
+            <Image source={marca} style={styles.marca} resizeMode="contain" />
             <Text style={styles.subtitle}>Cadastre-se, é simples e rápido!</Text>
           </View>
 
@@ -54,6 +60,21 @@ export default function SignUp() {
               autoCapitalize="true"
               autoCorrect={false}
               onChangeText={(input) => setSobrenome(input)}
+              style={styles.input}
+            />
+          </View>
+
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Telefone:</Text>
+            <TextInputMask
+              value={telefone}
+              type={'custom'}
+              options={{
+                mask: '+55 99 99999-9999',
+              }}
+              onChangeText={maskEditPhone}
+              keyboardType="numeric"
+              placeholder="+55 31 99999-9999"
               style={styles.input}
             />
           </View>
@@ -90,7 +111,7 @@ export default function SignUp() {
           </Text>
 
           <TouchableOpacity style={styles.btnSubmit} onPress={()=>RegisterUser()}>
-            {loadingAuth ? (
+            {loading ? (
               <View style={styles.indicator}>
                 <ActivityIndicator size={"large"} color="#4DCE4D" />
               </View>
@@ -125,7 +146,7 @@ const styles = StyleSheet.create({
     width: 50, 
     height: 50,
   },
-  mark:{
+  marca:{
     width: 150, 
     height: 50, 
     marginBottom: 15,
