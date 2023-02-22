@@ -7,6 +7,7 @@ import AppRoutes from './App.Routes';
 import AuthRoutes from './Auth.Routes';
 
 export default function Routes() {
+  // const { signed, dbUser } = authContext();
   const [loading, setLoading] = useState(true);
   const [dbUser, setDbUser] = useState(null);
   

@@ -4,7 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { authContext } from '../context/Auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { authContext } from '../context/Auth';
 
 import SideBar from "../components/SideBar";
 
@@ -21,7 +22,19 @@ import Perfil from '../pages/User';
 const Stack = createStackNavigator();
 
 export function AppRoutes() {
-  const { dbUser } = authContext();
+  // const { dbUser } = authContext();
+  const [dbUser, setDbUser] = useState(null);
+  
+  useEffect(() => {
+    async function loadStorage() {
+      const storageUser = await AsyncStorage.getItem('Auth_user');
+      if (storageUser) {
+        setDbUser(JSON.parse(storageUser));
+      }
+      setLoading(false);
+    }
+    loadStorage();
+  }, []);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
