@@ -25,7 +25,7 @@ export default function AuthProvider({ children }) {
   async function signIn(email, password) {
     setLoading(true);
     try {
-      const { user } = await Auth.signIn({username: email, password: password});
+      const user = await Auth.signIn(email, password);
       console.log("signIn: ",user);
       setDbUser(user);
       setLoading(false);
@@ -95,7 +95,7 @@ export default function AuthProvider({ children }) {
   return(
     <AuthContext.Provider 
       value={{ 
-        dbUser, loading, sub, 
+        signed: !!dbUser, dbUser, loading, sub,
         setDbUser, signIn, signUp, confirmSignUp, resendConfirmationCode, signOut
       }}
     >

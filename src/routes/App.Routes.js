@@ -1,13 +1,12 @@
 import React from 'react';
 import { Entypo, Fontisto, FontAwesome5 } from '@expo/vector-icons';
+
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-import { authContext } from '../context/Auth';
 
-import SideBar from "../components/SideBar";
+import { authContext } from '../context/Auth';
 
 import Categorias from '../pages/Categorias';
 import Deliveries from '../pages/Deliveries';
@@ -19,22 +18,14 @@ import OrderLiveUpdates from "../pages/Pedidos/_OrderLiveUpdates";
 import OrderPayment from '../pages/Pedidos/_OrderPayment';
 import Perfil from '../pages/User';
 
+import SideBar from "../components/SideBar";
+
+
 const Stack = createStackNavigator();
 
 export function AppRoutes() {
   const { dbUser } = authContext();
-  // const [dbUser, setDbUser] = useState(null);
-  
-  // useEffect(() => {
-  //   async function loadStorage() {
-  //     const storageUser = await AsyncStorage.getItem('Auth_user');
-  //     if (storageUser) {
-  //       setDbUser(JSON.parse(storageUser));
-  //     }
-  //     setLoading(false);
-  //   }
-  //   loadStorage();
-  // }, []);
+  console.log("dbUser (App.Routes): ", dbUser);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -205,3 +196,18 @@ export function DrawerNavigator() {
     </Drawer.Navigator>
   );
 }
+
+  // import AsyncStorage from '@react-native-async-storage/async-storage';
+
+  // const [dbUser, setDbUser] = useState(null);
+  
+  // useEffect(() => {
+  //   async function loadStorage() {
+  //     const storageUser = await AsyncStorage.getItem('Auth_user');
+  //     if (storageUser) {
+  //       setDbUser(JSON.parse(storageUser));
+  //     }
+  //     setLoading(false);
+  //   }
+  //   loadStorage();
+  // }, []);
