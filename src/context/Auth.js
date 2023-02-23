@@ -22,12 +22,10 @@ export default function AuthProvider({ children }) {
     });
   }, [sub]);
 
-  async function signIn({ props }) {
-    const username = props.email;
-    const password = props.password;
+  async function signIn(email, password) {
     setLoading(true);
     try {
-      const { user } = await Auth.signIn(username, password);
+      const { user } = await Auth.signIn({username: email, password: password});
       console.log("signIn: ",user);
       setDbUser(user);
       setLoading(false);

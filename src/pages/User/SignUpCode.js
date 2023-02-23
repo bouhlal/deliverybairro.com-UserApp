@@ -31,7 +31,7 @@ export default function SignUpCode({ route }) {
             placeholder='username@email.com'
             autoCapitalize='none'
             autoCorrect={false}
-            onChangeText={(input) => setUsername(input)}
+            onChangeText={(input) => setUsername(input.trim())}
             style={styles.input}
           />
         </View>
@@ -43,7 +43,7 @@ export default function SignUpCode({ route }) {
             placeholder="######"
             autoCorrect={false}
             keyboardType='numeric'
-            onChangeText={(input)=>setCode(input)}
+            onChangeText={(input)=>setCode(input.trim())}
             onSubmitEditing={() => Keyboard.dismiss()}
             secureTextEntry={false}
             style={styles.input}
