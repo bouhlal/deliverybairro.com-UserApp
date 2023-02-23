@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, Image, TextInput, TouchableOpacity, Keyboard, Alert, StyleSheet, ActivityIndicator, SafeAreaView } from 'react-native';
+import { ScrollView, View, Text, Image, TextInput, TouchableOpacity, Keyboard, Alert, StyleSheet, ActivityIndicator } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import { Background, Container } from './styles';
 import { useNavigation } from '@react-navigation/native';
@@ -10,7 +10,7 @@ import marca from "../../../assets/marca.png";
 
 export default function SignUp() {
   const navigation = useNavigation();
-  const { signUp, loading } = authContext();
+  const { loading, signUp } = authContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,9 +18,10 @@ export default function SignUp() {
   const [sobrenome, setSobrenome] = useState("");
   const [telefone, setTelefone] = useState("");
 
-  function RegisterUser() {
-    signUp(email.trim(), password.trim(), nome.trim(), sobrenome.trim(), telefone);
-    Alert.alert("Atenção", "Um código de confirmação foi enviado para o seu e-mail.");
+  async function RegisterUser() {
+    Alert.alert("SignUp: ", `${email}, ${password}, ${nome}, ${sobrenome}, ${telefone}`);
+    signUp(email.trim(), password.trim(), nome.trim(), sobrenome.trim(), telefone);   
+    Alert.alert("Atenção", "Um código de confirmação será enviado para o seu e-mail.");
     navigation.navigate('SignUpCode', {email: email});
   }
 

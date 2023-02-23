@@ -22,7 +22,7 @@ export default function LoadGPSbyAddress({ props }) {
 
     const formattedAddress = `${endereco}${complemento ? `, ${complemento}` : ''}, ${bairro}, ${cidade} - ${uf}, ${cep}`.replace(/ /g, '+');
     const address_formatated = endereco+", "+complemento+", "+bairro+", "+cidade+"/"+uf+" CEP "+cep;
-    console.log(address_formatated); setAddress(address_formatated);
+    console.log("Endereço formatado: ", address_formatated); setAddress(address_formatated);
 
     const apiKey = GOOGLE_APIKEY; 
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${apiKey}`;

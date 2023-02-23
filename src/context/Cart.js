@@ -8,6 +8,8 @@ const CartContext = createContext({});
 export default function CartProvider({ children }) {
   const { dbUser } = authContext();
 
+  console.log("dbUser (src/context/Cart.js): ", dbUser);
+
   const [basket, setBasket] = useState(null);
   const [basketItems, setBasketItems] = useState([]);
   const [delivery, setDelivery] = useState(null);
@@ -20,7 +22,7 @@ export default function CartProvider({ children }) {
   
   useEffect(() => {
     async function fetchBasket() {
-      const baskets = await DataStore.query(Basket, (basket) => basket.clienteID.eq(dbUser.uid));
+      const baskets = await DataStore.query(Basket, (basket) => basket.userID.eq(dbUser.uid));
       setBasket(baskets[0]);
     }
     fetchBasket();

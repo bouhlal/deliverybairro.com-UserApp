@@ -1,15 +1,15 @@
 import 'react-native-gesture-handler';
-import { useEffect } from 'react';
-import { LogBox } from "react-native";
+import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
-import { Amplify, Hub } from "aws-amplify";
+import { LogBox } from "react-native";
+
+import { Amplify } from "aws-amplify";
 import config from "./src/aws-exports";
 
 LogBox.ignoreLogs(['Warning: ...']);
 
 import AuthProvider from "./src/context/Auth";
-import CartProvider from "./src/context/Cart";
 import Routes from './src/routes/index';
 
 Amplify.configure({
@@ -20,6 +20,23 @@ Amplify.configure({
 });
 
 export default function App() {
+
+  return (
+    <NavigationContainer>
+      <AuthProvider>
+        <StatusBar style="light" />
+        <Routes/>
+      </AuthProvider>
+    </NavigationContainer>
+  );
+}
+
+/** 
+import { useEffect } from 'react';
+import { Amplify, Hub } from "aws-amplify";
+import CartProvider from "./src/context/Cart";
+
+Hub.configure(config);
 
   useEffect(() => {
     function listenToAutoSignInEvent() {
@@ -37,21 +54,18 @@ export default function App() {
     }
     listenToAutoSignInEvent();
   }, []);
-  
-  return (
+
     <NavigationContainer>
       <AuthProvider>
-        <CartProvider> 
-          <StatusBar style="light" />
-          <Routes/>
-        </CartProvider> 
+        <CartProvider>
+          <ThemeProvider theme={studioTheme}>
+            // <StatusBar backgroundColor='#FFF' barStyle='dark-content' />
+            <StatusBar style="light" />
+            <Routes/>
+          </ThemeProvider>
+        </CartProvider>
       </AuthProvider>
     </NavigationContainer>
-  );
-}
-
-/** 
-// Hub.configure(config);
 
 // Ignore log notification by message:
 LogBox.ignoreLogs(['Warning: ...']);

@@ -17,7 +17,7 @@ export default function Deliveries({ route }) {
     (async function() {
       try {
         await DataStore.query(Delivery, (delivery) => delivery.Categorias?.categoriaId.eq(id)).then(setDeliveries)
-        console.log("deliveries: ", deliveries);
+        console.log("Deliveries: ", deliveries);
       } catch(error) {
         console.error("Error (query: Delivery): ", error);
       }

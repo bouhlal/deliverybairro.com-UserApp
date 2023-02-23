@@ -4,8 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { authContext } from '../context/Auth';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { authContext } from '../context/Auth';
 
 import SideBar from "../components/SideBar";
 
@@ -22,24 +22,24 @@ import Perfil from '../pages/User';
 const Stack = createStackNavigator();
 
 export function AppRoutes() {
-  // const { dbUser } = authContext();
-  const [dbUser, setDbUser] = useState(null);
+  const { dbUser } = authContext();
+  // const [dbUser, setDbUser] = useState(null);
   
-  useEffect(() => {
-    async function loadStorage() {
-      const storageUser = await AsyncStorage.getItem('Auth_user');
-      if (storageUser) {
-        setDbUser(JSON.parse(storageUser));
-      }
-      setLoading(false);
-    }
-    loadStorage();
-  }, []);
+  // useEffect(() => {
+  //   async function loadStorage() {
+  //     const storageUser = await AsyncStorage.getItem('Auth_user');
+  //     if (storageUser) {
+  //       setDbUser(JSON.parse(storageUser));
+  //     }
+  //     setLoading(false);
+  //   }
+  //   loadStorage();
+  // }, []);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {dbUser ? (
-        <Stack.Screen name="HomeTabs" component={BottomTabNavigator} />
+        <Stack.Screen name="HomeTabs" component={HomeTabs} />
       ) : (
         <Stack.Screen name="Perfil" component={Perfil} />
       )}
@@ -49,7 +49,7 @@ export function AppRoutes() {
 
 const Tab = createBottomTabNavigator();
 
-export function BottomTabNavigator() {
+export function HomeTabs() {
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false, tabBarStyle: { height: 65 }, fontWeight: 'bold' }}
@@ -86,66 +86,6 @@ export function BottomTabNavigator() {
   );
 }
 
-const Drawer = createDrawerNavigator();
-
-export function DrawerNavigator() {
-
-  const getHeaderTitle = (route) => {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-    switch (routeName) {
-      case "Home": return "Categorias";
-      case "Deliveries": return "Deliverys perto de Você"
-      case "DeliveryInfo": return "Delivery (Produtos)"
-      case "CartInfo": return "Minhas Compras";
-      case "Pedidos": return "Meus Pedidos"
-      case "Perfil": return 'Dados do Usuário';
-    }
-  };
-
-  return (
-    <Drawer.Navigator
-      drawerContent={(props) => <SideBar {...props} />}
-      screenOptions={{
-        headerShown: true,
-        drawerStyle: {
-          backgroundColor: '#FFF',
-          width: '70%',
-          marginTop: 82,
-          marginBotton: 5,
-          borderTopRightRadius: 25,
-          borderBottomRightRadius: 25,
-        },
-        drawerLabelStyle: {
-          fontWeight: 'bold'
-        },
-        drawerItemStyle: {
-          activeTintColor: '#FFF',
-          activeBackgroundColor: '#FF0000',
-          inactiveTintColor: '#5D5D5D',
-          inactiveBackgroundColor: '#000',
-          marginVertical: 5
-        },
-      }}
-    >
-      <Drawer.Screen
-        name="Delivery Bairro"
-        component={TabNavigator}
-        options={({ route }) => ({
-          headerTitle: getHeaderTitle(route),
-          headerTintColor: '#FFF',
-          headerStyle: {
-            backgroundColor: '#000',
-            borderBottomWidth: 0,
-          },
-          tabBarIcon: {
-            color: '#000'
-          }
-        })}
-      />
-    </Drawer.Navigator>
-  );
-}
-
 export const HomeStack = createStackNavigator();
 
 export function HomeStackNavigator() {
@@ -155,7 +95,7 @@ export function HomeStackNavigator() {
         name="DrawerNavigator"
         component={DrawerNavigator}
       />
-      <HomeStack.Screen name="Home" component={Categorias} />
+      <HomeStack.Screen name="Categorias" component={Categorias} />
       <HomeStack.Screen name="Deliveries" component={Deliveries} />
       <HomeStack.Screen name="Delivery" component={DeliveryInfo} options={{ headerShown: false }} />
       <HomeStack.Screen name="Cart" component={CartInfo} />
@@ -205,3 +145,63 @@ function OrderDetailsNavigator({ route }) {
     </OrderDetailsTopTab.Navigator>
   );
 };
+
+const Drawer = createDrawerNavigator();
+
+export function DrawerNavigator() {
+
+  function getHeaderTitle(route) {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Categorias';
+    switch (routeName) {
+      case "Categorias": return "Categorias";
+      case "Deliveries": return "Deliverys perto de Você"
+      // case "DeliveryInfo": return "Delivery (Produtos)"
+      // case "CartInfo": return "Minhas Compras";
+      case "Pedidos": return "Meus Pedidos"
+      case "Perfil": return 'Dados do Usuário';
+    }
+  };
+
+  return (
+    <Drawer.Navigator
+      drawerContent={(props) => <SideBar {...props} />}
+      screenOptions={{
+        headerShown: true,
+        drawerStyle: {
+          backgroundColor: '#FFF',
+          width: '70%',
+          marginTop: 82,
+          marginBotton: 5,
+          borderTopRightRadius: 25,
+          borderBottomRightRadius: 25,
+        },
+        drawerLabelStyle: {
+          fontWeight: 'bold'
+        },
+        drawerItemStyle: {
+          activeTintColor: '#FFF',
+          activeBackgroundColor: '#FF0000',
+          inactiveTintColor: '#5D5D5D',
+          inactiveBackgroundColor: '#000',
+          marginVertical: 5
+        },
+      }}
+    >
+      <Drawer.Screen
+        name="Delivery Bairro"
+        component={TabNavigator}
+        options={({ route }) => ({
+          headerTitle: getHeaderTitle(route),
+          headerTintColor: '#FFF',
+          headerStyle: {
+            backgroundColor: '#000',
+            borderBottomWidth: 0,
+          },
+          tabBarIcon: {
+            color: '#000'
+          }
+        })}
+      />
+    </Drawer.Navigator>
+  );
+}

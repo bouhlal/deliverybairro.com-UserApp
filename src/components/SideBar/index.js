@@ -27,8 +27,8 @@ export default function SideBar({ props }) {
       </View>
 
       <DrawerItem
-        label="HOME (Categorias)"
-        onPress={() => GoToLink('Home')}
+        label="Categorias (Home)"
+        onPress={() => GoToLink('Categorias')}
         activeTintColor='#FFF'
         activeBackgroundColor='#FF0000'
         inactiveTintColor='#FFF'
@@ -38,7 +38,7 @@ export default function SideBar({ props }) {
         )}
       />
       <DrawerItem
-        label="MINHAS COMPRAS (Pedidos)"
+        label="Pedidos (Minhas Compras)"
         onPress={() => GoToLink('Pedidos')}
         activeTintColor='#FFF'
         activeBackgroundColor='#FF0000'
@@ -49,7 +49,7 @@ export default function SideBar({ props }) {
         )}
       />
       <DrawerItem
-        label="USUÁRIO (Perfil)"
+        label="Perfil (Usuário)"
         onPress={() => GoToLink('Perfil')}
         activeTintColor='#FFF'
         activeBackgroundColor='#FF0000'
@@ -60,7 +60,7 @@ export default function SideBar({ props }) {
         )}
       />
       <DrawerItem
-        label="SAIR (LogOut)"
+        label="Sair (LogOut)"
         onPress={() => signOut()}
         activeTintColor='#FFF'
         activeBackgroundColor='#FF0000'

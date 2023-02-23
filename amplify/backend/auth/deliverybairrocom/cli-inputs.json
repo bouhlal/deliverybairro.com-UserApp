@@ -14,8 +14,8 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "DeliveryBairro UserApp - Codigo deVerificacao: {####}",
-    "emailVerificationMessage": "O seu Codigo de Verificacao no Delivery Bairro \nUserApp: {####}\n\nDeliveryBairro\nhttps://deliverybairro.com",
+    "emailVerificationSubject": "Your verification code is {####}",
+    "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 6,
     "passwordPolicyCharacters": [

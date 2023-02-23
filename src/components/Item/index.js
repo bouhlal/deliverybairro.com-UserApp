@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from "react-native";
 
 export default function Item({ basketItem, produto }) {
-  console.log("basketItem: ", basketItem);
-  console.log("produto: ", produto);
+  console.log("BasketItem: ", basketItem);
+  console.log("Produto: ", produto);
   return (
     <View style={styles.row}>
       <View style={styles.quantity}>

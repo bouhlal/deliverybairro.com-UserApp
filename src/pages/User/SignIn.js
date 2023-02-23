@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, Platform, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, Text, Image, Keyboard, ActivityIndicator, Platform } from 'react-native';
 import { Background, Container, AreaInput, Input, BtnSubmit, BtnTxt, Link, LinkTxt } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { authContext } from '../../context/Auth';
@@ -8,8 +8,8 @@ import logo from "../../../assets/logo.png"
 import marca from "../../../assets/marca.png"
 
 export default function SignIn() {
-  const { signIn, loading } = authContext();
   const navigation = useNavigation();
+  const { loading, signIn } = authContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");  
 
@@ -44,7 +44,7 @@ export default function SignIn() {
             autoCorrect={false}
             keyboardType='numeric'
             onChangeText={(input)=>setPassword(input)}
-            // onSubmitEditing={() => Keyboard.dismiss()}
+            onSubmitEditing={() => Keyboard.dismiss()}
             secureTextEntry={true}
           />
         </AreaInput>
@@ -59,6 +59,10 @@ export default function SignIn() {
 
         <Link onPress={() => navigation.navigate('SignUp')}>
           <LinkTxt>Ainda não possui Conta? Junte-se a Nós!</LinkTxt>
+        </Link>
+
+        <Link onPress={() => navigation.navigate('SignUpCode', {email: email})}>
+          <LinkTxt>Confirmar código de verificação.</LinkTxt>
         </Link>
 
       </Container>
@@ -85,15 +89,3 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
-
-/**
-<BtnSubmit onPress={login}>
-{loading ? (
-  <View style={styles.indicator}>
-    <ActivityIndicator size={"large"} color="#000" />
-  </View>
-) : (
-  <BtnTxt>ACESSAR</BtnTxt>
-)}
-</BtnSubmit>
-**/

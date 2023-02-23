@@ -10,7 +10,7 @@ export default function OrderDetails({ id }) {
 
   useEffect(() => {
     getOrder(id).then(setPedido);
-    console.log(pedido);
+    console.log("Pedido: ", pedido);
   }, []);
 
   function OrderDetailsHeader({ order }) {

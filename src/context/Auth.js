@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect, useContext, createContext } from 'react';
 import { Alert } from 'react-native';
 import { Auth, DataStore } from 'aws-amplify';
@@ -23,31 +22,17 @@ export default function AuthProvider({ children }) {
     });
   }, [sub]);
 
-  useEffect(() => {
-    async function loadStorage() {
-      setLoading(true);
-      const storageUser = await AsyncStorage.getItem('Auth_user');
-      console.log(JSON.parse(storageUser));
-      if (storageUser) {
-        setDbUser(JSON.parse(storageUser));
-        setLoading(false);
-      } else {
-        setLoading(false);
-      }
-    }
-    loadStorage();
-  }, []);
-
-  async function signIn(email, password) {
+  async function signIn({ props }) {
+    const username = props.email;
+    const password = props.password;
     setLoading(true);
     try {
-      const { user } = await Auth.signIn({username: email, password: password});
+      const { user } = await Auth.signIn(username, password);
       console.log("signIn: ",user);
       setDbUser(user);
-      storageUser(user);
       setLoading(false);
     } catch (error) {
-      Alert.alert("Erro!", error.message);
+      Alert.alert("Error (sigIn)", error.message);
       setLoading(false);
     }
   }
@@ -60,63 +45,60 @@ export default function AuthProvider({ children }) {
         password: password,
         attributes: {
           email: email, 
-          phone_number: telefone, // opcional - Convenção de número E.164
           given_name: nome,
-          family_name:sobrenome,
+          family_name: sobrenome,
+          phone_number: telefone, // opcional - Convenção de número E.164
           // outros atributos personalizados
         },
-        autoSignIn: { // optional - enables auto sign in after user is confirmed
-          enabled: true,
-        },
       });
-      console.log("signUp: ",user);
+      console.log("signUp: ", user);
       setDbUser(user);
-      storageUser(user);
       setLoading(false); 
     } catch(error) {
-      Alert.alert("Erro!", error.message);
+      Alert.alert("Error (signUp)", error.message);
       setLoading(false);
     }
   }
 
-  async function confirmSignUp(email, code) {
+  async function confirmSignUp({ props }) {
+    const username = props.email;
+    const code = props.code;
     try {
-      const { user } =  await Auth.confirmSignUp({username: email, code: code});
+      await Auth.confirmSignUp(username, code);
       Alert.alert("Info",`Código enviado com sucesso! Confira o email enviado para: ${user.email}`);
     } catch (error) {
-      Alert.alert("Erro!", error.message);
+        Alert.alert("Error (confirmSignUp)", error.message);
+        console.log("Error confirming Sign Up: ", error);
     }
   }
 
-  async function resendConfirmationCode(email) {
+  async function resendConfirmationCode({ props }) {
+    const username = props.email;
     try {
-      const { user } =  await Auth.resendSignUp(email);
+      const { user } =  await Auth.resendSignUp(username);
       Alert.alert("Info",`Código reenviado com sucesso! Confira novamente o email enviado para: ${user.email}`);
-      console.log('code resent successfully');
+      console.log('Code resent successfully.');
     } catch (error) {
-      Alert.alert("Erro!", error.message);
+      Alert.alert("Error (resendConfirmationCode)", error.message);
+      console.log("Error resend confirmation Code: ", error);
     }
   }
 
   async function signOut() {
     try {
-      await AsyncStorage.clear();
       await Auth.signOut();
-      setDbUser(null);
+      // await AsyncStorage.clear();
+      // setDbUser(null);
     } catch (error) {
-      Alert.alert("Erro!", error.message);
+      Alert.alert("Error (signOut)", error.message);
     }
-  }
-
-  async function storageUser(data) {
-    await AsyncStorage.setItem('Auth_user', JSON.stringify(data));
   }
 
   return(
     <AuthContext.Provider 
       value={{ 
-        signed: !!dbUser, dbUser, sub, loading,
-        setDbUser, signIn, signUp, confirmSignUp, resendConfirmationCode, signOut 
+        dbUser, loading, // sub, 
+        setDbUser, signIn, signUp, confirmSignUp, resendConfirmationCode, signOut
       }}
     >
       {children}
@@ -127,3 +109,40 @@ export default function AuthProvider({ children }) {
 export function authContext() {
   return useContext(AuthContext);
 }
+
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+  // const [user_authorized, setAuthorized] = useState(null);
+  // const sub = user_authorized?.attributes?.sub; 
+
+  // useEffect(() => {
+  //   Auth.currentAuthenticatedUser({ bypassCache: false }).then(setAuthorized);
+  // }, [])
+
+  // useEffect(() => {
+  //   DataStore.query(User, (user) => user.token.eq(sub)).then((users) => {
+  //     setDbUser(users[0]);
+  //   });
+  // }, [sub]);
+
+  // AsyncStorage.clear();
+
+  // useEffect(() => {
+  //   async function loadStorage() {
+  //     setLoading(true);
+  //     const storageUser = await AsyncStorage.getItem('Auth_user');
+  //     console.log("StorageUser: ", JSON.parse(storageUser));
+  //     if (storageUser) {
+  //       setDbUser(JSON.parse(storageUser));
+  //       setLoading(false);
+  //     } else {
+  //       setLoading(false);
+  //     }
+  //   }
+  //   loadStorage();
+  // }, []);
+
+        // storageUser(user);
+      // storageUser(user);
+  // async function storageUser(data) {
+  //   await AsyncStorage.setItem('Auth_user', JSON.stringify(data));
+  // }

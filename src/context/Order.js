@@ -8,8 +8,10 @@ import { Pedido, Item } from "../models";
 const OrderContext = createContext({});
 
 export default function OrderContextProvider({ children }) {
-  const { dbUser } = authContext();
   const { delivery, total, basket, basketItens } = cartContext();
+  const { dbUser } = authContext();
+
+  console.log("dbUser (src/context/Order.js): ", dbUser);
 
   const [pedidos, setPedidos] = useState([]);
 
@@ -18,7 +20,7 @@ export default function OrderContextProvider({ children }) {
   }, [dbUser]);
 
   async function createOrder() {
-    // create the order
+    // Create new Order by Delivery
     const novoPedido = await DataStore.save(
       new Pedido({
         userID: dbUser.id,
@@ -28,7 +30,7 @@ export default function OrderContextProvider({ children }) {
       })
     );
 
-    // add all basketDishes to the order
+    // Add all basketItens to the new Order
     await Promise.all(
       basketItens.map((basketItem) =>
         DataStore.save(
@@ -41,7 +43,7 @@ export default function OrderContextProvider({ children }) {
       )
     );
 
-    // delete basket
+    // Delete Basket
     await DataStore.delete(basket);
     setPedidos([...pedidos, novoPedido]);
     return newOrder;
