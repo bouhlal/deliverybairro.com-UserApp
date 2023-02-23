@@ -10,12 +10,11 @@ import marca from '../../../assets/marca.png';
 export default function SignUpCode({ route }) {
   const navigation = useNavigation();
   const { loading, confirmSignUp, resendConfirmationCode } = authContext();
+  const [username, setUsername] = useState(route?.params?.email);
   const [code, setCode] = useState("");
 
-  const email = route.params?.email;
-
-  function SendCode() {
-    confirmSignUp(email, code);
+    function SendCode() {
+    confirmSignUp(username, code);
   }
 
   return (
@@ -26,7 +25,19 @@ export default function SignUpCode({ route }) {
         <Image source={marca} style={styles.marca} resizeMode="contain" />
 
         <View style={styles.areaInput}>
-          <Text>Informe o código de confirmação:</Text>
+          <Text style={{marginBottom: 5}}>Usuário:</Text>
+          <TextInput
+            value={username}
+            placeholder='username@email.com'
+            autoCapitalize='none'
+            autoCorrect={false}
+            onChangeText={(input) => setUsername(input)}
+            style={styles.input}
+          />
+        </View>
+
+        <View style={styles.areaInput}>
+          <Text>Código de confirmação:</Text>
           <TextInput
             value={code}
             placeholder="######"

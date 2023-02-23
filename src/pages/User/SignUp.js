@@ -20,7 +20,7 @@ export default function SignUp() {
 
   async function RegisterUser() {
     Alert.alert("SignUp: ", `${email}, ${password}, ${nome}, ${sobrenome}, ${telefone}`);
-    signUp(email.trim(), password.trim(), nome.trim(), sobrenome.trim(), telefone);   
+    signUp(email, password, nome, sobrenome, telefone);
     Alert.alert("Atenção", "Um código de confirmação será enviado para o seu e-mail.");
     navigation.navigate('SignUpCode', {email: email});
   }
@@ -48,7 +48,7 @@ export default function SignUp() {
               placeholder="Nome"
               autoCorrect={false}
               autoCapitalize="true"
-              onChangeText={(input) => setNome(input)}
+              onChangeText={(input) => setNome(input.trim())}
               style={styles.input}
             />
           </View>
@@ -60,7 +60,7 @@ export default function SignUp() {
               placeholder="Sobrenome"
               autoCapitalize="true"
               autoCorrect={false}
-              onChangeText={(input) => setSobrenome(input)}
+              onChangeText={(input) => setSobrenome(input.trim())}
               style={styles.input}
             />
           </View>
@@ -87,7 +87,7 @@ export default function SignUp() {
               placeholder='username@email.com'
               autoCapitalize='none'
               autoCorrect={false}
-              onChangeText={(input) => setEmail(input)}
+              onChangeText={(input) => setEmail(input.trim())}
               style={styles.input}
             />
           </View>
@@ -100,7 +100,7 @@ export default function SignUp() {
               autoCapitalize='none'
               autoCorrect={false}
               keyboardType='numeric'
-              onChangeText={(input)=>setPassword(input)}
+              onChangeText={(input)=>setPassword(input.trim())}
               onSubmitEditing={() => Keyboard.dismiss()}
               secureTextEntry={true}
               style={styles.input}
@@ -120,6 +120,11 @@ export default function SignUp() {
               <Text style={styles.btnText}>REGISTRAR USUÁRIO</Text>
             )}
           </TouchableOpacity>
+
+          <Link onPress={() => navigation.navigate('SignUpCode', {email: email})}>
+            <LinkTxt>Confirmar código de verificação.</LinkTxt>
+          </Link>
+
 
           <TouchableOpacity style={styles.link} onPress={()=>navigation.navigate('SignIn')}>
             <Text style={styles.linkTxt}>Já tenho uma Conta!</Text>

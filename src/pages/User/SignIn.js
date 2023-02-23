@@ -61,10 +61,6 @@ export default function SignIn() {
           <LinkTxt>Ainda não possui Conta? Junte-se a Nós!</LinkTxt>
         </Link>
 
-        <Link onPress={() => navigation.navigate('SignUpCode', {email: email})}>
-          <LinkTxt>Confirmar código de verificação.</LinkTxt>
-        </Link>
-
       </Container>
     </Background>
   );
