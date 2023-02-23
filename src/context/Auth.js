@@ -97,7 +97,7 @@ export default function AuthProvider({ children }) {
   return(
     <AuthContext.Provider 
       value={{ 
-        dbUser, loading, // sub, 
+        dbUser, loading, sub, 
         setDbUser, signIn, signUp, confirmSignUp, resendConfirmationCode, signOut
       }}
     >
