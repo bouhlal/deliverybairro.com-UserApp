@@ -26,11 +26,12 @@ type User @model @auth(rules: [{allow: public}]) {
   email: AWSEmail
   endereco: AWSJSON
   uf: UF
-  marcador: AWSJSON
   url_foto: AWSURL
   token: String
   Baskets: [Basket] @hasMany(indexName: "byUser", fields: ["id"])
   Pedidos: [Pedido] @hasMany(indexName: "byUser", fields: ["id"])
+  latitude: Float
+  longitude: Float
 }
 
 enum Situacao {
@@ -55,7 +56,6 @@ type Delivery @model @auth(rules: [{allow: public}]) {
   email: AWSEmail
   endereco: AWSJSON
   uf: UF
-  marcador: AWSJSON
   horario: String
   minDeliveryTime: Int
   maxDeliveryTime: Int
@@ -64,6 +64,8 @@ type Delivery @model @auth(rules: [{allow: public}]) {
   url_imagem: String
   Produtos: [Produto] @manyToMany(relationName: "DeliveryProduto")
   Categorias: [Categoria] @manyToMany(relationName: "DeliveryCategoria")
+  latitude: Float
+  longitude: Float
 }
 
 type Item @model @auth(rules: [{allow: public}]) {
@@ -150,9 +152,10 @@ type Courier @model @auth(rules: [{allow: public}]) {
   telefone: AWSPhone
   endereco: AWSJSON
   uf: UF
-  marcador: AWSJSON
   tipo_transporte: Transporte
   url_foto: AWSURL
   token_sms: String
+  latitude: Float
+  longitude: Float
 }
  

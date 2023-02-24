@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { TextMask } from 'react-native-masked-text';
+import { ScrollView, View, Text, TextInput, Keyboard, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { Background, Container } from './styles';
+import { TextInputMask } from 'react-native-masked-text';
+
 import { authContext } from '../../context/Auth';
 import { DataStore } from 'aws-amplify';
 import { User } from '../../models';
 
-import { GOOGLE_APIKEY } from '@env';
 import * as Location from 'expo-location';
+import { GOOGLE_APIKEY } from '@env';
 
 import Header from '../../components/Header';
 
 export default function Perfil() {
   const { sub, dbUser, setDbUser, signOut } = authContext();
 
-  const [nome, setNome] = useState('');
-  const [sobrenome, setSobrenome] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [email, setEmail] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [complemento, setComplemento] = useState('');
-  const [bairro, setBairro] = useState('');
-  const [cidade, setCidade] = useState('');
-  const [cep, setCep] = useState('');
-  const [uf, setUf] = useState('');
-  const [marcador, setMarcador] = useState(null);
+  const [nome, setNome] = useState("");
+  const [sobrenome, setSobrenome] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [email, setEmail] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [complemento, setComplemento] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [cep, setCep] = useState("");
+  const [uf, setUf] = useState("");
+  const [url_foto, setUrlFoto] = useState("");
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
 
   const [errorMsg, setErrorMsg] = useState(null);
   const [info, setInfo] = useState("Toque no botão para obter as coordenadas");
 
   async function getCoordinates() {
-    const { endereco, complemento, bairro, cidade, cep, uf } = {
-      "endereco": endereco, "complemento": complemento, "bairro": bairro, "cidade": cidade, "uf": uf, "cep": cep
-    };
-
     const apiKey = GOOGLE_APIKEY; 
     const formattedAddress = `${endereco}${complemento ? `, ${complemento}` : ''}, ${bairro}, ${cidade} - ${uf}, ${cep}`.replace(/ /g, '+');
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${apiKey}`;
@@ -41,7 +41,9 @@ export default function Perfil() {
       const response = await fetch(url);
       const data = await response.json();
       const { lat, lng } = data.results[0].geometry.location;
-      setMarcador({ latitude: lat, longitude: lng });
+      console.log(data.results[0]);
+      setLatitude(lat);
+      setLongitude(lng);
     } catch (error) {
       setErrorMsg('Erro ao obter as coordenadas');
     }
@@ -55,18 +57,20 @@ export default function Perfil() {
         return;
       }
       const { coords } = await Location.getCurrentPositionAsync({});
-      setMarcador(coords);
+      setLatitude(coords.latitude);
+      setLongitude(coords.longitude);
     } catch (error) {
       setErrorMsg('Erro ao obter a localização');
     }
   }
 
   async function loadGpsByAddress() {
-    if (!marcador) {
+    if (!latitude || !longitude) {
       await getCoordinates();
       getLocation();
     } else {
-      setMarcador(null);
+      setLatitude(0);
+      setLongitude(0);
     }
   };
 
@@ -81,8 +85,9 @@ export default function Perfil() {
           "email": email,
           "endereco": enderecoObj,
           "uf": uf,
-          "marcador": marcador,
           "url_foto": null,
+          "latitude": latitude,
+          "longitude": longitude,
           "token": sub,
           "Baskets": [],
           "Pedidos": []
@@ -101,8 +106,15 @@ export default function Perfil() {
       const enderecoObj = { endereco, complemento, bairro, cidade, cep };
       const updated = await DataStore.save(User.copyOf(current, 
         item => {
-          item.nome = nome, item.sobrenome = sobrenome, item.telefone = telefone, item.email = email, item.endereco = enderecoObj, 
-          item.uf = uf, item.marcador = marcador 
+          item.nome = nome, 
+          item.sobrenome = sobrenome, 
+          item.telefone = telefone, 
+          item.email = email, 
+          item.endereco = enderecoObj, 
+          item.uf = uf, 
+          item.url_foto = url_foto,
+          item.latitude = latitude,
+          item.longitude = longitude
         }
       ));
       setDbUser(updated);
@@ -115,121 +127,169 @@ export default function Perfil() {
   useEffect(() => {
     if (errorMsg) {
       setInfo(errorMsg);
-    } else if (marcador) {
-      setInfo(`Localização Atual (Latitude: ${marcador.latitude}, Longitude: ${marcador.longitude})`);
+    } else {
+      setInfo(`Localização Atual (${latitude}, ${longitude})`);
     }
-  }, [errorMsg, marcador])
+  }, [errorMsg, latitude, longitude])
 
-
-  function UserForm() {
-    return (
-      <ScrollView style={styles.container}>
-        <TextInput 
-          value={nome} 
-          placeholder="Nome" 
-          onChangeText={(input) => setNome(input)} 
-          style={styles.input}
-        />
-        <TextInput
-          value={sobrenome}
-          placeholder="Sobrenome"
-          onChangeText={(input) => setSobrenome(input)}
-          style={styles.input}
-        />
-        <TextInput 
-          value={email} 
-          placeholder="Email" 
-          onChangeText={(input) => setEmail(input)} 
-          style={styles.input}
-        />
-        <TextInput
-          value={telefone}
-          placeholder="Telefone" 
-          onChangeText={(input) => setTelefone(input)}
-          style={styles.input}
-          render={(props) => (
-            <TextMask
-              {...props}
-              type={'cel-phone'} 
-              options={{
-                maskType: 'BRL',
-                withDDD: true,
-                dddMask: '+99 (99) ',
-              }}
-            />
-          )}
-        />
-        <TextInput
-          value={endereco}
-          placeholder="Endereco"
-          onChangeText={(input) => setEndereco(input)}
-          autoCapitalize='true'
-          keyboardType='numeric'
-          style={styles.input}
-        />
-        <TextInput
-          value={complemento}
-          placeholder="Complemento"
-          onChangeText={(input) => setComplemento(input)}
-          autoCapitalize='true'
-          style={styles.input}
-        />
-        <TextInput
-          value={bairro}
-          placeholder="Bairro"
-          onChangeText={(input) => setBairro(input)}
-          autoCapitalize='true'
-          style={styles.input}
-        />
-        <TextInput
-          value={cidade}
-          placeholder="cidade"
-          onChangeText={(input) => setCidade(input)}
-          autoCapitalize='true'
-          style={styles.input}
-        />
-        <TextInput
-          value={uf}
-          placeholder="UF"
-          onChangeText={(input) => setUf(input)}
-          style={styles.input}
-        />
-        <TextInput
-          value={cep}
-          placeholder="CEP"
-          onChangeText={(input) => setCep(input)}
-          keyboardType='numeric'
-          style={styles.input}
-        />
-        <TextInput
-          value={marcador}
-          placeholder="Marcador (JSON)"
-          onChangeText={(input) => setMarcador(input)}
-          keyboardType='numeric'
-          style={styles.input}
-        />
-        <TextInput
-          value={urlFoto}
-          placeholder="URL da foto"
-          onChangeText={(input) => setUrlFoto(input)}
-          autoCapitalize='none'
-          autoCorrect={false}
-          style={styles.input}
-        />
-      </ScrollView>
-    );
+  function maskEditPhone(formatted, extracted) {
+    setTelefone(extracted);
   }
-  
-  return (
-    <View style={styles.background}>
-      <Header/>
-      <View style={styles.container}>
-        <Text style={styles.subtitle}>Dados do Usuário (Perfil)</Text>
 
-        <UserForm/>
+  function maskEditCep(formatted, extracted) {
+    setCep(extracted);
+  }
+
+  return (
+    <Background>
+      <Container>
+        <Header/>
+        <Text style={styles.title}>DADOS DO USUÁRIO (PERFIL)</Text>
+        <ScrollView contentContainerStyle={{width: "100%"}}>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Nome:</Text>
+            <TextInput 
+              value={nome}
+              placeholder="Nome"
+              autoCorrect={false}
+              autoCapitalize="true"
+              onChangeText={(input) => setNome(input)}
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Sobrenome:</Text>
+            <TextInput
+              value={sobrenome}
+              placeholder="Sobrenome"
+              autoCapitalize="true"
+              onChangeText={(input) => setSobrenome(input)}
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Email:</Text>
+            <TextInput 
+              value={email} 
+              placeholder="Email" 
+              autoCapitalize="false"
+              onChangeText={(input) => setEmail(input)} 
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Telefone:</Text>
+            <TextInputMask
+              value={telefone}
+              placeholder="+55 31 99999-9999"
+              type={'custom'}
+              options={{
+                mask: '+55 99 99999-9999',
+              }}
+              onChangeText={maskEditPhone}
+              keyboardType="numeric"
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Endereco:</Text>
+            <TextInput
+              value={endereco}
+              placeholder="Endereco"
+              onChangeText={(input) => setEndereco(input)}
+              autoCapitalize='true'
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Complemento:</Text>
+            <TextInput
+              value={complemento}
+              placeholder="Complemento"
+              onChangeText={(input) => setComplemento(input)}
+              autoCapitalize='true'
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Bairro:</Text>
+            <TextInput
+              value={bairro}
+              placeholder="Bairro"
+              onChangeText={(input) => setBairro(input)}
+              autoCapitalize='true'
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>Cidade:</Text>
+            <TextInput
+              value={cidade}
+              placeholder="cidade"
+              onChangeText={(input) => setCidade(input)}
+              onSubmitEditing={() => Keyboard.dismiss()}
+              autoCapitalize='true'
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>UF:</Text>
+            <TextInput
+              value={uf}
+              placeholder="UF"
+              onChangeText={(input) => setUf(input)}
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>CEP:</Text>
+            <TextInputMask
+              value={telefone}
+              placeholder="99999-999"
+              type={'custom'}
+              options={{
+                mask: '99999-999',
+              }}
+              onChangeText={maskEditCep}
+              keyboardType="numeric"
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>FOTO (LINK/URL):</Text>
+            <TextInput
+              value={url_foto}
+              placeholder="URL da foto"
+              onChangeText={(input) => setUrlFoto(input)}
+              autoCapitalize='none'
+              autoCorrect={false}
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>LATITUDE:</Text>
+            <TextInput
+              value={latitude}
+              placeholder="-19.82711"
+              onChangeText={(input) => setLatitude(input)}
+              keyboardType='numeric'
+              style={styles.input}
+            />
+          </View>
+          <View style={styles.areaInput}>
+            <Text style={{marginBottom: 5}}>LONGITUDE:</Text>
+            <TextInput
+              value={longitude}
+              placeholder="-43.98319"
+              onChangeText={(input) => setLongitude(input)}
+              keyboardType='numeric'
+              style={styles.input}
+            />
+          </View>
+        </ScrollView>
 
         { !dbUser ? (
-          <TouchableOpacity style={styles.btnSubmit} onPress={() => createUser()}>
+          <TouchableOpacity style={[styles.btnSubmit, {marginTop: 15}]} onPress={() => createUser()}>
             <Text style={styles.btnTxt}>SALVAR DADOS</Text>
           </TouchableOpacity>
         ) : (
@@ -238,37 +298,43 @@ export default function Perfil() {
           </TouchableOpacity>
         )}
 
-        <Text style={styles.line13}>{info}</Text>
+        <Text style={{fontSize: 13, textAlign: "center"}}>{info}</Text>
+
         <TouchableOpacity style={styles.btnSubmit} onPress={loadGpsByAddress} >
           <Text style={styles.btnTxt}>OBTER COORDENADAS</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.btnLogout} onPress={() => signOut()} >
           <Text style={styles.btnTxt}>SAIR (LOGOUT)</Text>
         </TouchableOpacity>
-      </View>
-    </View>
+
+      </Container>
+    </Background>
   );
 }
 
 const styles = StyleSheet.create({
-  background:{
+  background: {
     flex: 1,
-    backgroundColor: "#FFF",
+    width: "100%",
+    paddingVertical: 10,
+    padding: 10
   },
-  container:{
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
+  container: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center'
   },
   title:{ 
-    color: '#5D5D5D',
-    fontSize: 18,
-    marginTop: 25
+    color: '#000',
+    textAlign: "center",
+    fontWeight: 'bold',
+    fontSize: 21,
   },
   subtitle:{
     color: '#000',
+    textAlign: "center",
     fontSize: 15,
-    fontWeight: 'bold'
   },
   line18:{ 
     color: '#000', 
@@ -278,23 +344,42 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 13,
   },
-  btnSubmit:{
+  areaInput:{
     width: "100%",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    margin: 10,
+  },
+  input:{
+    width: "95%",
+    height: 50,
+    backgroundColor: "#FFF",
+    padding: 10,
+    borderColor: "#8CB8D2",
+    borderWidth: 1,
+    borderRadius: 7,
+    fontSize: 17,
+    color: "#000",
+  },
+  btnSubmit:{
+    width: "95%",
     height: 45,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",
-    borderRadius: 7,
-    marginBottom: 10,
+    borderRadius: 5,
+    margin: 10,
   },
   btnLogout: {
-    width: '100%',
+    width: '95%',
     height: 45,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FF0000',
-    borderRadius: 7,
-    marginBottom: 10
+    borderRadius: 5,
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
   },
   btnTxt:{
     color: "#FFF", 

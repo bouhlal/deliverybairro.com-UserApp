@@ -170,7 +170,6 @@ type EagerDelivery = {
   readonly email?: string | null;
   readonly endereco?: string | null;
   readonly uf?: Uf | keyof typeof Uf | null;
-  readonly marcador?: string | null;
   readonly horario?: string | null;
   readonly minDeliveryTime?: number | null;
   readonly maxDeliveryTime?: number | null;
@@ -179,6 +178,8 @@ type EagerDelivery = {
   readonly url_imagem?: string | null;
   readonly Produtos?: (DeliveryProduto | null)[] | null;
   readonly Categorias?: (DeliveryCategoria | null)[] | null;
+  readonly latitude?: number | null;
+  readonly longitude?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -197,7 +198,6 @@ type LazyDelivery = {
   readonly email?: string | null;
   readonly endereco?: string | null;
   readonly uf?: Uf | keyof typeof Uf | null;
-  readonly marcador?: string | null;
   readonly horario?: string | null;
   readonly minDeliveryTime?: number | null;
   readonly maxDeliveryTime?: number | null;
@@ -206,6 +206,8 @@ type LazyDelivery = {
   readonly url_imagem?: string | null;
   readonly Produtos: AsyncCollection<DeliveryProduto>;
   readonly Categorias: AsyncCollection<DeliveryCategoria>;
+  readonly latitude?: number | null;
+  readonly longitude?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -264,11 +266,12 @@ type EagerUser = {
   readonly email?: string | null;
   readonly endereco?: string | null;
   readonly uf?: Uf | keyof typeof Uf | null;
-  readonly marcador?: string | null;
   readonly url_foto?: string | null;
   readonly token?: string | null;
   readonly Baskets?: (Basket | null)[] | null;
   readonly Pedidos?: (Pedido | null)[] | null;
+  readonly latitude?: number | null;
+  readonly longitude?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -285,11 +288,12 @@ type LazyUser = {
   readonly email?: string | null;
   readonly endereco?: string | null;
   readonly uf?: Uf | keyof typeof Uf | null;
-  readonly marcador?: string | null;
   readonly url_foto?: string | null;
   readonly token?: string | null;
   readonly Baskets: AsyncCollection<Basket>;
   readonly Pedidos: AsyncCollection<Pedido>;
+  readonly latitude?: number | null;
+  readonly longitude?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -395,10 +399,11 @@ type EagerCourier = {
   readonly telefone?: string | null;
   readonly endereco?: string | null;
   readonly uf?: Uf | keyof typeof Uf | null;
-  readonly marcador?: string | null;
   readonly tipo_transporte?: Transporte | keyof typeof Transporte | null;
   readonly url_foto?: string | null;
   readonly token_sms?: string | null;
+  readonly latitude?: number | null;
+  readonly longitude?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -414,10 +419,11 @@ type LazyCourier = {
   readonly telefone?: string | null;
   readonly endereco?: string | null;
   readonly uf?: Uf | keyof typeof Uf | null;
-  readonly marcador?: string | null;
   readonly tipo_transporte?: Transporte | keyof typeof Transporte | null;
   readonly url_foto?: string | null;
   readonly token_sms?: string | null;
+  readonly latitude?: number | null;
+  readonly longitude?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

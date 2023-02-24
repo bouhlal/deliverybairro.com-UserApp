@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import { StatusBar, LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-
+import { withAuthenticator } from 'aws-amplify-react-native';
 import { Amplify } from "aws-amplify";
 import awsconfig from './src/aws-exports';
 
@@ -17,7 +17,7 @@ Amplify.configure({
 
 LogBox.ignoreLogs(['Warning: ...']);
 
-export default function App() {
+function App() {
 
   return (
     <NavigationContainer>
@@ -28,6 +28,8 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+export default withAuthenticator(App);
 
 
 /** 

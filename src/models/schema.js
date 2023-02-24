@@ -320,13 +320,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "marcador": {
-                    "name": "marcador",
-                    "isArray": false,
-                    "type": "AWSJSON",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "horario": {
                     "name": "horario",
                     "isArray": false,
@@ -400,6 +393,20 @@ export const schema = {
                             "delivery"
                         ]
                     }
+                },
+                "latitude": {
+                    "name": "latitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "longitude": {
+                    "name": "longitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -593,13 +600,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "marcador": {
-                    "name": "marcador",
-                    "isArray": false,
-                    "type": "AWSJSON",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "url_foto": {
                     "name": "url_foto",
                     "isArray": false,
@@ -645,6 +645,20 @@ export const schema = {
                             "userID"
                         ]
                     }
+                },
+                "latitude": {
+                    "name": "latitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "longitude": {
+                    "name": "longitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -1002,13 +1016,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "marcador": {
-                    "name": "marcador",
-                    "isArray": false,
-                    "type": "AWSJSON",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "tipo_transporte": {
                     "name": "tipo_transporte",
                     "isArray": false,
@@ -1029,6 +1036,20 @@ export const schema = {
                     "name": "token_sms",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "latitude": {
+                    "name": "latitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "longitude": {
+                    "name": "longitude",
+                    "isArray": false,
+                    "type": "Float",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1343,5 +1364,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "bd608d2f2fceefdeead9872168998a46"
+    "version": "8fa992e7d50c5b3a67ed75c765cfa536"
 };

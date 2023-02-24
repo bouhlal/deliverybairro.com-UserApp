@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { cartContext } from '../../context/Cart';
+// import { cartContext } from '../../context/Cart';
 
 import logo_png from '../../../assets/logo.png';
 import marca_png from '../../../assets/marca.png'
@@ -9,7 +9,7 @@ import cart_png from '../../../assets/cart.png';
 
 export default function Header() {
   const navigation = useNavigation();
-  const { cart } = cartContext();
+  // const { cart } = cartContext();
 
   function GoToLink(link) {
     return (
@@ -33,11 +33,11 @@ export default function Header() {
 
         <TouchableOpacity onPress={()=>GoToLink("CartInfo")}>
           <Image source={cart_png} style={{ width: 85, height: 85 }} resizeMode="contain" />
-          { cart.length >= 1 &&
+          {/* { cart.length >= 1 &&
             <View style={styles.dot}>
               <Text style={styles.dotText}>{ cart?.length }</Text>
             </View>
-          }
+          } */}
         </TouchableOpacity>
       </View>
     </View>

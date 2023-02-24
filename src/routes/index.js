@@ -1,3 +1,13 @@
+// import React from 'react';
+import AppRoutes from './App.Routes';
+
+export default function Routes() {
+  return(
+    <AppRoutes />
+  )
+}
+
+/*
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { authContext } from '../context/Auth';
 
@@ -27,7 +37,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
-
+**/
   // import { useState, useEffect } from 'react';
   // import AsyncStorage from '@react-native-async-storage/async-storage';
   

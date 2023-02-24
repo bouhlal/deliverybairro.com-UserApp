@@ -36,15 +36,15 @@ export default function OrderLiveUpdates({ id }) {
   }, [pedido?.courierID]);
 
   useEffect(() => {
-    if (courier?.marcador.longitude && courier?.marcador.latitude) {
+    if (courier?.longitude && courier?.latitude) {
       mapRef.current.animateToRegion({
-        latitude: courier?.marcador.latitude,
-        longitude: courier?.marcador.longitude,
+        latitude: courier?.latitude,
+        longitude: courier?.longitude,
         latitudeDelta: 0.007,
         longitudeDelta: 0.007,
       });
     }
-  }, [courier?.marcador.longitude, courier?.marcador.latitude]);
+  }, [courier?.longitude, courier?.latitude]);
 
   useEffect(() => {
     if (!courier) {
@@ -64,9 +64,9 @@ export default function OrderLiveUpdates({ id }) {
     <View>
       <Text>Status: {pedido?.status || "loading"}</Text>
       <MapView style={styles.map} ref={mapRef} showsUserLocation>
-        {courier?.marcador.latitude && (
+        {courier?.latitude && (
           <Marker
-            coordinate={{ latitude: courier.lat, longitude: courier.lng }}
+            coordinate={{ latitude: courier.latitude, longitude: courier.longitude }}
           >
             <View
               style={{

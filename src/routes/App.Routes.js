@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import { authContext } from '../context/Auth';
 
@@ -20,10 +21,9 @@ import Perfil from '../pages/User';
 
 import SideBar from "../components/SideBar";
 
-
 const Stack = createStackNavigator();
 
-export function AppRoutes() {
+export default function AppRoutes() {
   const { dbUser } = authContext();
   console.log("dbUser (App.Routes): ", dbUser);
 
@@ -146,8 +146,8 @@ export function DrawerNavigator() {
     switch (routeName) {
       case "Categorias": return "Categorias";
       case "Deliveries": return "Deliverys perto de Você"
-      // case "DeliveryInfo": return "Delivery (Produtos)"
-      // case "CartInfo": return "Minhas Compras";
+      case "DeliveryInfo": return "Delivery (Produtos)"
+      case "CartInfo": return "Minhas Compras";
       case "Pedidos": return "Meus Pedidos"
       case "Perfil": return 'Dados do Usuário';
     }
@@ -180,7 +180,7 @@ export function DrawerNavigator() {
     >
       <Drawer.Screen
         name="Delivery Bairro"
-        component={TabNavigator}
+        component={HomeTabs}
         options={({ route }) => ({
           headerTitle: getHeaderTitle(route),
           headerTintColor: '#FFF',
