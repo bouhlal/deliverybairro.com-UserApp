@@ -298,13 +298,13 @@ export default function Perfil() {
           </View>
         </ScrollView>
 
-        <TouchableOpacity style={[styles.btnSubmit, {marginTop: 15}]} onPress={onSave}>
+        <TouchableOpacity style={[styles.btnSubmit, {marginTop: 15}]} onPress={() => onSave()}>
           <Text style={styles.btnTxt}>{(!dbUser) ? "SALVAR" : "ATUALIZAR"} DADOS</Text>
         </TouchableOpacity>
 
         <Text style={{fontSize: 13, textAlign: "center"}}>{info}</Text>
 
-        <TouchableOpacity style={styles.btnSubmit} onPress={loadGpsByAddress} >
+        <TouchableOpacity style={styles.btnSubmit} onPress={() => loadGpsByAddress()} >
           <Text style={styles.btnTxt}>OBTER COORDENADAS</Text>
         </TouchableOpacity>
 
