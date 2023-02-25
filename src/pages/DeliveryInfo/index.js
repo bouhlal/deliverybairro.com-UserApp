@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, FlatList, Modal, SafeAreaView, ActivityIndicator } from "react-native";
 import { DataStore } from "aws-amplify";
 import { Delivery, Produto } from "../../models";
-import { cartContext } from "../../context/Cart";
+import { cartContext } from "../../contexts/CartContext";
 
 import Header from "../../components/Header";
 

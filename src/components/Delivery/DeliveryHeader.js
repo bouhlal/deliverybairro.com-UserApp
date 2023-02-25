@@ -10,7 +10,7 @@ export default function DeliveryHeader({ delivery, listbyaz }) {
         <Text style={styles.title}>{delivery.nome}</Text>
         <Image source={{uri: delivery.url_imagem}} style={styles.imagem} />
         <Text style={styles.info}>{delivery.horario}</Text>
-        <Text style={styles.info}><Fontisto color="#FF0000" name='map-marker-alt' size={18}/> {delivery.endereco.endereco}, {delivery.endereco.bairro}</Text>
+        <Text style={styles.info}><Fontisto color="#FF0000" name='map-marker-alt' size={18}/> {delivery.latitude}, {delivery.longitude}</Text>
         <Text style={styles.info}>Valor da Taxa de Entrega: R$ {delivery.taxa_entrega.toFixed(2)}</Text>
         <Text style={[styles.info, {marginBottom: 10}]}>Tempo Estimado: {delivery.minDeliveryTime} a {delivery.maxDeliveryTime} min.</Text>
         <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>

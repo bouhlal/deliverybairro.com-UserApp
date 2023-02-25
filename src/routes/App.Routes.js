@@ -1,15 +1,15 @@
-import React from 'react';
 import { Entypo, Fontisto, FontAwesome5 } from '@expo/vector-icons';
-
+import { Alert } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { authContext } from '../contexts/AuthContext';
+
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
-import { authContext } from '../context/Auth';
 
-import Categorias from '../pages/Categorias';
+import Home from '../pages/Home';
 import Deliveries from '../pages/Deliveries';
 import DeliveryInfo from '../pages/DeliveryInfo';
 import CartInfo from '../pages/CartInfo';
@@ -29,10 +29,10 @@ export default function AppRoutes() {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {dbUser ? (
-        <Stack.Screen name="HomeTabs" component={HomeTabs} />
-      ) : (
+      {!dbUser ? (
         <Stack.Screen name="Perfil" component={Perfil} />
+      ) : (
+        <Stack.Screen name="HomeTabs" component={HomeTabs} />
       )}
     </Stack.Navigator>
   );
@@ -86,10 +86,10 @@ export function HomeStackNavigator() {
         name="DrawerNavigator"
         component={DrawerNavigator}
       />
-      <HomeStack.Screen name="Categorias" component={Categorias} />
+      <HomeStack.Screen name="Home" component={Home} />
       <HomeStack.Screen name="Deliveries" component={Deliveries} />
       <HomeStack.Screen name="Delivery" component={DeliveryInfo} options={{ headerShown: false }} />
-      <HomeStack.Screen name="Cart" component={CartInfo} />
+      <HomeStack.Screen name="Cart" component={CartInfo} options={{ headerShown: false }} />
     </HomeStack.Navigator>
   )
 }
@@ -115,24 +115,28 @@ function OrderDetailsNavigator({ route }) {
   const id = route?.params?.id;
   return (
     <OrderDetailsTopTab.Navigator>
+
       <OrderDetailsTopTab.Screen 
         name="Detalhes do Pedido"
         options={{ headerShown: false }}
       >
         {() => <OrderDetails id={id} />}
       </OrderDetailsTopTab.Screen>
+
       <OrderDetailsTopTab.Screen 
         name="Atualizações" 
         options={{ headerShown: false }}
       >
         {() => <OrderLiveUpdates id={id} />}
       </OrderDetailsTopTab.Screen>
+
       <OrderDetailsTopTab.Screen 
         name="Pagamento" 
         options={{ headerShown: false }}
       >
-        {() => <OrderPayment orderId={id} />}
+        {() => <OrderPayment id={id} />}
       </OrderDetailsTopTab.Screen>
+
     </OrderDetailsTopTab.Navigator>
   );
 };
@@ -144,7 +148,7 @@ export function DrawerNavigator() {
   function getHeaderTitle(route) {
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Categorias';
     switch (routeName) {
-      case "Categorias": return "Categorias";
+      case "Home": return "Home (Categorias)";
       case "Deliveries": return "Deliverys perto de Você"
       case "DeliveryInfo": return "Delivery (Produtos)"
       case "CartInfo": return "Minhas Compras";

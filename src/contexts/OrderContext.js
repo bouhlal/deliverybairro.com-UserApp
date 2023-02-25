@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { authContext } from "./Auth";
-import { cartContext } from "./Cart";
+import { authContext } from "./AuthContext";
+import { cartContext } from "./CartContext";
 
 import { DataStore } from "aws-amplify";
 import { Pedido, Item } from "../models";
@@ -16,14 +16,14 @@ export default function OrderContextProvider({ children }) {
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
-    DataStore.query(Pedido, (pedido) => pedido.userID.eq(dbUser.id)).then(setPedidos);
+    DataStore.query(Pedido, (pedido) => pedido.userID.eq(dbUser.token)).then(setPedidos);
   }, [dbUser]);
 
   async function createOrder() {
     // Create new Order by Delivery
     const novoPedido = await DataStore.save(
       new Pedido({
-        userID: dbUser.id,
+        userID: dbUser.token,
         Delivery: delivery,
         status: "NOVO",
         total: total,
@@ -64,6 +64,12 @@ export default function OrderContextProvider({ children }) {
   );
 };
 
-export function orderContext() {
+function newLocalContext() {
   return useContext(OrderContext);
 }
+
+export const orderContext = newLocalContext;
+
+// export function orderContext() {
+//   return useContext(OrderContext);
+// }

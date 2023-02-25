@@ -5,7 +5,10 @@ import { withAuthenticator } from 'aws-amplify-react-native';
 import { Amplify } from "aws-amplify";
 import awsconfig from './src/aws-exports';
 
-import AuthProvider from "./src/context/Auth";
+import AuthContextProvider from './src/contexts/AuthContext';
+import CartContextProvider from './src/contexts/CartContext';
+import OrderContextProvider from './src/contexts/OrderContext';
+
 import Routes from './src/routes/index';
 
 Amplify.configure({
@@ -21,16 +24,19 @@ function App() {
 
   return (
     <NavigationContainer>
-      <AuthProvider>
-        <StatusBar style="light" />
-        <Routes/>
-      </AuthProvider>
+      <AuthContextProvider>
+        <CartContextProvider>
+          <OrderContextProvider>
+            <StatusBar style="light" />
+            <Routes/>
+          </OrderContextProvider>
+        </CartContextProvider>
+      </AuthContextProvider>
     </NavigationContainer>
   );
 }
 
 export default withAuthenticator(App);
-
 
 /** 
 import React, { useEffect } from 'react';
@@ -59,11 +65,11 @@ Hub.configure(config);
     <NavigationContainer>
       <AuthProvider>
         <CartProvider>
-          <ThemeProvider theme={studioTheme}>
-            // <StatusBar backgroundColor='#FFF' barStyle='dark-content' />
+          <OrderProvider>
             <StatusBar style="light" />
+            // <StatusBar backgroundColor='#FFF' barStyle='dark-content' />
             <Routes/>
-          </ThemeProvider>
+          </OrderProvider>
         </CartProvider>
       </AuthProvider>
     </NavigationContainer>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, Text, Image, Alert, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { cartContext } from "../../context/Cart";
+import { cartContext } from "../../contexts/CartContext";
 
 import { DataStore } from "aws-amplify";
 import { Produto } from "../../models";

@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { FontAwesome5, Fontisto, AntDesign, Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { authContext } from '../../context/Auth';
+import { authContext } from '../../contexts/AuthContext';
 
 import logo_png from '../../../assets/logo.png';
 

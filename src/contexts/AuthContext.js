@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useContext, createContext } from 'react';
-// import { Alert } from 'react-native';
+import { createContext, useState, useEffect, useContext } from 'react';
 import { Auth, DataStore } from 'aws-amplify';
 import { User } from '../models';
 
 const AuthContext = createContext({});
 
-export default function AuthProvider({ children }) {
+export default function AuthContextProvider({ children }) {
+  const [authUser, setAuthUser] = useState(null);
   const [dbUser, setDbUser] = useState(null);
-  const [user_authorized, setAuthorized] = useState(null);
-  // const [loading, setLoading] = useState(false);
 
-  const sub = user_authorized?.attributes?.sub; 
+  const sub = authUser?.attributes?.sub; 
 
   useEffect(() => {
-    Auth.currentAuthenticatedUser({ bypassCache: false }).then(setAuthorized);
+    Auth.currentAuthenticatedUser({ bypassCache: true }).then(setAuthUser);
   }, [])
 
   useEffect(() => {
@@ -22,31 +20,19 @@ export default function AuthProvider({ children }) {
     });
   }, [sub]);
 
-  async function signOut() {
-    try {
-      await Auth.signOut();
-    } catch (error) {
-      console.error('Error (signOut): ', error);
-      setError(error.message);
-    }
-  }
-
   return(
-    <AuthContext.Provider 
-      value={{ 
-        dbUser, user_authorized, sub, setDbUser, signOut
-        // signed: !!dbUser, dbUser, loading, sub,
-        // setDbUser, signIn, signUp, confirmSignUp, resendConfirmationCode, signOut
-      }}
-    >
+    <AuthContext.Provider value={{ authUser, dbUser, sub, setDbUser}}>
       {children}
     </AuthContext.Provider> 
   )
 }
 
-export function authContext() {
+function newLocalContext() {
   return useContext(AuthContext);
 }
+
+export const authContext = newLocalContext;
+
 /**
   async function signIn(email, password) {
     setLoading(true);
@@ -153,7 +139,7 @@ export function authContext() {
 
   // storageUser(user);
   // storageUser(user);
-  
+
   // async function storageUser(data) {
   //   await AsyncStorage.setItem('Auth_user', JSON.stringify(data));
   // }

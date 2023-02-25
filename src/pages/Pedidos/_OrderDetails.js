@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, ActivityIndicator, StyleSheet } from "react-native";
-import { orderContext } from "../../context/Order";
+import { orderContext } from "../../contexts/OrderContext";
 
 import Item from "../../components/Item";
 

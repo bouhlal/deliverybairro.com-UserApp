@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-// import { cartContext } from '../../context/Cart';
+// import { cartContext } from '../../context/CartContext';
 
 import logo_png from '../../../assets/logo.png';
 import marca_png from '../../../assets/marca.png'

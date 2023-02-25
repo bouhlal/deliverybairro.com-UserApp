@@ -3,7 +3,7 @@ import { ScrollView, View, Text, Image, TextInput, TouchableOpacity, Keyboard, A
 import { TextInputMask } from 'react-native-masked-text';
 import { Background, Container } from './styles';
 import { useNavigation } from '@react-navigation/native';
-import { authContext } from '../../context/Auth';
+import { authContext } from '../../context/AuthContext';
 
 import logo from "../../../assets/logo.png";
 import marca from "../../../assets/marca.png";

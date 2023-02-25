@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList, ScrollView, TouchableOpacity, Alert, SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 import { DataStore } from 'aws-amplify';
 import { Categoria } from '../../models';
 

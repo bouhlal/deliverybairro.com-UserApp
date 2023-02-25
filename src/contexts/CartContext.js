@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext, useMemo, createContext } from 'react';
-import { authContext } from './Auth';
+import { authContext } from './AuthContext';
 import { DataStore } from 'aws-amplify';
 import { Basket, BasketItem } from '../models';
 
 const CartContext = createContext({});
 
-export default function CartProvider({ children }) {
+export default function CartContextProvider({ children }) {
   const { dbUser } = authContext();
 
   console.log("dbUser (src/context/Cart.js): ", dbUser);
@@ -22,7 +22,7 @@ export default function CartProvider({ children }) {
   
   useEffect(() => {
     async function fetchBasket() {
-      const baskets = await DataStore.query(Basket, (basket) => basket.userID.eq(dbUser.uid));
+      const baskets = await DataStore.query(Basket, (basket) => basket.userID.eq(dbUser.token));
       setBasket(baskets[0]);
     }
     fetchBasket();
@@ -57,7 +57,7 @@ export default function CartProvider({ children }) {
 
   async function createNewBasket({ delivery }) {
     const newBasket = await DataStore.save(
-      new Basket({ userID: dbUser.id, deliveryID: delivery.id })
+      new Basket({ userID: dbUser.token, deliveryID: delivery.id })
     );
     setBasket(newBasket => newBasket || newBasket);
     return newBasket;
@@ -102,17 +102,14 @@ export default function CartProvider({ children }) {
   }
 
   return(
-    <CartContext.Provider 
-      value={{
-        delivery, cart, total, 
-        GetDelivery, cleanCart, AddToCart, RemoveFromCart
-      }}
-    >
+    <CartContext.Provider value={{ delivery, cart, total, GetDelivery, cleanCart, AddToCart, RemoveFromCart }}>
       { children }
     </CartContext.Provider>
   )
 }
 
-export function cartContext() {
+function newLocalContext() {
   return useContext(CartContext);
 }
+
+export const cartContext = newLocalContext;

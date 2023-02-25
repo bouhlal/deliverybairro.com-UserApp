@@ -1,36 +1,104 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, TextInput, Keyboard, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, TextInput, Keyboard, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Background, Container } from './styles';
 import { TextInputMask } from 'react-native-masked-text';
 
-import { authContext } from '../../context/Auth';
-import { DataStore } from 'aws-amplify';
+import { Auth, DataStore } from 'aws-amplify';
 import { User } from '../../models';
-
+import { authContext } from '../../contexts/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { GOOGLE_APIKEY } from '@env';
 
 import Header from '../../components/Header';
 
 export default function Perfil() {
-  const { sub, dbUser, setDbUser, signOut } = authContext();
-
-  const [nome, setNome] = useState("");
-  const [sobrenome, setSobrenome] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [email, setEmail] = useState("");
-  const [endereco, setEndereco] = useState("");
-  const [complemento, setComplemento] = useState("");
-  const [bairro, setBairro] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [cep, setCep] = useState("");
-  const [uf, setUf] = useState("");
-  const [url_foto, setUrlFoto] = useState("");
-  const [latitude, setLatitude] = useState(0);
-  const [longitude, setLongitude] = useState(0);
+  const navigation = useNavigation();
+  const { dbUser, setDbUser, sub } = authContext();
+ 
+  const [nome, setNome] = useState(dbUser?.nome || "");
+  const [sobrenome, setSobrenome] = useState(dbUser?.sobrenome || "");
+  const [telefone, setTelefone] = useState(dbUser?.telefone || "");
+  const [email, setEmail] = useState(dbUser?.email || "");
+  const [endereco, setEndereco] = useState(dbUser?.endereco || {});
+  const [complemento, setComplemento] = useState(dbUser?.complemento || "");
+  const [bairro, setBairro] = useState(dbUser?.bairro || "");
+  const [cidade, setCidade] = useState(dbUser?.cidade || "");
+  const [uf, setUf] = useState(dbUser?.uf || "");
+  const [cep, setCep] = useState(dbUser?.cep || "");
+  const [url_foto, setUrlFoto] = useState(dbUser?.url_foto || "");
+  const [latitude, setLatitude] = useState(dbUser?.latitude + "" || 0);
+  const [longitude, setLongitude] = useState(dbUser?.longitude + "" || 0);
 
   const [errorMsg, setErrorMsg] = useState(null);
   const [info, setInfo] = useState("Toque no botão para obter as coordenadas");
+
+  async function onSave() {
+    if (dbUser) {
+      await updateUser();
+      navigation.goBack();
+    } else {
+      await createUser();
+      navigation.navigate('Home');
+    }
+  };
+
+  async function updateUser() {
+    try {
+      const enderecoObj = { endereco, complemento, bairro, cidade, cep };
+      const user = await DataStore.save(
+        User.copyOf(dbUser, (updated) => {
+          updated.nome = nome;
+          updated.sobrenome = sobrenome;
+          updated.telefone = telefone;
+          updated.email = email;
+          updated.endereco = enderecoObj;
+          updated.uf = uf;
+          updated.url_foto = url_foto;
+          updated.latitude = parseFloat(latitude);
+          updated.longitude = parseFloat(longitude);
+        })
+      );
+      setDbUser(user);
+      Alert.alert('Sucesso', `Dados do Usuário ${dbUser.nome} atualizados com sucesso!`);
+    } catch (e) {
+      Alert.alert('Error', e.message);
+    }
+  }
+
+  async function createUser() {
+    try {
+      const enderecoObj = { endereco, complemento, bairro, cidade, cep };
+      const user = await DataStore.save(
+        new User({
+          nome: nome,
+          sobrenome: sobrenome,
+          telefone: telefone,
+          email: email,
+          endereco: enderecoObj,
+          uf: uf,
+          url_foto: null,
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude),
+          token: sub,
+          Baskets: [],
+          Pedidos: []
+        })
+      );
+      setDbUser(user);
+      Alert.alert('Sucesso', `Dados do Usuário cadastrados com sucesso! ID: ${user.id}`);
+    } catch (e) {
+      Alert.alert('Error', e.message);
+    }
+  }
+
+  useEffect(() => {
+    if (errorMsg) {
+      setInfo(errorMsg);
+    } else {
+      setInfo(`Localização Atual (${latitude}, ${longitude})`);
+    }
+  }, [errorMsg, latitude, longitude])
 
   async function getCoordinates() {
     const apiKey = GOOGLE_APIKEY; 
@@ -41,7 +109,7 @@ export default function Perfil() {
       const response = await fetch(url);
       const data = await response.json();
       const { lat, lng } = data.results[0].geometry.location;
-      console.log(data.results[0]);
+      console.log(data.results[0].geometry.location);
       setLatitude(lat);
       setLongitude(lng);
     } catch (error) {
@@ -65,7 +133,7 @@ export default function Perfil() {
   }
 
   async function loadGpsByAddress() {
-    if (!latitude || !longitude) {
+    if (!dbUser) {
       await getCoordinates();
       getLocation();
     } else {
@@ -73,64 +141,6 @@ export default function Perfil() {
       setLongitude(0);
     }
   };
-
-  async function createUser() {
-    try {
-      const enderecoObj = { endereco, complemento, bairro, cidade, cep };
-      const user = await DataStore.save(
-        new User({
-          "nome": nome,
-          "sobrenome": sobrenome,
-          "telefone": telefone,
-          "email": email,
-          "endereco": enderecoObj,
-          "uf": uf,
-          "url_foto": null,
-          "latitude": latitude,
-          "longitude": longitude,
-          "token": sub,
-          "Baskets": [],
-          "Pedidos": []
-        })
-      );
-      setDbUser(user);
-      Alert.alert('Sucesso', `Dados do Usuário cadastrados com sucesso! ID: ${user.id}`);
-    } catch (e) {
-      Alert.alert('Error', e.message);
-    }
-  }
-
-  async function updateUser() {
-    try {
-      const current = await DataStore.query(User, dbUser.id);
-      const enderecoObj = { endereco, complemento, bairro, cidade, cep };
-      const updated = await DataStore.save(User.copyOf(current, 
-        item => {
-          item.nome = nome, 
-          item.sobrenome = sobrenome, 
-          item.telefone = telefone, 
-          item.email = email, 
-          item.endereco = enderecoObj, 
-          item.uf = uf, 
-          item.url_foto = url_foto,
-          item.latitude = latitude,
-          item.longitude = longitude
-        }
-      ));
-      setDbUser(updated);
-      Alert.alert('Sucesso', `Dados do Usuário atualizados com sucesso! ID: ${dbUser.id}`);
-    } catch (e) {
-      Alert.alert('Error', e.message);
-    }
-  }
-
-  useEffect(() => {
-    if (errorMsg) {
-      setInfo(errorMsg);
-    } else {
-      setInfo(`Localização Atual (${latitude}, ${longitude})`);
-    }
-  }, [errorMsg, latitude, longitude])
 
   function maskEditPhone(formatted, extracted) {
     setTelefone(extracted);
@@ -172,8 +182,8 @@ export default function Perfil() {
             <TextInput 
               value={email} 
               placeholder="Email" 
-              autoCapitalize="false"
-              onChangeText={(input) => setEmail(input)} 
+              autoCapitalize="none"
+              onChangeText={(input) => setEmail(input.toLowerCase())} 
               style={styles.input}
             />
           </View>
@@ -270,7 +280,7 @@ export default function Perfil() {
             <Text style={{marginBottom: 5}}>LATITUDE:</Text>
             <TextInput
               value={latitude}
-              placeholder="-19.82711"
+              placeholder={String(latitude)} //"-19.82711"
               onChangeText={(input) => setLatitude(input)}
               keyboardType='numeric'
               style={styles.input}
@@ -280,7 +290,7 @@ export default function Perfil() {
             <Text style={{marginBottom: 5}}>LONGITUDE:</Text>
             <TextInput
               value={longitude}
-              placeholder="-43.98319"
+              placeholder={String(longitude)} //"-43.98319"
               onChangeText={(input) => setLongitude(input)}
               keyboardType='numeric'
               style={styles.input}
@@ -288,15 +298,9 @@ export default function Perfil() {
           </View>
         </ScrollView>
 
-        { !dbUser ? (
-          <TouchableOpacity style={[styles.btnSubmit, {marginTop: 15}]} onPress={() => createUser()}>
-            <Text style={styles.btnTxt}>SALVAR DADOS</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.btnSubmit} onPress={() => updateUser()}>
-            <Text style={styles.btnTxt}>ATUALIZAR DADOS</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity style={[styles.btnSubmit, {marginTop: 15}]} onPress={onSave}>
+          <Text style={styles.btnTxt}>{(!dbUser) ? "SALVAR" : "ATUALIZAR"} DADOS</Text>
+        </TouchableOpacity>
 
         <Text style={{fontSize: 13, textAlign: "center"}}>{info}</Text>
 
@@ -304,7 +308,7 @@ export default function Perfil() {
           <Text style={styles.btnTxt}>OBTER COORDENADAS</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.btnLogout} onPress={() => signOut()} >
+        <TouchableOpacity style={styles.btnLogout} onPress={() => Auth.signOut()} >
           <Text style={styles.btnTxt}>SAIR (LOGOUT)</Text>
         </TouchableOpacity>
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import { Fontisto } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
-import { cartContext } from '../../context/Cart';
+import { cartContext } from '../../contexts/CartContext';
 
 import CardItem from '../../components/Cart';
 
@@ -40,7 +40,7 @@ export default function CartInfo() {
         <View style={{flexDirection: 'column', width: '100%'}}>
           <Text style={{ fontSize: 21, fontWeight: 'bold' }}>{delivery?.nome}</Text>
           <Text style={{ fontSize: 13}}>{delivery?.horario}</Text>
-          <Text style={{ fontSize: 13}}><Fontisto color="#FF0000" name='map-marker-alt' size={18}/> {delivery?.endereco.endereco}, {delivery?.endereco.bairro}</Text>
+          <Text style={{ fontSize: 13}}><Fontisto color="#FF0000" name='map-marker-alt' size={18}/> {delivery?.latitude}, {delivery?.longitude}</Text>
           <Text style={{ fontSize: 13, marginBottom: 10}}>Valor da Taxa de Entrega: R$ {delivery?.taxa_entrega.toFixed(2)}</Text>
         </View>
       </View>

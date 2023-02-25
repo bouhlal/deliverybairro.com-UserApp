@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet} from 'react-native';
-import { authContext } from '../../context/Auth';
+import { authContext } from '../../contexts/AuthContext';
 
 import Header from '../../components/Header';
 
@@ -11,7 +11,7 @@ export default function Pedidos() {
       <Header/>
       <View style={styles.container}>
         <Text style={styles.subtitle}>Meus Pedidos</Text>
-        <Text style={styles.line18}>{dbUser.email}</Text>
+        <Text style={styles.line18}>{dbUser.nome} {dbUser.sobrenome}</Text>
         <Text style={styles.line13}>{dbUser.token}</Text>
       </View>
     </View>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, Image, Keyboard, ActivityIndicator, Platform } from 'react-native';
 import { Background, Container, BtnSubmit, BtnTxt, Link, LinkTxt } from './styles';
 import { useNavigation } from '@react-navigation/native';
-import { authContext } from '../../context/Auth';
+import { authContext } from '../../context/AuthContext';
 
 import logo from '../../../assets/logo.png';
 import marca from '../../../assets/marca.png';
