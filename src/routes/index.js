@@ -1,12 +1,5 @@
-import AppRoutes from './App.Routes';
-
-export default function Routes() {
-  return(
-    <AppRoutes />
-  )
-}
-
-/*
+// import { useState, useEffect } from 'react';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { authContext } from '../context/Auth';
 
@@ -15,6 +8,18 @@ import AuthRoutes from './Auth.Routes';
 
 export default function Routes() {
   const { dbUser, loading } = authContext();
+  // const [dbUser, setDbUser] = useState(null);
+
+  // useEffect(() => {
+  //   async function loadStorage() {
+  //     const storageUser = await AsyncStorage.getItem('Auth_user');
+  //     if (storageUser) {
+  //       setDbUser(JSON.parse(storageUser));
+  //     }
+  //     setLoading(false);
+  //   }
+  //   loadStorage();
+  // }, []);
 
   if (loading) {
     return(
@@ -36,19 +41,3 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
-**/
-  // import { useState, useEffect } from 'react';
-  // import AsyncStorage from '@react-native-async-storage/async-storage';
-  
-  // const [dbUser, setDbUser] = useState(null);
-  
-  // useEffect(() => {
-  //   async function loadStorage() {
-  //     const storageUser = await AsyncStorage.getItem('Auth_user');
-  //     if (storageUser) {
-  //       setDbUser(JSON.parse(storageUser));
-  //     }
-  //     setLoading(false);
-  //   }
-  //   loadStorage();
-  // }, []);

@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Auth, DataStore } from 'aws-amplify';
 import { User } from '../models';
 
@@ -20,25 +21,27 @@ export default function AuthContextProvider({ children }) {
     });
   }, [sub]);
 
-  return(
-    <AuthContext.Provider value={{ authUser, dbUser, sub, setDbUser}}>
-      {children}
-    </AuthContext.Provider> 
-  )
-}
+  // useEffect(() => {
+  //   async function loadStorage() {
+  //     setLoading(true);
+  //     const storageUser = await AsyncStorage.getItem('Auth_user');
+  //     console.log("StorageUser: ", JSON.parse(storageUser));
+  //     if (storageUser) {
+  //       setDbUser(JSON.parse(storageUser));
+  //       setLoading(false);
+  //     } else {
+  //       setLoading(false);
+  //     }
+  //   }
+  //   loadStorage();
+  // }, []);
 
-function newLocalContext() {
-  return useContext(AuthContext);
-}
-
-export const authContext = newLocalContext;
-
-/**
   async function signIn(email, password) {
     setLoading(true);
     try {
       const user = await Auth.signIn(email, password);
       console.log("signIn: ",user);
+      // storageUser(user);
       setDbUser(user);
       setLoading(false);
     } catch (error) {
@@ -62,6 +65,7 @@ export const authContext = newLocalContext;
         },
       });
       console.log("signUp: ", user);
+      // storageUser(user);
       setDbUser(user);
       setLoading(false); 
     } catch(error) {
@@ -97,49 +101,26 @@ export const authContext = newLocalContext;
   async function signOut() {
     try {
       await Auth.signOut();
-      // await AsyncStorage.clear();
-      // setDbUser(null);
+      // AsyncStorage.clear();
+      setDbUser(null);
     } catch (error) {
       Alert.alert("Error (signOut)", error.message);
     }
   }
 
- */
+// async function storageUser(data) {
+//   await AsyncStorage.setItem('Auth_user', JSON.stringify(data));
+// }
 
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-  // const [user_authorized, setAuthorized] = useState(null);
-  // const sub = user_authorized?.attributes?.sub; 
+  return(
+    <AuthContext.Provider value={{ 
+      authUser, dbUser, sub, setDbUser,
+      signIn, signUp, confirmSignUp, resendConfirmationCode, signOut
+    }}>
+      {children}
+    </AuthContext.Provider> 
+  )
+}
 
-  // useEffect(() => {
-  //   Auth.currentAuthenticatedUser({ bypassCache: false }).then(setAuthorized);
-  // }, [])
+export const useAuthContext = () => useContext(AuthContext);
 
-  // useEffect(() => {
-  //   DataStore.query(User, (user) => user.token.eq(sub)).then((users) => {
-  //     setDbUser(users[0]);
-  //   });
-  // }, [sub]);
-
-  // AsyncStorage.clear();
-
-  // useEffect(() => {
-  //   async function loadStorage() {
-  //     setLoading(true);
-  //     const storageUser = await AsyncStorage.getItem('Auth_user');
-  //     console.log("StorageUser: ", JSON.parse(storageUser));
-  //     if (storageUser) {
-  //       setDbUser(JSON.parse(storageUser));
-  //       setLoading(false);
-  //     } else {
-  //       setLoading(false);
-  //     }
-  //   }
-  //   loadStorage();
-  // }, []);
-
-  // storageUser(user);
-  // storageUser(user);
-
-  // async function storageUser(data) {
-  //   await AsyncStorage.setItem('Auth_user', JSON.stringify(data));
-  // }
