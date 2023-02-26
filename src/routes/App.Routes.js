@@ -1,11 +1,13 @@
+/**
+ * App.Routes.js (src/routes/App.Routes.js)
+ */
+
 import { Entypo, Fontisto, FontAwesome5 } from '@expo/vector-icons';
-import { Alert } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { authContext } from '../contexts/AuthContext';
-
+import { useAuthContext } from '../contexts/AuthContext';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 
@@ -24,7 +26,7 @@ import SideBar from "../components/SideBar";
 const Stack = createStackNavigator();
 
 export default function AppRoutes() {
-  const { dbUser } = authContext();
+  const { dbUser } = useAuthContext();
   console.log("dbUser (App.Routes): ", dbUser);
 
   return (
@@ -200,18 +202,3 @@ export function DrawerNavigator() {
     </Drawer.Navigator>
   );
 }
-
-  // import AsyncStorage from '@react-native-async-storage/async-storage';
-
-  // const [dbUser, setDbUser] = useState(null);
-  
-  // useEffect(() => {
-  //   async function loadStorage() {
-  //     const storageUser = await AsyncStorage.getItem('Auth_user');
-  //     if (storageUser) {
-  //       setDbUser(JSON.parse(storageUser));
-  //     }
-  //     setLoading(false);
-  //   }
-  //   loadStorage();
-  // }, []);

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { authContext } from "./AuthContext";
-import { cartContext } from "./CartContext";
+import { useAuthContext } from "./AuthContext";
+import { useCartContext } from "./CartContext";
 
 import { DataStore } from "aws-amplify";
 import { Pedido, Item } from "../models";
@@ -8,8 +8,8 @@ import { Pedido, Item } from "../models";
 const OrderContext = createContext({});
 
 export default function OrderContextProvider({ children }) {
-  const { delivery, total, basket, basketItens } = cartContext();
-  const { dbUser } = authContext();
+  const { dbUser } = useAuthContext();
+  const { delivery, total, basket, basketItens } = useCartContext();
 
   console.log("dbUser (src/context/Order.js): ", dbUser);
 
@@ -64,12 +64,8 @@ export default function OrderContextProvider({ children }) {
   );
 };
 
-function newLocalContext() {
-  return useContext(OrderContext);
-}
+export const useOrderContext = () => useContext(OrderContext);
 
-export const orderContext = newLocalContext;
-
-// export function orderContext() {
-//   return useContext(OrderContext);
+// export function useOrderContext() {
+//   useContext(OrderContext);
 // }

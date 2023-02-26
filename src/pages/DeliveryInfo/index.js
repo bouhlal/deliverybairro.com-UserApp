@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, FlatList, Modal, SafeAreaView, ActivityIndicator } from "react-native";
 import { DataStore } from "aws-amplify";
 import { Delivery, Produto } from "../../models";
-import { cartContext } from "../../contexts/CartContext";
+import { useCartContext } from '../../contexts/CartContext';
 
 import Header from "../../components/Header";
 
@@ -11,7 +11,7 @@ import DeliveryItemToSelect from '../../components/Delivery/DeliveryItemToSelect
 import DeliveryListItem from '../../components/Delivery/DeliveryListItem';
 
 export default function DeliveryInfo({ route }) {
-  const { GetDelivery } = cartContext();
+  const { GetDelivery } = useCartContext();
 
   const [show, showModal] = useState(false);
   const [delivery, setDelivery] = useState(null);

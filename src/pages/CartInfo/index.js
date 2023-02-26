@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import { Fontisto } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
-import { cartContext } from '../../contexts/CartContext';
+import { useCartContext } from '../../contexts/CartContext';
 
 import CardItem from '../../components/Cart';
 
 export default function CartInfo() {
   const navigation = useNavigation();
-  const { delivery, cart, subtotal, cleanCart } = cartContext();
+  const { delivery, cart, subtotal, cleanCart } = useCartContext();
   const [ total, setTotal ] = useState(0);
 
   useEffect(() => {

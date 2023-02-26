@@ -1,3 +1,7 @@
+/** 
+ * index.js (src/pages/User/index.js)
+ */
+
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Text, TextInput, Keyboard, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Background, Container } from './styles';
@@ -5,7 +9,7 @@ import { TextInputMask } from 'react-native-masked-text';
 
 import { Auth, DataStore } from 'aws-amplify';
 import { User } from '../../models';
-import { authContext } from '../../contexts/AuthContext';
+import { useAuthContext } from '../../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { GOOGLE_APIKEY } from '@env';
@@ -14,7 +18,7 @@ import Header from '../../components/Header';
 
 export default function Perfil() {
   const navigation = useNavigation();
-  const { dbUser, setDbUser, sub } = authContext();
+  const { dbUser, setDbUser, token } = useAuthContext();
  
   const [nome, setNome] = useState(dbUser?.nome || "");
   const [sobrenome, setSobrenome] = useState(dbUser?.sobrenome || "");
@@ -57,6 +61,7 @@ export default function Perfil() {
           updated.url_foto = url_foto;
           updated.latitude = parseFloat(latitude);
           updated.longitude = parseFloat(longitude);
+          updated.token = token;
         })
       );
       setDbUser(user);
@@ -80,7 +85,7 @@ export default function Perfil() {
           url_foto: null,
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
-          token: sub,
+          token: token,
           Baskets: [],
           Pedidos: []
         })

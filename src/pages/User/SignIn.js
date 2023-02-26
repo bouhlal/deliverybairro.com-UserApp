@@ -1,15 +1,19 @@
+/**
+ * SignIn.js (src/pages/User/SignIn.js)
+ */
+
 import React, { useState } from 'react';
 import { StyleSheet, Text, Image, Keyboard, ActivityIndicator, Platform } from 'react-native';
 import { Background, Container, AreaInput, Input, BtnSubmit, BtnTxt, Link, LinkTxt } from './styles';
 import { useNavigation } from '@react-navigation/native';
-import { authContext } from '../../context/AuthContext';
+import { useAuthContext } from '../../contexts/AuthContext';
 
 import logo from "../../../assets/logo.png"
 import marca from "../../../assets/marca.png"
 
 export default function SignIn() {
   const navigation = useNavigation();
-  const { loading, signIn } = authContext();
+  const { loading, signIn } = useAuthContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");  
 
@@ -59,6 +63,10 @@ export default function SignIn() {
 
         <Link onPress={() => navigation.navigate('SignUp')}>
           <LinkTxt>Ainda não possui Conta? Junte-se a Nós!</LinkTxt>
+        </Link>
+
+        <Link onPress={() => navigation.navigate('SignUpCode', {email: email})}>
+          <LinkTxt>Confirmar código de verificação.</LinkTxt>
         </Link>
 
       </Container>

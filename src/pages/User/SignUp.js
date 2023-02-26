@@ -1,26 +1,27 @@
+/**
+ * SignUp.js (src/pages/User/SignUp.js)
+ */
+
 import React, { useState } from 'react';
 import { ScrollView, View, Text, Image, TextInput, TouchableOpacity, Keyboard, Alert, StyleSheet, ActivityIndicator } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import { Background, Container } from './styles';
 import { useNavigation } from '@react-navigation/native';
-import { authContext } from '../../context/AuthContext';
+import { useAuthContext } from '../../contexts/AuthContext';
 
 import logo from "../../../assets/logo.png";
 import marca from "../../../assets/marca.png";
 
 export default function SignUp() {
   const navigation = useNavigation();
-  const { loading, signUp } = authContext();
+  const { loading, signUp } = useAuthContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [nome, setNome] = useState("");
-  const [sobrenome, setSobrenome] = useState("");
   const [telefone, setTelefone] = useState("");
 
   async function RegisterUser() {
-    Alert.alert("SignUp: ", `${email}, ${password}, ${nome}, ${sobrenome}, ${telefone}`);
-    signUp(email, password, nome, sobrenome, telefone);
+    signUp({ email, password, telefone });
     Alert.alert("Atenção", "Um código de confirmação será enviado para o seu e-mail.");
     navigation.navigate('SignUpCode', {email: email});
   }
@@ -39,30 +40,6 @@ export default function SignUp() {
             <Image source={logo} style={styles.logo} resizeMode="contain" />
             <Image source={marca} style={styles.marca} resizeMode="contain" />
             <Text style={styles.subtitle}>Cadastre-se, é simples e rápido!</Text>
-          </View>
-
-          <View style={styles.areaInput}>
-            <Text style={{marginBottom: 5}}>Nome:</Text>
-            <TextInput
-              value={nome}
-              placeholder="Nome"
-              autoCorrect={false}
-              autoCapitalize="true"
-              onChangeText={(input) => setNome(input.trim())}
-              style={styles.input}
-            />
-          </View>
-
-          <View style={styles.areaInput}>
-            <Text style={{marginBottom: 5}}>Sobrenome:</Text>
-            <TextInput
-              value={sobrenome}
-              placeholder="Sobrenome"
-              autoCapitalize="true"
-              autoCorrect={false}
-              onChangeText={(input) => setSobrenome(input.trim())}
-              style={styles.input}
-            />
           </View>
 
           <View style={styles.areaInput}>

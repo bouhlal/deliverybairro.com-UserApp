@@ -1,20 +1,25 @@
+/**
+ * SignUpCode.js (src/pages/User/SignUpCode.js)
+ */
+
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, Image, Keyboard, ActivityIndicator, Platform } from 'react-native';
 import { Background, Container, BtnSubmit, BtnTxt, Link, LinkTxt } from './styles';
 import { useNavigation } from '@react-navigation/native';
-import { authContext } from '../../context/AuthContext';
+import { useAuthContext } from '../../contexts/AuthContext';
 
 import logo from '../../../assets/logo.png';
 import marca from '../../../assets/marca.png';
 
 export default function SignUpCode({ route }) {
   const navigation = useNavigation();
-  const { loading, confirmSignUp, resendConfirmationCode } = authContext();
+  const { loading, confirmSignUp, resendConfirmationCode } = useAuthContext();
   const [username, setUsername] = useState(route?.params?.email);
   const [code, setCode] = useState("");
 
-    function SendCode() {
+  function SendCode() {
     confirmSignUp(username, code);
+    navigation.navigate('SignIn')
   }
 
   return (

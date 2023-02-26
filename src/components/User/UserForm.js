@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView, TextInput, StyleSheet } from 'react-native';
-import { TextMask } from 'react-native-masked-text';
+import { TextInputMask } from 'react-native-masked-text';
 
 export default function UserForm({ data }) {
 

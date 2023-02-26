@@ -1,10 +1,9 @@
-import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 import NO_IMAGE from "../../../assets/sem-imagem.jpg";
 
 export default function DeliveryListItem({ item, selectItem }) {
-  const [produto, setProduto] = useState(item);
+  const produto = item;
   
   console.log("DeliveryListItem: ", produto);
   return (

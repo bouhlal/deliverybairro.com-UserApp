@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, ActivityIndicator, StyleSheet } from "react-native";
-import { orderContext } from "../../contexts/OrderContext";
+import { useOrderContext } from "../../contexts/OrderContext";
 
 import Item from "../../components/Item";
 
 export default function OrderDetails({ id }) {
   const [pedido, setPedido] = useState();
-  const { getOrder } = orderContext();
+  const { getOrder } = useOrderContext();
 
   useEffect(() => {
     getOrder(id).then(setPedido);
