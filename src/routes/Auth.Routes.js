@@ -5,9 +5,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import SignIn from '../pages/User/SignIn';
-import SignUp from '../pages/User/SignUp';
-import SignUpCode from '../pages/User/SignUpCode';
+import CustomSignIn from '../pages/User/_SignIn';
+import CustomSignUp from '../pages/User/_SignUp';
+import CustomSignUpCode from '../pages/User/_SignUpCode';
 
 const AuthStack = createStackNavigator();
 
@@ -17,14 +17,14 @@ export default function AuthRoutes() {
     <AuthStack.Navigator>
 
       <AuthStack.Screen
-        name="SignIn"
-        component={SignIn}
+        name="CustomSignIn"
+        component={CustomSignIn}
         options={{headerShown: false}}
       />
 
       <AuthStack.Screen
-        name="SignUp"
-        component={SignUp}
+        name="CustomSignUp"
+        component={CustomSignUp}
         options={{
           headerStyle:{
             backgroundColor: '#000',
@@ -37,8 +37,8 @@ export default function AuthRoutes() {
       />
 
       <AuthStack.Screen
-        name="SignUpCode"
-        component={SignUpCode}
+        name="CustomSignUpCode"
+        component={CustomSignUpCode}
         options={{
           headerStyle:{
             backgroundColor: '#000',

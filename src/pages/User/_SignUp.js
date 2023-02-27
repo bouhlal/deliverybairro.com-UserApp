@@ -12,18 +12,18 @@ import { useAuthContext } from '../../contexts/AuthContext';
 import logo from "../../../assets/logo.png";
 import marca from "../../../assets/marca.png";
 
-export default function SignUp() {
+export default function CustomSignUp() {
   const navigation = useNavigation();
-  const { loading, signUp } = useAuthContext();
+  const { authSignUp, loading } = useAuthContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [telefone, setTelefone] = useState("");
 
-  async function RegisterUser() {
-    signUp({ email, password, telefone });
+  async function handleSignUp() {
+    authSignUp({ email, password, telefone });
     Alert.alert("Atenção", "Um código de confirmação será enviado para o seu e-mail.");
-    navigation.navigate('SignUpCode', {email: email});
+    navigation.navigate('CustomSignUpCode', {email: email});
   }
 
   function maskEditPhone(formatted, extracted) {
@@ -88,7 +88,7 @@ export default function SignUp() {
             *Ao clicar em "Registrar Usuário", você estará concordando com nossa Política de Uso e Privacidade.
           </Text>
 
-          <TouchableOpacity style={styles.btnSubmit} onPress={()=>RegisterUser()}>
+          <TouchableOpacity style={styles.btnSubmit} onPress={() => handleSignUp()}>
             {loading ? (
               <View style={styles.indicator}>
                 <ActivityIndicator size={"large"} color="#4DCE4D" />
@@ -98,12 +98,12 @@ export default function SignUp() {
             )}
           </TouchableOpacity>
 
-          <Link onPress={() => navigation.navigate('SignUpCode', {email: email})}>
+          <Link onPress={() => navigation.navigate('CustomSignUpCode', {email: email})}>
             <LinkTxt>Confirmar código de verificação.</LinkTxt>
           </Link>
 
 
-          <TouchableOpacity style={styles.link} onPress={()=>navigation.navigate('SignIn')}>
+          <TouchableOpacity style={styles.link} onPress={()=>navigation.navigate('CustomSignIn')}>
             <Text style={styles.linkTxt}>Já tenho uma Conta!</Text>
           </TouchableOpacity>
         </ScrollView>

@@ -2,13 +2,10 @@
  * AuthContext.js (src/contexts/AuthContext.js)
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { Alert } from 'react-native';
 import { Auth, DataStore } from 'aws-amplify';
 import { User } from '../models';
-
-const STORAGE_KEY = '@auth_user';
 
 const AuthContext = createContext({});
 
@@ -18,10 +15,7 @@ export default function AuthContextProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
   const [dbUser, setDbUser] = useState(null);
 
-  const USER_KEY = '@UserApp:user';
-  const TOKEN_KEY = '@UserApp:token';
-
-  function fetchUser() {
+  function loadUser() {
     Auth.currentAuthenticatedUser({ bypassCache: true })
       .then(user => {
         setAuthUser(user);
@@ -30,8 +24,7 @@ export default function AuthContextProvider({ children }) {
         if (sub) {
           DataStore.query(User, (user) => user.token.eq(sub)).then((users) => {
             setDbUser(users[0]);
-            console.log("dbUser: ", dbUser);
-            AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(users[0]));
+            console.log("dbUser: ", users[0]);
           });
         }
       })
@@ -39,24 +32,18 @@ export default function AuthContextProvider({ children }) {
   }
 
   useEffect(() => {
-    fetchUser();
+    loadUser();
   }, []);
 
-  async function signIn({ props }) {
+  async function authSignIn({ props }) {
     const username = props.email;
     const password = props.password;
     setLoading(true);
     try {
       const user = await Auth.signIn(username, password);
       console.log(user);
-      // Armazena o token e os dados do usuário no AsyncStorage
-      await AsyncStorage.multiSet([
-        [TOKEN_KEY, user.token],
-        [USER_KEY, JSON.stringify(user)],
-      ]);
-      // 
       setDbUser(user);
-      setToken(user.token)
+      setToken(user.signInUserSession.accessToken.jwtToken);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -65,7 +52,7 @@ export default function AuthContextProvider({ children }) {
     }
   }
 
-  async function signUp({ props }) {
+  async function authSignUp({ props }) {
     const username = props.email;
     const password = props.password;
     const email = props.email;
@@ -83,7 +70,6 @@ export default function AuthContextProvider({ children }) {
       console.log(user);
       setDbUser(user);
       setLoading(false);
-      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(user));
     } catch(error) {
       Alert.alert("SignUp Error: ", error.message);
       console.log(error.message);
@@ -91,7 +77,7 @@ export default function AuthContextProvider({ children }) {
     }
   }
 
-  async function confirmSignUp({ props }) {
+  async function authConfirmSignUp({ props }) {
     const username = props.email;
     const code = props.code;
     setLoading(true);
@@ -106,7 +92,7 @@ export default function AuthContextProvider({ children }) {
     }
   }
 
-  async function resendConfirmationCode({ props }) {
+  async function authResendConfirmationCode({ props }) {
     const username = props.email;
     setLoading(true);
     try {
@@ -121,10 +107,9 @@ export default function AuthContextProvider({ children }) {
     }
   }
 
-  async function signOut() {
+  async function authSignOut() {
     try {
       await Auth.signOut();
-      await AsyncStorage.multiRemove([TOKEN_KEY, USER_KEY]);
       setDbUser(null);
       setToken(null);
     } catch (error) {
@@ -135,8 +120,8 @@ export default function AuthContextProvider({ children }) {
 
   return(
     <AuthContext.Provider value={{ 
-      authUser, dbUser, token, setDbUser,
-      signIn, signUp, confirmSignUp, resendConfirmationCode, signOut
+      authUser, dbUser, token, loading, setDbUser,
+      authSignIn, authSignUp, authConfirmSignUp, authResendConfirmationCode, authSignOut
     }}>
       {children}
     </AuthContext.Provider> 
@@ -144,8 +129,6 @@ export default function AuthContextProvider({ children }) {
 }
 
 export const useAuthContext = () => useContext(AuthContext);
-
-  // import AsyncStorage from '@react-native-async-storage/async-storage';
 
   // const sub = authUser?.attributes?.sub; 
   
@@ -161,26 +144,3 @@ export const useAuthContext = () => useContext(AuthContext);
   //     console.log("dbUser: ", dbUser);
   //   });
   // }, [sub]);
-
-  // useEffect(() => {
-  //   async function loadStorage() {
-  //     setLoading(true);
-  //     const storageUser = await AsyncStorage.getItem('Auth_user');
-  //     console.log("StorageUser: ", JSON.parse(storageUser));
-  //     if (storageUser) {
-  //       setDbUser(JSON.parse(storageUser));
-  //       setLoading(false);
-  //     } else {
-  //       setLoading(false);
-  //     }
-  //   }
-  //   loadStorage();
-  // }, []);
-
-      // storageUser(user);
-      // storageUser(user);
-      // AsyncStorage.clear();
-
-// async function storageUser(data) {
-//   await AsyncStorage.setItem('Auth_user', JSON.stringify(data));
-// }

@@ -10,7 +10,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useAuthContext } from '../contexts/AuthContext';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
-
 import Home from '../pages/Home';
 import Deliveries from '../pages/Deliveries';
 import DeliveryInfo from '../pages/DeliveryInfo';

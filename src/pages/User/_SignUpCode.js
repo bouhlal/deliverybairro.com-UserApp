@@ -11,15 +11,15 @@ import { useAuthContext } from '../../contexts/AuthContext';
 import logo from '../../../assets/logo.png';
 import marca from '../../../assets/marca.png';
 
-export default function SignUpCode({ route }) {
+export default function CustomSignUpCode({ route }) {
   const navigation = useNavigation();
-  const { loading, confirmSignUp, resendConfirmationCode } = useAuthContext();
+  const { authConfirmSignUp, authResendConfirmationCode, loading } = useAuthContext();
   const [username, setUsername] = useState(route?.params?.email);
   const [code, setCode] = useState("");
 
-  function SendCode() {
-    confirmSignUp(username, code);
-    navigation.navigate('SignIn')
+  function handleConfirmSignUpCode() {
+    authConfirmSignUp({username, code});
+    navigation.navigate('CustomSignIn');
   }
 
   return (
@@ -55,7 +55,7 @@ export default function SignUpCode({ route }) {
           />
         </View>
 
-        <BtnSubmit onPress={SendCode}>
+        <BtnSubmit onPress={() => handleConfirmSignUpCode()}>
           {loading ? (
             <View style={styles.indicator}>
               <ActivityIndicator size={"large"} color="#FF0000" />
@@ -65,11 +65,11 @@ export default function SignUpCode({ route }) {
           )}
         </BtnSubmit>
 
-        <BtnSubmit onPress={()=>navigation.navigate('SignIn')}>
+        <BtnSubmit onPress={()=>navigation.navigate('CustomSignIn')}>
           <BtnTxt>EFETUAR LOGIN</BtnTxt>
         </BtnSubmit>
 
-        <Link onPress={()=>resendConfirmationCode()}>
+        <Link onPress={() => authResendConfirmationCode()}>
           <LinkTxt>Código não recebido? Renviar Código.</LinkTxt>
         </Link>
 

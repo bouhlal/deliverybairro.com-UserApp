@@ -1,26 +1,15 @@
 /**
  * index.js (src/routes/index.js)
  */
-
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthContext } from '../contexts/AuthContext';
 
 import AppRoutes from './App.Routes';
 import AuthRoutes from './Auth.Routes';
 
 export default function Routes() {
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { token, loading } = useAuthContext();
 
-  useEffect(() => {
-    AsyncStorage.getItem('@UserApp:token').then((value) => {
-      if (value !== null) {
-        setToken(value);
-      }
-      setLoading(false);
-    });
-  }, []);
-  
   if (loading) {
     return(
       <View style={styles.indicator}>

@@ -11,14 +11,14 @@ import { useAuthContext } from '../../contexts/AuthContext';
 import logo from "../../../assets/logo.png"
 import marca from "../../../assets/marca.png"
 
-export default function SignIn() {
+export default function CustomSignIn() {
   const navigation = useNavigation();
-  const { loading, signIn } = useAuthContext();
+  const { authSignIn, loading } = useAuthContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");  
 
-  function login() {
-    signIn(email, password);
+  function handleLogin() {
+    authSignIn({email, password});
   }
 
   return (
@@ -53,7 +53,7 @@ export default function SignIn() {
           />
         </AreaInput>
 
-        <BtnSubmit onPress={login}>
+        <BtnSubmit onPress={() => handleLogin()}>
           {loading ? (
             <ActivityIndicator size={20} color='#FFF' />
           ) : (
@@ -61,11 +61,11 @@ export default function SignIn() {
           )}
         </BtnSubmit>
 
-        <Link onPress={() => navigation.navigate('SignUp')}>
+        <Link onPress={() => navigation.navigate('CustomSignUp')}>
           <LinkTxt>Ainda não possui Conta? Junte-se a Nós!</LinkTxt>
         </Link>
 
-        <Link onPress={() => navigation.navigate('SignUpCode', {email: email})}>
+        <Link onPress={() => navigation.navigate('CustomSignUpCode', {email: email})}>
           <LinkTxt>Confirmar código de verificação.</LinkTxt>
         </Link>
 
