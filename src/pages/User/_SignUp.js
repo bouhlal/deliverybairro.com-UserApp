@@ -3,9 +3,8 @@
  */
 
 import React, { useState } from 'react';
-import { ScrollView, View, Text, Image, TextInput, TouchableOpacity, Keyboard, Alert, StyleSheet, ActivityIndicator } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Platform } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
-import { Background, Container } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../../contexts/AuthContext';
 
@@ -21,7 +20,7 @@ export default function CustomSignUp() {
   const [telefone, setTelefone] = useState("");
 
   async function handleSignUp() {
-    authSignUp({ email, password, telefone });
+    authSignUp(email, password, telefone);
     Alert.alert("Atenção", "Um código de confirmação será enviado para o seu e-mail.");
     navigation.navigate('CustomSignUpCode', {email: email});
   }
@@ -31,11 +30,10 @@ export default function CustomSignUp() {
   }
 
   return (
-    <Background>
-      <Container behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled >
+    <View style={styles.background}>
+      <View style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled>
 
-        <ScrollView style={styles.container}>
-
+        <ScrollView style={{flex: 1}}>
           <View style={styles.header}>
             <Image source={logo} style={styles.logo} resizeMode="contain" />
             <Image source={marca} style={styles.marca} resizeMode="contain" />
@@ -64,7 +62,7 @@ export default function CustomSignUp() {
               placeholder='username@email.com'
               autoCapitalize='none'
               autoCorrect={false}
-              onChangeText={(input) => setEmail(input.trim())}
+              onChangeText={(input) => setEmail(input)}
               style={styles.input}
             />
           </View>
@@ -77,7 +75,7 @@ export default function CustomSignUp() {
               autoCapitalize='none'
               autoCorrect={false}
               keyboardType='numeric'
-              onChangeText={(input)=>setPassword(input.trim())}
+              onChangeText={(input)=>setPassword(input)}
               onSubmitEditing={() => Keyboard.dismiss()}
               secureTextEntry={true}
               style={styles.input}
@@ -90,30 +88,39 @@ export default function CustomSignUp() {
 
           <TouchableOpacity style={styles.btnSubmit} onPress={() => handleSignUp()}>
             {loading ? (
-              <View style={styles.indicator}>
-                <ActivityIndicator size={"large"} color="#4DCE4D" />
-              </View>
+              <ActivityIndicator size={"large"} color="#FFF" />
             ) : (
-              <Text style={styles.btnText}>REGISTRAR USUÁRIO</Text>
+              <Text style={styles.btnTxt}>REGISTRAR USUÁRIO</Text>
             )}
           </TouchableOpacity>
 
-          <Link onPress={() => navigation.navigate('CustomSignUpCode', {email: email})}>
-            <LinkTxt>Confirmar código de verificação.</LinkTxt>
-          </Link>
-
-
+          <TouchableOpacity style={styles.link}  onPress={() => navigation.navigate('CustomSignUpCode', {email: email})}>
+            <Text style={styles.linkTxt}>Confirmar código de verificação.</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.link} onPress={()=>navigation.navigate('CustomSignIn')}>
             <Text style={styles.linkTxt}>Já tenho uma Conta!</Text>
           </TouchableOpacity>
+
         </ScrollView>
 
-      </Container>
-    </Background>
+      </View>
+    </View>
+
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: "100%",
+    paddingVertical: 10,
+    padding: 10
+  },
+  container: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
   scrollview:{
     flex: 1,
     justifyContent: "center",
@@ -141,42 +148,36 @@ const styles = StyleSheet.create({
   subtitle:{
     fontSize: 18,
   },
-  error: {
-    color: 'red'
-  },
-  indicator:{
-    flex:1, 
-    justifyContent: "center",
-    alignItems: "center",
-  },
   areaInput:{
-    flex: 1,
+    width: "100%",
     justifyContent: "center",
     alignItems: "flex-start",
-    marginBottom: 10,
+    margin: 10,
   },
   input:{
-    width: "100%",
+    width: "95%",
     height: 50,
     backgroundColor: "#FFF",
-    fontSize: 17,
-    color: "#000",
     padding: 10,
-    borderColor: "#000",
+    borderColor: "#8CB8D2",
     borderWidth: 1,
     borderRadius: 7,
+    fontSize: 17,
+    color: "#000",
   },
   btnSubmit:{
-    width: "100%",
+    width: "95%",
     height: 45,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",
-    borderRadius: 7,
+    borderRadius: 5,
+    margin: 10,
   },
-  btnText:{
+  btnTxt:{
+    color: "#FFF", 
     fontSize: 20,
-    color: "#FFF"
+    textAlign: "center", 
   },
   link: {
     marginTop: 10,

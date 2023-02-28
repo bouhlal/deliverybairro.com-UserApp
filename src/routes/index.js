@@ -1,6 +1,7 @@
 /**
  * index.js (src/routes/index.js)
  */
+
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAuthContext } from '../contexts/AuthContext';
 
@@ -8,7 +9,7 @@ import AppRoutes from './App.Routes';
 import AuthRoutes from './Auth.Routes';
 
 export default function Routes() {
-  const { token, loading } = useAuthContext();
+  const { dbUser, loading } = useAuthContext();
 
   if (loading) {
     return(
@@ -19,7 +20,7 @@ export default function Routes() {
   }
 
   return (
-    token ? <AppRoutes/> : <AuthRoutes/>
+    dbUser ? <AppRoutes /> : <AuthRoutes />
   );
 }
 

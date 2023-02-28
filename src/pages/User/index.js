@@ -2,29 +2,27 @@
  * index.js (src/pages/User/index.js)
  */
 
+import * as Location from 'expo-location';
+import { GOOGLE_APIKEY } from '@env';
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Text, TextInput, Keyboard, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { Background, Container } from './styles';
+import { StyleSheet, View, ScrollView, Text, TextInput, Keyboard, TouchableOpacity, Alert, Platform } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 
 import { Auth, DataStore } from 'aws-amplify';
 import { User } from '../../models';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
-import * as Location from 'expo-location';
-import { GOOGLE_APIKEY } from '@env';
 
 import Header from '../../components/Header';
 
 export default function Perfil() {
-  const navigation = useNavigation();
   const { dbUser, setDbUser, token } = useAuthContext();
  
   const [nome, setNome] = useState(dbUser?.nome || "");
   const [sobrenome, setSobrenome] = useState(dbUser?.sobrenome || "");
   const [telefone, setTelefone] = useState(dbUser?.telefone || "");
   const [email, setEmail] = useState(dbUser?.email || "");
-  const [endereco, setEndereco] = useState(dbUser?.endereco || {});
+  const [endereco, setEndereco] = useState(dbUser?.endereco || null);
   const [complemento, setComplemento] = useState(dbUser?.complemento || "");
   const [bairro, setBairro] = useState(dbUser?.bairro || "");
   const [cidade, setCidade] = useState(dbUser?.cidade || "");
@@ -34,60 +32,49 @@ export default function Perfil() {
   const [latitude, setLatitude] = useState(dbUser?.latitude + "" || 0);
   const [longitude, setLongitude] = useState(dbUser?.longitude + "" || 0);
 
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [info, setInfo] = useState("Toque no botão para obter as coordenadas");
+  const navigation = useNavigation();
 
   async function onSave() {
     if (dbUser) {
       await updateUser();
-      navigation.goBack();
     } else {
       await createUser();
-      navigation.navigate('Home');
     }
+    navigation.goBack();
   };
 
   async function updateUser() {
-    try {
-      const enderecoObj = { endereco, complemento, bairro, cidade, cep };
-      const user = await DataStore.save(
-        User.copyOf(dbUser, (updated) => {
-          updated.nome = nome;
-          updated.sobrenome = sobrenome;
-          updated.telefone = telefone;
-          updated.email = email;
-          updated.endereco = enderecoObj;
-          updated.uf = uf;
-          updated.url_foto = url_foto;
-          updated.latitude = parseFloat(latitude);
-          updated.longitude = parseFloat(longitude);
-          updated.token = token;
-        })
-      );
-      setDbUser(user);
-      Alert.alert('Sucesso', `Dados do Usuário ${dbUser.nome} atualizados com sucesso!`);
-    } catch (e) {
-      Alert.alert('Error', e.message);
-    }
-  }
+    const user = await DataStore.save(
+      User.copyOf(dbUser, (updated) => {
+        updated.nome = nome;
+        updated.sobrenome = sobrenome;
+        updated.telefone = telefone;
+        updated.email = email;
+        updated.endereco = { endereco, complemento, bairro, cidade, cep };
+        updated.uf = uf;
+        updated.url_foto = url_foto;
+        updated.latitude = parseFloat(latitude);
+        updated.longitude = parseFloat(longitude);
+        updated.token = token;
+      })
+    );
+    setDbUser(user);
+  };
 
   async function createUser() {
     try {
-      const enderecoObj = { endereco, complemento, bairro, cidade, cep };
       const user = await DataStore.save(
         new User({
-          nome: nome,
-          sobrenome: sobrenome,
-          telefone: telefone,
-          email: email,
-          endereco: enderecoObj,
-          uf: uf,
+          nome,
+          sobrenome,
+          telefone,
+          email,
+          endereco: { endereco, complemento, bairro, cidade, cep },
+          uf,
           url_foto: null,
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
-          token: token,
-          Baskets: [],
-          Pedidos: []
+          token,
         })
       );
       setDbUser(user);
@@ -96,6 +83,9 @@ export default function Perfil() {
       Alert.alert('Error', e.message);
     }
   }
+
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [info, setInfo] = useState("Toque no botão para obter as coordenadas");
 
   useEffect(() => {
     if (errorMsg) {
@@ -156,11 +146,12 @@ export default function Perfil() {
   }
 
   return (
-    <Background>
-      <Container>
+    <View style={styles.background} behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled>
+      <View style={styles.container}>
         <Header/>
         <Text style={styles.title}>DADOS DO USUÁRIO (PERFIL)</Text>
-        <ScrollView contentContainerStyle={{width: "100%"}}>
+        <ScrollView contentContainerStyle={{width: "100%", justifyContent: "center", alignItems: "stretch"}}>
+
           <View style={styles.areaInput}>
             <Text style={{marginBottom: 5}}>Nome:</Text>
             <TextInput 
@@ -317,8 +308,8 @@ export default function Perfil() {
           <Text style={styles.btnTxt}>SAIR (LOGOUT)</Text>
         </TouchableOpacity>
 
-      </Container>
-    </Background>
+      </View>
+    </View>
   );
 }
 

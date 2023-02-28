@@ -3,8 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Image, Keyboard, ActivityIndicator, Platform } from 'react-native';
-import { Background, Container, BtnSubmit, BtnTxt, Link, LinkTxt } from './styles';
+import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../../contexts/AuthContext';
 
@@ -14,17 +13,17 @@ import marca from '../../../assets/marca.png';
 export default function CustomSignUpCode({ route }) {
   const navigation = useNavigation();
   const { authConfirmSignUp, authResendConfirmationCode, loading } = useAuthContext();
-  const [username, setUsername] = useState(route?.params?.email);
+  const [email, setEmail] = useState(route?.params?.email);
   const [code, setCode] = useState("");
 
   function handleConfirmSignUpCode() {
-    authConfirmSignUp({username, code});
+    authConfirmSignUp(email, code);
     navigation.navigate('CustomSignIn');
   }
 
   return (
-    <Background>
-      <Container behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled >
+    <View style={styles.background}>
+      <View style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled>
 
         <Image source={logo} style={styles.logo} resizeMode="contain" />
         <Image source={marca} style={styles.marca} resizeMode="contain" />
@@ -32,11 +31,11 @@ export default function CustomSignUpCode({ route }) {
         <View style={styles.areaInput}>
           <Text style={{marginBottom: 5}}>Usuário:</Text>
           <TextInput
-            value={username}
+            value={email}
             placeholder='username@email.com'
             autoCapitalize='none'
             autoCorrect={false}
-            onChangeText={(input) => setUsername(input.trim())}
+            onChangeText={(input) => setEmail(input)}
             style={styles.input}
           />
         </View>
@@ -48,37 +47,53 @@ export default function CustomSignUpCode({ route }) {
             placeholder="######"
             autoCorrect={false}
             keyboardType='numeric'
-            onChangeText={(input)=>setCode(input.trim())}
+            onChangeText={(input)=>setCode(input)}
             onSubmitEditing={() => Keyboard.dismiss()}
             secureTextEntry={false}
             style={styles.input}
           />
         </View>
 
-        <BtnSubmit onPress={() => handleConfirmSignUpCode()}>
+        <TouchableOpacity style={styles.btnSubmit} onPress={() => handleConfirmSignUpCode()}>
           {loading ? (
-            <View style={styles.indicator}>
-              <ActivityIndicator size={"large"} color="#FF0000" />
-            </View>
+            <ActivityIndicator size={"large"} color="#FFF" />
           ) : (
-            <BtnTxt>CONFIRMAR CÓDIGO</BtnTxt>
+            <Text style={styles.btnTxt}>CONFIRMAR CÓDIGO</Text>
           )}
-        </BtnSubmit>
+        </TouchableOpacity>
 
-        <BtnSubmit onPress={()=>navigation.navigate('CustomSignIn')}>
-          <BtnTxt>EFETUAR LOGIN</BtnTxt>
-        </BtnSubmit>
+        <TouchableOpacity style={styles.btnSubmit} onPress={() => handleConfirmSignUpCode()}>
+          {loading ? (
+            <ActivityIndicator size={"large"} color="#FFF" />
+          ) : (
+            <Text style={styles.btnTxt}>CONFIRMAR CÓDIGO</Text>
+          )}
+        </TouchableOpacity>
 
-        <Link onPress={() => authResendConfirmationCode()}>
-          <LinkTxt>Código não recebido? Renviar Código.</LinkTxt>
-        </Link>
+        <TouchableOpacity style={styles.link} onPress={()=>navigation.navigate('CustomSignIn')}>
+          <Text style={styles.linkTxt}>EFETUAR LOGIN</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.link} onPress={() => authResendConfirmationCode()}>
+          <Text style={styles.linkTxt}>Código não recebido? Renviar Código.</Text>
+        </TouchableOpacity>
 
-      </Container>
-    </Background>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: "100%",
+    paddingVertical: 10,
+    padding: 10
+  },
+  container: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
   logo:{
     width: 100, 
     height: 100
@@ -89,34 +104,42 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   areaInput:{
-    width: "90%",
+    width: "100%",
     justifyContent: "center",
     alignItems: "flex-start",
-    marginBottom: 10,
-    marginTop: 10
+    margin: 10,
   },
   input:{
-    width: "100%",
+    width: "95%",
     height: 50,
     backgroundColor: "#FFF",
-    fontSize: 17,
-    color: "#000",
     padding: 10,
-    borderColor: "#000",
+    borderColor: "#8CB8D2",
     borderWidth: 1,
     borderRadius: 7,
+    fontSize: 17,
+    color: "#000",
   },
-  error: {
-    color: 'red'
+  btnSubmit:{
+    width: "95%",
+    height: 45,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000",
+    borderRadius: 5,
+    margin: 10,
   },
-  indicator:{
-    flex:1, 
-    position: 'absolute', 
-    backgroundColor: '#000', 
-    opacity: 0.7, 
-    width: '100%', 
-    height: '100%', 
-    alignItems: 'center', 
-    justifyContent: 'center'
+  btnTxt:{
+    color: "#FFF", 
+    fontSize: 20,
+    textAlign: "center", 
+  },
+  link: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  linkTxt:{
+    textAlign: "center",
+    color: "#000",
   }
 })

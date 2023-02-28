@@ -1,14 +1,14 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { FontAwesome5, Fontisto, AntDesign, Entypo } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../../contexts/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
 import logo_png from '../../../assets/logo.png';
 
 export default function SideBar({ props }) {
-  const navigation = useNavigation();
   const { dbUser, signOut } = useAuthContext();
+  const navigation = useNavigation();
 
   function GoToLink(link) {
     return (

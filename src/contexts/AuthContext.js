@@ -11,9 +11,10 @@ const AuthContext = createContext({});
 
 export default function AuthContextProvider({ children }) {
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState("");
   const [authUser, setAuthUser] = useState(null);
   const [dbUser, setDbUser] = useState(null);
+
+  const token = authUser?.attributes?.sub;
 
   function loadUser() {
     Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -35,15 +36,14 @@ export default function AuthContextProvider({ children }) {
     loadUser();
   }, []);
 
-  async function authSignIn({ props }) {
-    const username = props.email;
-    const password = props.password;
+  async function authSignIn(email, password) {
+    const username = email;
     setLoading(true);
     try {
       const user = await Auth.signIn(username, password);
       console.log(user);
       setDbUser(user);
-      setToken(user.signInUserSession.accessToken.jwtToken);
+      // setToken(user.signInUserSession.accessToken.jwtToken);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -52,11 +52,11 @@ export default function AuthContextProvider({ children }) {
     }
   }
 
-  async function authSignUp({ props }) {
-    const username = props.email;
-    const password = props.password;
-    const email = props.email;
-    const phone_number = props.telefone;
+  async function authSignUp(email, password, telefone) {
+    const username = email;
+    const password = password;
+    const email = email;
+    const phone_number = telefone;
     setLoading(true);
     try {
       const { user } = await Auth.signUp({
@@ -77,9 +77,9 @@ export default function AuthContextProvider({ children }) {
     }
   }
 
-  async function authConfirmSignUp({ props }) {
-    const username = props.email;
-    const code = props.code;
+  async function authConfirmSignUp(email, code) {
+    const username = email;
+    const code = code;
     setLoading(true);
     try {
       await Auth.confirmSignUp(username, code);
@@ -92,8 +92,8 @@ export default function AuthContextProvider({ children }) {
     }
   }
 
-  async function authResendConfirmationCode({ props }) {
-    const username = props.email;
+  async function authResendConfirmationCode(email) {
+    const username = email;
     setLoading(true);
     try {
       const { user } =  await Auth.resendSignUp(username);
@@ -120,7 +120,7 @@ export default function AuthContextProvider({ children }) {
 
   return(
     <AuthContext.Provider value={{ 
-      authUser, dbUser, token, loading, setDbUser,
+      signed:!!authUser, authUser, dbUser, token, loading, setDbUser,
       authSignIn, authSignUp, authConfirmSignUp, authResendConfirmationCode, authSignOut
     }}>
       {children}
