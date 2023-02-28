@@ -14,9 +14,7 @@ export default function AuthContextProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
   const [dbUser, setDbUser] = useState(null);
 
-  const token = authUser?.attributes?.sub;
-
-  function loadUser() {
+  function fetchUser() {
     Auth.currentAuthenticatedUser({ bypassCache: true })
       .then(user => {
         setAuthUser(user);
@@ -33,7 +31,7 @@ export default function AuthContextProvider({ children }) {
   }
 
   useEffect(() => {
-    loadUser();
+    fetchUser();
   }, []);
 
   async function authSignIn(email, password) {
@@ -120,7 +118,7 @@ export default function AuthContextProvider({ children }) {
 
   return(
     <AuthContext.Provider value={{ 
-      signed:!!authUser, authUser, dbUser, token, loading, setDbUser,
+      authUser, dbUser, loading, setDbUser,
       authSignIn, authSignUp, authConfirmSignUp, authResendConfirmationCode, authSignOut
     }}>
       {children}
