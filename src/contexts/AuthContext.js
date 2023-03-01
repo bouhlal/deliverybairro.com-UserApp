@@ -52,8 +52,6 @@ export default function AuthContextProvider({ children }) {
 
   async function authSignUp(email, password, telefone) {
     const username = email;
-    const password = password;
-    const email = email;
     const phone_number = telefone;
     setLoading(true);
     try {
@@ -77,7 +75,6 @@ export default function AuthContextProvider({ children }) {
 
   async function authConfirmSignUp(email, code) {
     const username = email;
-    const code = code;
     setLoading(true);
     try {
       await Auth.confirmSignUp(username, code);

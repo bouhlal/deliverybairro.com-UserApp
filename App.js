@@ -17,8 +17,8 @@ Amplify.configure({
 });
 
 import AuthContextProvider from './src/contexts/AuthContext';
-import CartContextProvider from './src/contexts/CartContext';
-import OrderContextProvider from './src/contexts/OrderContext';
+// import CartContextProvider from './src/contexts/CartContext';
+// import OrderContextProvider from './src/contexts/OrderContext';
 import Routes from './src/routes/index';
 
 LogBox.ignoreLogs(['Warning: ...']);
@@ -27,12 +27,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <AuthContextProvider>
-        <CartContextProvider>
-          <OrderContextProvider> 
+        {/* <CartContextProvider>
+          <OrderContextProvider>  */}
             <StatusBar style="light" />
             <Routes/>
-          </OrderContextProvider>
-        </CartContextProvider> 
+          {/* </OrderContextProvider>
+        </CartContextProvider>  */}
       </AuthContextProvider>
     </NavigationContainer>
   );

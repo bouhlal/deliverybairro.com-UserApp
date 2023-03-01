@@ -2,6 +2,11 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const Situacao = {
+  "ATIVO": "ATIVO",
+  "INATIVO": "INATIVO"
+};
+
 const Plano = {
   "FREE": "FREE",
   "BASIC": "BASIC",
@@ -9,9 +14,20 @@ const Plano = {
   "PREMIUM": "PREMIUM"
 };
 
-const Situacao = {
-  "ATIVO": "ATIVO",
-  "INATIVO": "INATIVO"
+const Status = {
+  "NOVO": "NOVO",
+  "AGUARDANDO": "AGUARDANDO",
+  "PREPARANDO": "PREPARANDO",
+  "PRONTO_PARA_RETIRADA": "PRONTO_PARA_RETIRADA",
+  "RETIRADO": "RETIRADO",
+  "ENTREGUE": "ENTREGUE",
+  "FINALIZADO": "FINALIZADO",
+  "CANCELADO": "CANCELADO"
+};
+
+const Transporte = {
+  "DRIVING": "DRIVING",
+  "BICYCLING": "BICYCLING"
 };
 
 const Uf = {
@@ -44,39 +60,23 @@ const Uf = {
   "TO": "TO"
 };
 
-const Status = {
-  "NOVO": "NOVO",
-  "AGUARDANDO": "AGUARDANDO",
-  "PREPARANDO": "PREPARANDO",
-  "PRONTO_PARA_RETIRADA": "PRONTO_PARA_RETIRADA",
-  "RETIRADO": "RETIRADO",
-  "ENTREGUE": "ENTREGUE",
-  "FINALIZADO": "FINALIZADO",
-  "CANCELADO": "CANCELADO"
-};
-
-const Transporte = {
-  "DRIVING": "DRIVING",
-  "BICYCLING": "BICYCLING"
-};
-
-const { BasketItem, Basket, Categoria, Delivery, Produto, User, Pedido, Item, Courier, DeliveryCategoria, DeliveryProduto } = initSchema(schema);
+const { BasketItem, Basket, Categoria, User, Delivery, Item, Pedido, Produto, Courier, DeliveryCategoria, DeliveryProduto } = initSchema(schema);
 
 export {
   BasketItem,
   Basket,
   Categoria,
-  Delivery,
-  Produto,
   User,
-  Pedido,
+  Delivery,
   Item,
+  Pedido,
+  Produto,
   Courier,
   DeliveryCategoria,
   DeliveryProduto,
-  Plano,
   Situacao,
-  Uf,
+  Plano,
   Status,
-  Transporte
+  Transporte,
+  Uf
 };

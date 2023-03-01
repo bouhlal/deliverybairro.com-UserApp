@@ -248,6 +248,162 @@ export const schema = {
                 }
             ]
         },
+        "User": {
+            "name": "User",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "nome": {
+                    "name": "nome",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "sobrenome": {
+                    "name": "sobrenome",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "telefone": {
+                    "name": "telefone",
+                    "isArray": false,
+                    "type": "AWSPhone",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "email": {
+                    "name": "email",
+                    "isArray": false,
+                    "type": "AWSEmail",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "endereco": {
+                    "name": "endereco",
+                    "isArray": false,
+                    "type": "AWSJSON",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "uf": {
+                    "name": "uf",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Uf"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "url_foto": {
+                    "name": "url_foto",
+                    "isArray": false,
+                    "type": "AWSURL",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "token": {
+                    "name": "token",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "Baskets": {
+                    "name": "Baskets",
+                    "isArray": true,
+                    "type": {
+                        "model": "Basket"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "userID"
+                        ]
+                    }
+                },
+                "Pedidos": {
+                    "name": "Pedidos",
+                    "isArray": true,
+                    "type": {
+                        "model": "Pedido"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "userID"
+                        ]
+                    }
+                },
+                "latitude": {
+                    "name": "latitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "longitude": {
+                    "name": "longitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Users",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "Delivery": {
             "name": "Delivery",
             "fields": {
@@ -450,8 +606,8 @@ export const schema = {
                 }
             ]
         },
-        "Produto": {
-            "name": "Produto",
+        "Item": {
+            "name": "Item",
             "fields": {
                 "id": {
                     "name": "id",
@@ -460,17 +616,10 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "nome": {
-                    "name": "nome",
+                "qtd": {
+                    "name": "qtd",
                     "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "descricao": {
-                    "name": "descricao",
-                    "isArray": false,
-                    "type": "String",
+                    "type": "Int",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -481,185 +630,20 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "url_imagem": {
-                    "name": "url_imagem",
+                "vr_total": {
+                    "name": "vr_total",
                     "isArray": false,
-                    "type": "AWSURL",
+                    "type": "Float",
                     "isRequired": false,
                     "attributes": []
                 },
-                "deliverys": {
-                    "name": "deliverys",
-                    "isArray": true,
-                    "type": {
-                        "model": "DeliveryProduto"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "produto"
-                        ]
-                    }
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "Produtos",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "User": {
-            "name": "User",
-            "fields": {
-                "id": {
-                    "name": "id",
+                "pedidoID": {
+                    "name": "pedidoID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
                 },
-                "nome": {
-                    "name": "nome",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "sobrenome": {
-                    "name": "sobrenome",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "telefone": {
-                    "name": "telefone",
-                    "isArray": false,
-                    "type": "AWSPhone",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "email": {
-                    "name": "email",
-                    "isArray": false,
-                    "type": "AWSEmail",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "endereco": {
-                    "name": "endereco",
-                    "isArray": false,
-                    "type": "AWSJSON",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "uf": {
-                    "name": "uf",
-                    "isArray": false,
-                    "type": {
-                        "enum": "Uf"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "url_foto": {
-                    "name": "url_foto",
-                    "isArray": false,
-                    "type": "AWSURL",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "token": {
-                    "name": "token",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "Baskets": {
-                    "name": "Baskets",
-                    "isArray": true,
-                    "type": {
-                        "model": "Basket"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "userID"
-                        ]
-                    }
-                },
-                "Pedidos": {
-                    "name": "Pedidos",
-                    "isArray": true,
-                    "type": {
-                        "model": "Pedido"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "userID"
-                        ]
-                    }
-                },
-                "latitude": {
-                    "name": "latitude",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "longitude": {
-                    "name": "longitude",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -678,11 +662,20 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Users",
+            "pluralName": "Items",
             "attributes": [
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byPedido",
+                        "fields": [
+                            "pedidoID"
+                        ]
+                    }
                 },
                 {
                     "type": "auth",
@@ -880,8 +873,8 @@ export const schema = {
                 }
             ]
         },
-        "Item": {
-            "name": "Item",
+        "Produto": {
+            "name": "Produto",
             "fields": {
                 "id": {
                     "name": "id",
@@ -890,10 +883,17 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "qtd": {
-                    "name": "qtd",
+                "nome": {
+                    "name": "nome",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "descricao": {
+                    "name": "descricao",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -904,19 +904,28 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "vr_total": {
-                    "name": "vr_total",
+                "url_imagem": {
+                    "name": "url_imagem",
                     "isArray": false,
-                    "type": "Float",
+                    "type": "AWSURL",
                     "isRequired": false,
                     "attributes": []
                 },
-                "pedidoID": {
-                    "name": "pedidoID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
+                "deliverys": {
+                    "name": "deliverys",
+                    "isArray": true,
+                    "type": {
+                        "model": "DeliveryProduto"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "produto"
+                        ]
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -936,20 +945,11 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Items",
+            "pluralName": "Produtos",
             "attributes": [
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byPedido",
-                        "fields": [
-                            "pedidoID"
-                        ]
-                    }
                 },
                 {
                     "type": "auth",
@@ -1293,6 +1293,13 @@ export const schema = {
         }
     },
     "enums": {
+        "Situacao": {
+            "name": "Situacao",
+            "values": [
+                "ATIVO",
+                "INATIVO"
+            ]
+        },
         "Plano": {
             "name": "Plano",
             "values": [
@@ -1302,11 +1309,24 @@ export const schema = {
                 "PREMIUM"
             ]
         },
-        "Situacao": {
-            "name": "Situacao",
+        "Status": {
+            "name": "Status",
             "values": [
-                "ATIVO",
-                "INATIVO"
+                "NOVO",
+                "AGUARDANDO",
+                "PREPARANDO",
+                "PRONTO_PARA_RETIRADA",
+                "RETIRADO",
+                "ENTREGUE",
+                "FINALIZADO",
+                "CANCELADO"
+            ]
+        },
+        "Transporte": {
+            "name": "Transporte",
+            "values": [
+                "DRIVING",
+                "BICYCLING"
             ]
         },
         "Uf": {
@@ -1340,29 +1360,9 @@ export const schema = {
                 "SP",
                 "TO"
             ]
-        },
-        "Status": {
-            "name": "Status",
-            "values": [
-                "NOVO",
-                "AGUARDANDO",
-                "PREPARANDO",
-                "PRONTO_PARA_RETIRADA",
-                "RETIRADO",
-                "ENTREGUE",
-                "FINALIZADO",
-                "CANCELADO"
-            ]
-        },
-        "Transporte": {
-            "name": "Transporte",
-            "values": [
-                "DRIVING",
-                "BICYCLING"
-            ]
         }
     },
     "nonModels": {},
-    "codegenVersion": "3.3.5",
+    "codegenVersion": "3.3.6",
     "version": "8fa992e7d50c5b3a67ed75c765cfa536"
 };
