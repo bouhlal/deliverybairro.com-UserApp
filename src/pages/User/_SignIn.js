@@ -12,9 +12,10 @@ import marca from "../../../assets/marca.png"
 
 export default function CustomSignIn() {
   const navigation = useNavigation();
-  const { authSignIn, loading } = useAuthContext();
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);  
+
+  const { loading, authSignIn } = useAuthContext();
 
   function handleLogin() {
     authSignIn(email, password);

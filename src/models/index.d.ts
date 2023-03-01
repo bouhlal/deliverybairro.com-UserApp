@@ -164,10 +164,6 @@ type EagerUser = {
   readonly id: string;
   readonly nome?: string | null;
   readonly sobrenome?: string | null;
-  readonly telefone?: string | null;
-  readonly email?: string | null;
-  readonly endereco?: string | null;
-  readonly uf?: Uf | keyof typeof Uf | null;
   readonly url_foto?: string | null;
   readonly token?: string | null;
   readonly Baskets?: (Basket | null)[] | null;
@@ -186,10 +182,6 @@ type LazyUser = {
   readonly id: string;
   readonly nome?: string | null;
   readonly sobrenome?: string | null;
-  readonly telefone?: string | null;
-  readonly email?: string | null;
-  readonly endereco?: string | null;
-  readonly uf?: Uf | keyof typeof Uf | null;
   readonly url_foto?: string | null;
   readonly token?: string | null;
   readonly Baskets: AsyncCollection<Basket>;

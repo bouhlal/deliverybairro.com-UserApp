@@ -4,11 +4,11 @@
 
 import React from 'react';
 import { Entypo, Fontisto, FontAwesome5 } from '@expo/vector-icons';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { useAuthContext } from '../contexts/AuthContext';
 
 import Home from '../pages/Home';
@@ -27,14 +27,13 @@ const Stack = createStackNavigator();
 
 export default function AppRoutes() {
   const { dbUser } = useAuthContext();
-  console.log("dbUser (App.Routes): ", dbUser);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {!dbUser ? (
-        <Stack.Screen name="Perfil" component={Perfil} />
-      ) : (
+      {dbUser ? (
         <Stack.Screen name="HomeTabs" component={HomeTabs} />
+      ) : (
+        <Stack.Screen name="Perfil" component={Perfil} />
       )}
     </Stack.Navigator>
   );
@@ -42,7 +41,7 @@ export default function AppRoutes() {
 
 const Tab = createBottomTabNavigator();
 
-export function HomeTabs() {
+function HomeTabs() {
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false, tabBarStyle: { height: 65 }, fontWeight: 'bold' }}
@@ -79,9 +78,9 @@ export function HomeTabs() {
   );
 }
 
-export const HomeStack = createStackNavigator();
+const HomeStack = createStackNavigator();
 
-export function HomeStackNavigator() {
+function HomeStackNavigator() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -145,7 +144,7 @@ function OrderDetailsNavigator({ route }) {
 
 const Drawer = createDrawerNavigator();
 
-export function DrawerNavigator() {
+function DrawerNavigator() {
 
   function getHeaderTitle(route) {
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Categorias';

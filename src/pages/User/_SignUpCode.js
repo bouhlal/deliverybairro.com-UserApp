@@ -12,9 +12,10 @@ import marca from '../../../assets/marca.png';
 
 export default function CustomSignUpCode({ route }) {
   const navigation = useNavigation();
-  const { authConfirmSignUp, authResendConfirmationCode, loading } = useAuthContext();
   const [email, setEmail] = useState(route?.params?.email);
   const [code, setCode] = useState("");
+
+  const { loading, authConfirmSignUp, authResendConfirmationCode } = useAuthContext();
 
   function handleConfirmSignUpCode() {
     authConfirmSignUp(email, code);
@@ -53,14 +54,6 @@ export default function CustomSignUpCode({ route }) {
             style={styles.input}
           />
         </View>
-
-        <TouchableOpacity style={styles.btnSubmit} onPress={() => handleConfirmSignUpCode()}>
-          {loading ? (
-            <ActivityIndicator size={"large"} color="#FFF" />
-          ) : (
-            <Text style={styles.btnTxt}>CONFIRMAR CÓDIGO</Text>
-          )}
-        </TouchableOpacity>
 
         <TouchableOpacity style={styles.btnSubmit} onPress={() => handleConfirmSignUpCode()}>
           {loading ? (

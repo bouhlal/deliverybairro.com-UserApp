@@ -9,18 +9,20 @@ import AppRoutes from './App.Routes';
 import AuthRoutes from './Auth.Routes';
 
 export default function Routes() {
-  const { dbUser, loading } = useAuthContext();
+  const { signed, loading } = useAuthContext();
+
+  console.log("Usuário Autenticado? (signed): ", signed);
 
   if (loading) {
     return(
-      <View style={styles.indicator}>
-        <ActivityIndicator size={50} color="#FF0000"/>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size='large' color='#0033CC' />
       </View>
     )
   }
 
   return (
-    dbUser ? <AppRoutes /> : <AuthRoutes />
+    <AppRoutes/> //signed ? <AppRoutes/> : <AuthRoutes/> 
   );
 }
 

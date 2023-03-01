@@ -272,36 +272,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "telefone": {
-                    "name": "telefone",
-                    "isArray": false,
-                    "type": "AWSPhone",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "email": {
-                    "name": "email",
-                    "isArray": false,
-                    "type": "AWSEmail",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "endereco": {
-                    "name": "endereco",
-                    "isArray": false,
-                    "type": "AWSJSON",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "uf": {
-                    "name": "uf",
-                    "isArray": false,
-                    "type": {
-                        "enum": "Uf"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "url_foto": {
                     "name": "url_foto",
                     "isArray": false,
@@ -1364,5 +1334,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.6",
-    "version": "8fa992e7d50c5b3a67ed75c765cfa536"
+    "version": "627c182b16e477fd80f570ed2c56ca78"
 };

@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Platform } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Platform, Alert } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../../contexts/AuthContext';
@@ -13,11 +13,11 @@ import marca from "../../../assets/marca.png";
 
 export default function CustomSignUp() {
   const navigation = useNavigation();
-  const { authSignUp, loading } = useAuthContext();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [telefone, setTelefone] = useState("");
+
+  const { loading, authSignUp } = useAuthContext();
 
   async function handleSignUp() {
     authSignUp(email, password, telefone);

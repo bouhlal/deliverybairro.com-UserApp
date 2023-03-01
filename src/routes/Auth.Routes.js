@@ -15,7 +15,6 @@ export default function AuthRoutes() {
 
   return(
     <AuthStack.Navigator>
-
       <AuthStack.Screen
         name="CustomSignIn"
         component={CustomSignIn}
@@ -35,7 +34,6 @@ export default function AuthRoutes() {
           headerTitle: 'Voltar',
         }}
       />
-
       <AuthStack.Screen
         name="CustomSignUpCode"
         component={CustomSignUpCode}
@@ -49,7 +47,6 @@ export default function AuthRoutes() {
           headerTitle: 'Voltar',
         }}
       />
-
     </AuthStack.Navigator>
   )
 }

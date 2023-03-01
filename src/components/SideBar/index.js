@@ -22,8 +22,8 @@ export default function SideBar({ props }) {
       <View style={styles.hearder}>
         <Image style={styles.logo} source={logo_png} resizeMode="contain" />
         <Text style={styles.title}>Bem vindo!</Text>
-        <Text style={styles.subtitle}>{dbUser?.attributes?.given_name} {dbUser?.attributes.family_name}</Text>
-        <Text style={styles.line13}>{dbUser?.attributes?.email}</Text>
+        <Text style={styles.subtitle}>{dbUser?.nome} {dbUser?.sobrenome}</Text>
+        <Text style={styles.line13}>{dbUser?.telefone}</Text>
       </View>
 
       <DrawerItem

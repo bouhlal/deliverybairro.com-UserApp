@@ -11,37 +11,28 @@ const AuthContext = createContext({});
 
 export default function AuthContextProvider({ children }) {
   const [loading, setLoading] = useState(false);
-  const [authUser, setAuthUser] = useState(null);
+  const [authUser, setAuthUser] = useState({});
   const [dbUser, setDbUser] = useState(null);
 
-  function fetchUser() {
-    Auth.currentAuthenticatedUser({ bypassCache: true })
-      .then(user => {
-        setAuthUser(user);
-        console.log("authUser: ", user);
-        const sub = user?.attributes?.sub;
-        if (sub) {
-          DataStore.query(User, (user) => user.token.eq(sub)).then((users) => {
-            setDbUser(users[0]);
-            console.log("dbUser: ", users[0]);
-          });
-        }
-      })
-      .catch(error => console.log(error));
-  }
+  const sub = authUser?.attributes?.sub;
 
   useEffect(() => {
-    fetchUser();
+    Auth.currentAuthenticatedUser({ bypassCache: true }).then(setAuthUser);
   }, []);
 
+  useEffect(() => {
+    DataStore.query(User, (user) => user.token.eq(sub)).then((users) =>
+      setDbUser(users[0])
+    );
+  }, [sub]);
+
   async function authSignIn(email, password) {
-    const username = email;
     setLoading(true);
+    const username = email;
     try {
       const user = await Auth.signIn(username, password);
       console.log(user);
-      setDbUser(user);
-      // setToken(user.signInUserSession.accessToken.jwtToken);
+      setAuthUser(user);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -64,7 +55,7 @@ export default function AuthContextProvider({ children }) {
         },
       });
       console.log(user);
-      setDbUser(user);
+      setAuthUser(user);
       setLoading(false);
     } catch(error) {
       Alert.alert("SignUp Error: ", error.message);
@@ -105,8 +96,8 @@ export default function AuthContextProvider({ children }) {
   async function authSignOut() {
     try {
       await Auth.signOut();
+      setAuthUser({});
       setDbUser(null);
-      setToken(null);
     } catch (error) {
       console.error(error);
       Alert.alert('Erro', 'Não foi possível realizar o logout. Tente novamente.');
@@ -115,7 +106,7 @@ export default function AuthContextProvider({ children }) {
 
   return(
     <AuthContext.Provider value={{ 
-      authUser, dbUser, loading, setDbUser,
+      signed:!!dbUser, authUser, dbUser, sub, setDbUser,
       authSignIn, authSignUp, authConfirmSignUp, authResendConfirmationCode, authSignOut
     }}>
       {children}
@@ -125,17 +116,38 @@ export default function AuthContextProvider({ children }) {
 
 export const useAuthContext = () => useContext(AuthContext);
 
-  // const sub = authUser?.attributes?.sub; 
-  
+  // const [token, setToken] = useState(null);
+
   // useEffect(() => {
-  //   Auth.currentAuthenticatedUser({ bypassCache: true }).then(setAuthUser);
-  //   console.log("authUser: ", authUser);
-  // // const token = authUser?.signInUserSession?.accessToken?.jwtToken;
+  //   async function fetchAuthUser() {
+  //     try {
+  //       const user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+  //       console.log("authUser: ", authUser);
+  //       setAuthUser(user);
+  //     } catch (error) {
+  //       console.log(error);
+  //       setAuthUser({});
+  //     }
+  //   }
+  //   fetchAuthUser();
   // }, [])
 
   // useEffect(() => {
-  //   DataStore.query(User, (user) => user.token.eq(sub)).then((users) => {
-  //     setDbUser(users[0]);
-  //     console.log("dbUser: ", dbUser);
-  //   });
-  // }, [sub]);
+  //   async function fetchDbUser() {
+  //     try {
+  //       const token = authUser?.attributes?.sub; 
+  //       setToken(token);
+  //       if (token) {
+  //         const users = await DataStore.query(User, (user) => user.token.eq(token));
+  //         console.log("dbUser: ", dbUser);
+  //         setDbUser(users[0]);
+  //       } else {
+  //         setDbUser(null);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //       setDbUser(null);
+  //     }
+  //   }
+  //   fetchDbUser();
+  // }, [authUser])

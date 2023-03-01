@@ -3,12 +3,15 @@
  */
 
 import 'react-native-gesture-handler';
-import { StatusBar, LogBox } from "react-native";
+import React from "react";
+import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar} from 'expo-status-bar';
+
+console.disableYellowBox=true;
+
 import { Amplify } from 'aws-amplify';
-
 import awsconfig from './src/aws-exports';
-
 Amplify.configure({
   ...awsconfig, 
   Analytics: {
@@ -29,7 +32,7 @@ export default function App() {
       <AuthContextProvider>
         {/* <CartContextProvider>
           <OrderContextProvider>  */}
-            <StatusBar style="light" />
+            <StatusBar backgroundColor='#FFF' barStyle='dark-content'  />
             <Routes/>
           {/* </OrderContextProvider>
         </CartContextProvider>  */}

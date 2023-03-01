@@ -33,13 +33,13 @@ export default function Header() {
 
         <TouchableOpacity onPress={()=>GoToLink("CartInfo")}>
           <Image source={cart_png} style={{ width: 85, height: 85 }} resizeMode="contain" />
-          {/* 
+{/* 
           { cart.length >= 1 &&
             <View style={styles.dot}>
               <Text style={styles.dotText}>{ cart?.length }</Text>
             </View>
-          } 
-          */}
+          }
+ */}
         </TouchableOpacity>
       </View>
     </View>
