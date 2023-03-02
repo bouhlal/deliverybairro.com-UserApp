@@ -45,7 +45,7 @@ export default function Perfil() {
     } catch (error) {
       Alert.alert('Erro', error.message);
     }
-  };
+  }
 
   async function updateUser() {
     try {
@@ -62,7 +62,7 @@ export default function Perfil() {
     } catch (error) {
       throw new Error(`Não foi possível atualizar o usuário. ${error.message}`);
     }
-  };
+  }
 
   async function createUser() {
     try {
@@ -84,18 +84,10 @@ export default function Perfil() {
     } catch (error) {
       throw new Error(`Não foi possível criar o usuário. ${error.message}`);
     }
-  };
+  }
 
   async function getLocation() {
     try {
-      // let { status } = await Location.requestForegroundPermissionsAsync();
-      // if (status !== 'granted') {
-      //   setErrorMsg('Permissão para acessar a localização foi negada');
-      //   return;
-      // }
-      // const { coords } = await Location.getCurrentPositionAsync({});
-      // setLatitude(coords.latitude);
-      // setLongitude(coords.longitude);
       const position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
@@ -107,8 +99,8 @@ export default function Perfil() {
       console.error(error);
     }
   }
-
-  return (
+  
+    return (
     <View style={styles.background} behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled>
       <Header/>
       <Text style={styles.title}>DADOS DO USUÁRIO (PERFIL)</Text>
@@ -272,172 +264,3 @@ const styles = StyleSheet.create({
     color: "#000",
   }
 })
-
-/**
- * blocos removidos do código acima
- * 
-  import { GOOGLE_APIKEY } from '@env';
-  import { TextInputMask } from 'react-native-masked-text';
-
-  const [telefone, setTelefone] = useState(dbUser?.telefone || "");
-  const [email, setEmail] = useState(dbUser?.email || "");
-  const [endereco, setEndereco] = useState(dbUser?.endereco || null);
-  const [complemento, setComplemento] = useState(dbUser?.complemento || "");
-  const [bairro, setBairro] = useState(dbUser?.bairro || "");
-  const [cidade, setCidade] = useState(dbUser?.cidade || "");
-  const [uf, setUf] = useState(dbUser?.uf || "");
-  const [cep, setCep] = useState(dbUser?.cep || "");
-
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [info, setInfo] = useState("Toque no botão para obter as coordenadas");
-
-  useEffect(() => {
-    if (errorMsg) {
-      setInfo(errorMsg);
-    } else {
-      setInfo(`Localização Atual (${latitude}, ${longitude})`);
-    }
-  }, [errorMsg, latitude, longitude])
-
-  async function getCoordinates() {
-    const apiKey = GOOGLE_APIKEY; 
-    const formattedAddress = `${endereco}${complemento ? `, ${complemento}` : ''}, ${bairro}, ${cidade} - ${uf}, ${cep}`.replace(/ /g, '+');
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${apiKey}`;
-
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      const { lat, lng } = data.results[0].geometry.location;
-      console.log(data.results[0].geometry.location);
-      setLatitude(lat);
-      setLongitude(lng);
-    } catch (error) {
-      setErrorMsg('Erro ao obter as coordenadas');
-    }
-  };
-
-  async function getLocation() {
-    try {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permissão para acessar a localização foi negada');
-        return;
-      }
-      const { coords } = await Location.getCurrentPositionAsync({});
-      setLatitude(coords.latitude);
-      setLongitude(coords.longitude);
-    } catch (error) {
-      setErrorMsg('Erro ao obter a localização');
-    }
-  }
-
-  async function loadGpsByAddress() {
-    if (!dbUser) {
-      await getCoordinates();
-      getLocation();
-    } else {
-      setLatitude(0);
-      setLongitude(0);
-    }
-  };
-
-  function maskEditPhone(formatted, extracted) {
-    setTelefone(extracted);
-  }
-
-  function maskEditCep(formatted, extracted) {
-    setCep(extracted);
-  }
-
-  // outros componentes utilizados anteriormente neste formulário:
-
-  <View style={styles.areaInput}>
-    <Text style={{marginBottom: 5}}>Email:</Text>
-    <TextInput 
-      value={email} 
-      placeholder="Email" 
-      autoCapitalize="none"
-      onChangeText={(input) => setEmail(input.toLowerCase())} 
-      style={styles.input}
-    />
-  </View>
-  <View style={styles.areaInput}>
-    <Text style={{marginBottom: 5}}>Telefone:</Text>
-    <TextInputMask
-      value={telefone}
-      placeholder="+55 31 99999-9999"
-      type={'custom'}
-      options={{
-        mask: '+55 99 99999-9999',
-      }}
-      onChangeText={maskEditPhone}
-      keyboardType="numeric"
-      style={styles.input}
-    />
-  </View>
-  <View style={styles.areaInput}>
-    <Text style={{marginBottom: 5}}>Endereco:</Text>
-    <TextInput
-      value={endereco}
-      placeholder="Endereco"
-      onChangeText={(input) => setEndereco(input)}
-      autoCapitalize='true'
-      style={styles.input}
-    />
-  </View>
-  <View style={styles.areaInput}>
-    <Text style={{marginBottom: 5}}>Complemento:</Text>
-    <TextInput
-      value={complemento}
-      placeholder="Complemento"
-      onChangeText={(input) => setComplemento(input)}
-      autoCapitalize='true'
-      style={styles.input}
-    />
-  </View>
-  <View style={styles.areaInput}>
-    <Text style={{marginBottom: 5}}>Bairro:</Text>
-    <TextInput
-      value={bairro}
-      placeholder="Bairro"
-      onChangeText={(input) => setBairro(input)}
-      autoCapitalize='true'
-      style={styles.input}
-    />
-  </View>
-  <View style={styles.areaInput}>
-    <Text style={{marginBottom: 5}}>Cidade:</Text>
-    <TextInput
-      value={cidade}
-      placeholder="cidade"
-      onChangeText={(input) => setCidade(input)}
-      onSubmitEditing={() => Keyboard.dismiss()}
-      autoCapitalize='true'
-      style={styles.input}
-    />
-  </View>
-  <View style={styles.areaInput}>
-    <Text style={{marginBottom: 5}}>UF:</Text>
-    <TextInput
-      value={uf}
-      placeholder="UF"
-      onChangeText={(input) => setUf(input)}
-      style={styles.input}
-    />
-  </View>
-  <View style={styles.areaInput}>
-    <Text style={{marginBottom: 5}}>CEP:</Text>
-    <TextInputMask
-      value={telefone}
-      placeholder="99999-999"
-      type={'custom'}
-      options={{
-        mask: '99999-999',
-      }}
-      onChangeText={maskEditCep}
-      keyboardType="numeric"
-      style={styles.input}
-    />
-  </View>
-
- */

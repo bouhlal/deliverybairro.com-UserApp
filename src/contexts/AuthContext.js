@@ -117,39 +117,3 @@ export default function AuthContextProvider({ children }) {
 }
 
 export const useAuthContext = () => useContext(AuthContext);
-
-  // const [token, setToken] = useState(null);
-
-  // useEffect(() => {
-  //   async function fetchAuthUser() {
-  //     try {
-  //       const user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-  //       console.log("authUser: ", authUser);
-  //       setAuthUser(user);
-  //     } catch (error) {
-  //       console.log(error);
-  //       setAuthUser({});
-  //     }
-  //   }
-  //   fetchAuthUser();
-  // }, [])
-
-  // useEffect(() => {
-  //   async function fetchDbUser() {
-  //     try {
-  //       const token = authUser?.attributes?.sub; 
-  //       setToken(token);
-  //       if (token) {
-  //         const users = await DataStore.query(User, (user) => user.token.eq(token));
-  //         console.log("dbUser: ", dbUser);
-  //         setDbUser(users[0]);
-  //       } else {
-  //         setDbUser(null);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //       setDbUser(null);
-  //     }
-  //   }
-  //   fetchDbUser();
-  // }, [authUser])
