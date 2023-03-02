@@ -22,7 +22,7 @@ export default function Routes() {
   }
 
   return (
-    <AppRoutes/> //signed ? <AppRoutes/> : <AuthRoutes/> 
+    signed ? <AppRoutes/> : <AuthRoutes/> 
   );
 }
 

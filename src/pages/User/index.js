@@ -27,18 +27,6 @@ export default function Perfil() {
   const [info, setInfo] = useState("");
   const [gps, setGps] = useState(null);
   
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-      const gps = await Location.getCurrentPositionAsync({});
-      setGps(gps);
-    })();
-  }, []);
-
   async function onSave() {
     if (dbUser) {
       await updateUser();
@@ -92,6 +80,18 @@ export default function Perfil() {
     }
     // return { info, error_msg }
   }
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+      const gps = await Location.getCurrentPositionAsync({});
+      setGps(gps);
+    })();
+  }, []);
 
   return (
     <View style={styles.background} behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled>

@@ -21,10 +21,12 @@ export default function AuthContextProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    DataStore.query(User, (user) => user.token.eq(sub)).then((users) =>
-      setDbUser(users[0])
-    );
-  }, [sub]);
+    if (authUser) { // verificação adicionada aqui
+      DataStore.query(User, (user) => user.token.eq(sub)).then((users) =>
+        setDbUser(users[0])
+      );
+    }
+  }, [authUser, sub]);
 
   async function authSignIn(email, password) {
     setLoading(true);
