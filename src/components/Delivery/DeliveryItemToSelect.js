@@ -7,7 +7,7 @@ import { CartContext } from "../../contexts/CartContext";
 
 import NO_IMAGE from "../../../assets/sem-imagem.jpg";
 
-export default function DeliveryItemToSelect({ item, CloseModal }) {
+export default function DeliveryItemToSelect({ item, close }) {
   const { AddToCart } = useContext(CartContext);
 
   const [produto, setProduto] = useState([]);
@@ -37,7 +37,6 @@ export default function DeliveryItemToSelect({ item, CloseModal }) {
 
   async function AddItemToCart() {
     await AddToCart(produto, qtd, total);
-    CloseModal();
   }
 
   return (
@@ -66,7 +65,7 @@ export default function DeliveryItemToSelect({ item, CloseModal }) {
           <TouchableOpacity style={styles.btnAdd} onPress={AddItemToCart}>
             <Text style={{ color: '#FFF', fontSize: 18 }}>Adiciona item ao Pedido</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btnClose} onPress={CloseModal}>
+          <TouchableOpacity style={styles.btnClose} onPress={close}>
             <Text style={{ color: '#FFF', fontSize: 18 }}>FECHAR</Text>
           </TouchableOpacity>
         </View>
