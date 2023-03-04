@@ -26,7 +26,7 @@ function AuthContextProvider({ children }) {
         setDbUser(users[0])
       );
     }
-  }, [authUser, sub]);
+  }, [authUser, usr_token]);
 
   async function authSignIn(email, password) {
     setLoading(true);
