@@ -3,17 +3,17 @@
  */
 
 import * as Location from 'expo-location';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, ScrollView, Text, TextInput, Keyboard, TouchableOpacity, Alert, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Auth, DataStore } from 'aws-amplify';
 import { User } from '../../models';
-import { useAuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import Header from '../../components/Header';
 
 export default function Perfil() {
-  const { usr_token, dbUser } = useAuthContext();
+  const { usr_token, dbUser, authSignOut } = useContext(AuthContext);
 
   const [nome, setNome] = useState(dbUser?.nome || '');
   const [sobrenome, setSobrenome] = useState(dbUser?.sobrenome || "");
@@ -171,7 +171,7 @@ export default function Perfil() {
       <TouchableOpacity style={styles.btnSubmit} onPress={() => getPositionByGps()} >
         <Text style={styles.btnTxt}>OBTER COORDENADAS</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.btnLogout} onPress={signOut} >
+      <TouchableOpacity style={styles.btnLogout} onPress={authSignOut} >
         <Text style={styles.btnTxt}>SAIR (LOGOUT)</Text>
       </TouchableOpacity>
 

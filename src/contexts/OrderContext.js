@@ -4,10 +4,10 @@ import { Pedido, Item } from "../models";
 import { AuthContext } from "./AuthContext";
 import { CartContext } from "./CartContext";
 
-const OrderContext = createContext({});
+export const OrderContext = createContext({});
 
-export default function OrderContextProvider({ children }) {
-  const { dbUser } = useContext(AuthContext);
+function OrderContextProvider({ children }) {
+  const { usr_token, dbUser } = useContext(AuthContext);
   const { delivery, total, basket, basketItens } = useContext(CartContext);
 
   console.log("dbUser (src/context/Order.js): ", dbUser);
@@ -22,7 +22,7 @@ export default function OrderContextProvider({ children }) {
     // Create new Order by Delivery
     const novoPedido = await DataStore.save(
       new Pedido({
-        userID: dbUser.token,
+        userID: usr_token,
         Delivery: delivery,
         status: "NOVO",
         total: total,
@@ -63,8 +63,4 @@ export default function OrderContextProvider({ children }) {
   );
 };
 
-export const useOrderContext = () => useContext(OrderContext);
-
-// export function useOrderContext() {
-//   useContext(OrderContext);
-// }
+export default OrderContextProvider;

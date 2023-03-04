@@ -68,7 +68,8 @@ function AuthContextProvider({ children }) {
 
   async function authSignOut() {
     try {
-      await Auth.signOut({ global: true });
+      // await Auth.signOut({ global: true });
+      await Auth.signOut();
       setAuthUser({});
       setDbUser(null);
     } catch (error) {

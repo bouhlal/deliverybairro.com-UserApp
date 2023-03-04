@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, FlatList, Modal, SafeAreaView, ActivityIndicator } from "react-native";
 import { DataStore } from "aws-amplify";
 import { Delivery, Produto } from "../../models";
-import { useCartContext } from '../../contexts/CartContext';
+import { CartContext } from '../../contexts/CartContext';
 
 import Header from "../../components/Header";
 
@@ -11,28 +11,22 @@ import DeliveryItemToSelect from '../../components/Delivery/DeliveryItemToSelect
 import DeliveryListItem from '../../components/Delivery/DeliveryListItem';
 
 export default function DeliveryInfo({ route }) {
-  const { GetDelivery } = useCartContext();
+  const { delivery, setDelivery } = useContext(CartContext);
 
   const [show, showModal] = useState(false);
-  const [delivery, setDelivery] = useState(null);
   const [listaDeProdutos, setListaDeProdutos] = useState([]);
   const [produto, setProduto] = useState({});
   const [isAscending, setIsAscending] = useState(true);
 
-  const { id } = route.params ?? {}; console.log('Delivery ID: ', id);
+  const id = route.params?.id; console.log('Delivery ID: ', id);
 
   useEffect(() => {
     if (!id) {
       return;
     }
-    GetDelivery(null);
     DataStore.query(Delivery, id).then(setDelivery);
     DataStore.query(Produto, (produto) => produto.deliverys?.deliveryId.eq(id)).then(setListaDeProdutos);
   }, [id]);
-
-  useEffect(() => {
-    GetDelivery(delivery);
-  }, [delivery]);
 
   function listByAZ() {
     const listaordenada = [...listaDeProdutos].sort((a, b) => (
@@ -42,12 +36,12 @@ export default function DeliveryInfo({ route }) {
     setIsAscending(!isAscending);
   }
   
-  async function SelectItem(item) {
+  async function handleSelectItem(item) {
     setProduto(item);
     showModal(true);
   }
 
-  async function CloseModal() {
+  async function handleCloseModal() {
     showModal(false);
   }
 
@@ -59,7 +53,7 @@ export default function DeliveryInfo({ route }) {
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
         <Modal animationType="slide" transparent={true} visible={show} >
-          <DeliveryItemToSelect item={produto} CloseModal={()=>CloseModal()}/>
+          <DeliveryItemToSelect item={produto} close={()=>handleCloseModal()}/>
         </Modal>
         <Header />
         <FlatList
@@ -67,7 +61,7 @@ export default function DeliveryInfo({ route }) {
           ListHeaderComponent={() => <DeliveryHeader delivery={delivery} listbyaz={()=>listByAZ()}/>}
           ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há produtos deste Delivery!</Text>}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({item}) => <DeliveryListItem item={item} dlvry={delivery} selectItem={()=>SelectItem(item)}/>}
+          renderItem={({item}) => <DeliveryListItem item={item} dlvry={delivery} selectItem={()=>handleSelectItem(item)}/>}
         />
       </View>
     </SafeAreaView>

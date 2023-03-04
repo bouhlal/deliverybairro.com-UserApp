@@ -1,10 +1,11 @@
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet} from 'react-native';
-import { useAuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import Header from '../../components/Header';
 
 export default function Pedidos() { 
-  const { dbUser } = useAuthContext();
+  const { dbUser } = useContext(AuthContext);
 
   return (
     <View style={styles.background}>
