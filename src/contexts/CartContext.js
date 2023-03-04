@@ -1,12 +1,12 @@
-import { useState, useEffect, useContext, useMemo, createContext } from 'react';
-import { useAuthContext} from './AuthContext';
+import { useState, useEffect, useMemo, useContext, createContext } from 'react';
 import { DataStore } from 'aws-amplify';
 import { Basket, BasketItem } from '../models';
+import { AuthContext } from './AuthContext';
 
-const CartContext = createContext({});
+export const CartContext = createContext({});
 
-export default function CartContextProvider({ children }) {
-  const { dbUser } = useAuthContext();
+function CartConextProvider({ children }) {
+  const { dbUser } = useContext(AuthContext);
 
   console.log("dbUser (src/context/Cart.js): ", dbUser);
 
@@ -96,20 +96,18 @@ export default function CartContextProvider({ children }) {
     }
   }
 
-
-  function GetDelivery(delivery) {
-    setDelivery(delivery)
-  }
-
   return(
-    <CartContext.Provider value={{ delivery, cart, total, GetDelivery, cleanCart, AddToCart, RemoveFromCart }}>
+    <CartContext.Provider 
+      value={{ 
+        delivery, cart, total, 
+        cleanCart, AddToCart, RemoveFromCart,
+        setDelivery
+      }}
+    >
       { children }
     </CartContext.Provider>
   )
 }
 
-export const useCartContext = () => useContext(CartContext);
+export default CartConextProvider;
 
-// export function useCartContext() {
-//   useContext(CartContext);
-// }

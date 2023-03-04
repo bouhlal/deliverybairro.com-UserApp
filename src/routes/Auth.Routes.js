@@ -2,12 +2,11 @@
  * Auth.Routes.js (src/routes/Auth.Routes.js)
  */
 
-import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import CustomSignIn from '../pages/User/_SignIn';
-import CustomSignUp from '../pages/User/_SignUp';
-import CustomSignUpCode from '../pages/User/_SignUpCode';
+import CustomSignIn from '../pages/User/SignIn';
+import CustomSignUp from '../pages/User/SignUp';
+import CustomSignUpCode from '../pages/User/SignUpCode';
 
 const AuthStack = createStackNavigator();
 
@@ -15,6 +14,7 @@ export default function AuthRoutes() {
 
   return(
     <AuthStack.Navigator>
+
       <AuthStack.Screen
         name="CustomSignIn"
         component={CustomSignIn}
@@ -34,6 +34,7 @@ export default function AuthRoutes() {
           headerTitle: 'Voltar',
         }}
       />
+
       <AuthStack.Screen
         name="CustomSignUpCode"
         component={CustomSignUpCode}
@@ -47,6 +48,7 @@ export default function AuthRoutes() {
           headerTitle: 'Voltar',
         }}
       />
+
     </AuthStack.Navigator>
   )
 }

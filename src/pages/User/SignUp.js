@@ -2,28 +2,47 @@
  * SignUp.js (src/pages/User/SignUp.js)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, ScrollView, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Platform, Alert } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
+import { Auth } from 'aws-amplify';
+import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthContext } from '../../contexts/AuthContext';
 
 import logo from "../../../assets/logo.png";
 import marca from "../../../assets/marca.png";
 
 export default function CustomSignUp() {
-  const navigation = useNavigation();
-  const [email, setEmail] = useState("");
+  const { authSignUp } = useContext(AuthContext);
+  
   const [password, setPassword] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const { loading, authSignUp } = useAuthContext();
+  const navigation = useNavigation();
 
-  async function handleSignUp() {
-    authSignUp(email, password, telefone);
-    Alert.alert("Atenção", "Um código de confirmação será enviado para o seu e-mail.");
-    navigation.navigate('CustomSignUpCode', {email: email});
+  async function signUp() {
+    const username = email;
+    const phone_number = telefone;
+    setLoading(true);
+    try {
+      const { user } = await Auth.signUp({ username, password, attributes: { email, phone_number } });
+      setLoading(false);
+      console.log('Sign-Up Confirmed');
+      navigation.navigate('CustomSignUpCode', {email: email})
+    } catch (error) {
+      setLoading(false);
+      Alert.alert('Erro', 'Não foi possível registrar o login. Tente novamente.');
+      console.log('Error signing up...', error);
+    }
   }
+
+  // async function handleSignUp() {
+  //   authSignUp(email, password, telefone);
+  //   Alert.alert("Atenção", "Um código de confirmação será enviado para o seu e-mail.");
+  //   navigation.navigate('CustomSignUpCode', {email: email});
+  // }
 
   function maskEditPhone(formatted, extracted) {
     setTelefone(extracted);
@@ -59,10 +78,11 @@ export default function CustomSignUp() {
             <Text style={{marginBottom: 5}}>Email:</Text>
             <TextInput
               value={email}
+              onChangeText={(input) => setEmail(input)}
               placeholder='username@email.com'
               autoCapitalize='none'
-              autoCorrect={false}
-              onChangeText={(input) => setEmail(input)}
+              keyboardType="email-address"
+              textContentType="emailAddress"
               style={styles.input}
             />
           </View>
@@ -71,13 +91,14 @@ export default function CustomSignUp() {
             <Text style={{marginBottom: 5}}>Senha:</Text>
             <TextInput
               value={password}
+              onChangeText={(input)=>setPassword(input)}
               placeholder='Senha'
               autoCapitalize='none'
               autoCorrect={false}
               keyboardType='numeric'
-              onChangeText={(input)=>setPassword(input)}
-              onSubmitEditing={() => Keyboard.dismiss()}
               secureTextEntry={true}
+              // onSubmitEditing={() => Keyboard.dismiss()}
+              textContentType="password"
               style={styles.input}
             />
           </View>
@@ -86,7 +107,7 @@ export default function CustomSignUp() {
             *Ao clicar em "Registrar Usuário", você estará concordando com nossa Política de Uso e Privacidade.
           </Text>
 
-          <TouchableOpacity style={styles.btnSubmit} onPress={() => handleSignUp()}>
+          <TouchableOpacity style={styles.btnSubmit} onPress={signUp}>
             {loading ? (
               <ActivityIndicator size={"large"} color="#FFF" />
             ) : (
@@ -105,7 +126,6 @@ export default function CustomSignUp() {
 
       </View>
     </View>
-
   );
 }
 

@@ -2,23 +2,36 @@
  * SignIn.js (src/pages/User/SignIn.js)
  */
 
-import React, { useState } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Platform } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Alert, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
+import { Auth } from 'aws-amplify';
 
 import logo from "../../../assets/logo.png"
 import marca from "../../../assets/marca.png"
 
 export default function CustomSignIn() {
-  const navigation = useNavigation();
+  const { authSignIn } = useContext(AuthContext);
+
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);  
+  const [loading, setLoading] = useState(false);
 
-  const { loading, authSignIn } = useAuthContext();
+  const navigation = useNavigation();
 
-  function handleLogin() {
-    authSignIn(email, password);
+  async function signIn() {
+    const username = email;
+    setLoading(true);
+    try {
+      const user = await Auth.signIn(username, password);
+      setLoading(false);
+      console.log('Success');
+    } catch(error) {
+      Alert.alert('Erro', 'Não foi possível realizar o login. Verifique suas credenciais e tente novamente.');
+      console.log('Error signing in...', error)
+      setLoading(false);
+    }
   }
 
   return (
@@ -29,33 +42,35 @@ export default function CustomSignIn() {
         <Image source={marca} style={styles.marca} resizeMode="contain" />
 
         <View style={styles.areaInput}>
-          <Text>Email:</Text>
+          <Text style={{marginBottom: 10}}>Email:</Text>
           <TextInput
             value={email}
+            onChangeText={(input)=>setEmail(input)}
             placeholder='username@email.com'
             autoCapitalize='none'
-            autoCorrect={false}
-            onChangeText={(input)=>setEmail(input)}
+            keyboardType='email-address'
+            textContentType='emailAddress'
             style={styles.input}
           />
         </View>
 
         <View style={styles.areaInput}>
-          <Text>Senha:</Text>
+          <Text style={{marginBottom: 10}}>Senha:</Text>
           <TextInput
             value={password}
+            onChangeText={(input)=>setPassword(input)}
             placeholder='Senha'
             autoCapitalize='none'
             autoCorrect={false}
-            keyboardType='numeric'
-            onChangeText={(input)=>setPassword(input)}
-            onSubmitEditing={() => Keyboard.dismiss()}
             secureTextEntry={true}
+            keyboardType='numeric'
+            textContentType='password'
+            // onSubmitEditing={() => Keyboard.dismiss()}
             style={styles.input}
           />
         </View>
 
-        <TouchableOpacity style={styles.btnSubmit} onPress={() => handleLogin()}>
+        <TouchableOpacity style={styles.btnSubmit} onPress={signIn}>
           {loading ? (
             <ActivityIndicator size={20} color='#FFF' />
           ) : (

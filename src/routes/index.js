@@ -2,14 +2,15 @@
  * index.js (src/routes/index.js)
  */
 
+import React, { useContext } from 'react';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
-import { useAuthContext } from '../contexts/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 import AppRoutes from './App.Routes';
 import AuthRoutes from './Auth.Routes';
 
 export default function Routes() {
-  const { signed, loading } = useAuthContext();
+  const { signed, loading } = useContext(AuthContext);
 
   console.log("Usuário Autenticado? (signed): ", signed);
 
@@ -22,7 +23,7 @@ export default function Routes() {
   }
 
   return (
-    <AppRoutes/> // signed ? <AppRoutes/> : <AuthRoutes/> 
+    signed ? <AppRoutes/> : <AuthRoutes/> 
   );
 }
 

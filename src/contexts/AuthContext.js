@@ -2,19 +2,19 @@
  * AuthContext.js (src/contexts/AuthContext.js)
  */
 
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { Alert } from 'react-native';
 import { Auth, DataStore } from 'aws-amplify';
 import { User } from '../models';
 
-const AuthContext = createContext({});
+export const AuthContext = createContext({});
 
-export default function AuthContextProvider({ children }) {
+function AuthContextProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [authUser, setAuthUser] = useState({});
   const [dbUser, setDbUser] = useState(null);
 
-  const sub = authUser?.attributes?.sub;
+  const usr_token = authUser?.attributes?.sub;
 
   useEffect(() => {
     Auth.currentAuthenticatedUser({ bypassCache: true }).then(setAuthUser);
@@ -22,7 +22,7 @@ export default function AuthContextProvider({ children }) {
 
   useEffect(() => {
     if (authUser) { // verificação adicionada aqui
-      DataStore.query(User, (user) => user.token.eq(sub)).then((users) =>
+      DataStore.query(User, (user) => user.token.eq(usr_token)).then((users) =>
         setDbUser(users[0])
       );
     }
@@ -33,13 +33,13 @@ export default function AuthContextProvider({ children }) {
     const username = email;
     try {
       const user = await Auth.signIn(username, password);
-      console.log(user);
-      setAuthUser(user);
       setLoading(false);
+      setAuthUser(user);
+      console.log(user);
     } catch (error) {
-      console.log(error);
       setLoading(false);
       Alert.alert('Erro', 'Não foi possível realizar o login. Verifique suas credenciais e tente novamente.');
+      console.log(error);
     }
   }
 
@@ -56,27 +56,24 @@ export default function AuthContextProvider({ children }) {
           phone_number,
         },
       });
-      console.log(user);
-      setAuthUser(user);
       setLoading(false);
+      setAuthUser(user);
+      console.log(user);
     } catch(error) {
+      setLoading(false);
       Alert.alert("SignUp Error: ", error.message);
       console.log(error.message);
-      setLoading(false);
     }
   }
 
-  async function authConfirmSignUp(email, code) {
-    const username = email;
-    setLoading(true);
+  async function authSignOut() {
     try {
-      await Auth.confirmSignUp(username, code);
-      Alert.alert("Info",`Código enviado com sucesso! Confira o email enviado para: ${username}`);
-      setLoading(false);
+      await Auth.signOut({ global: true });
+      setAuthUser({});
+      setDbUser(null);
     } catch (error) {
-      console.log(error);
-      Alert.alert("Erro", "Não foi possivel enviar o código de verificação. Tente novamente.");
-      setLoading(false);
+      Alert.alert('Erro', 'Não foi possível realizar o logout. Tente novamente.');
+      console.error(error);
     }
   }
 
@@ -85,35 +82,39 @@ export default function AuthContextProvider({ children }) {
     setLoading(true);
     try {
       const { user } =  await Auth.resendSignUp(username);
+      setLoading(false);
       Alert.alert("Info",`Código reenviado com sucesso! Confira novamente o email enviado para: ${user.email}`);
       console.log('Código reenviado com sucesso.');
-      setLoading(false);
     } catch (error) {
-      console.log(error);
-      Alert.alert("Erro", "Não foi possivel reenviar o código de verificação. Tente novamente.");
       setLoading(false);
+      Alert.alert("Erro", "Não foi possivel reenviar o código de verificação. Tente novamente.");
+      console.log(error);
     }
   }
 
-  async function authSignOut() {
+  async function authConfirmSignUp(email, code) {
+    const username = email;
+    setLoading(true);
     try {
-      await Auth.signOut();
-      setAuthUser({});
-      setDbUser(null);
+      await Auth.confirmSignUp(username, code);
+      setLoading(false);
+      Alert.alert("Info",`Código enviado com sucesso! Confira o email enviado para: ${username}`);
+      console.log("Confirmation Code is send to: ", username);
     } catch (error) {
-      console.error(error);
-      Alert.alert('Erro', 'Não foi possível realizar o logout. Tente novamente.');
+      setLoading(false);
+      Alert.alert("Erro", "Não foi possivel enviar o código de verificação. Tente novamente.");
+      console.log(error);
     }
   }
 
   return(
     <AuthContext.Provider value={{ 
-      signed:!!dbUser, authUser, dbUser, sub, setDbUser,
-      authSignIn, authSignUp, authConfirmSignUp, authResendConfirmationCode, authSignOut
+      signed: !!authUser, dbUser, authUser, loading, usr_token,
+      authSignIn, authSignUp, authSignOut, authConfirmSignUp, authResendConfirmationCode
     }}>
       {children}
     </AuthContext.Provider> 
   )
 }
 
-export const useAuthContext = () => useContext(AuthContext);
+export default AuthContextProvider;

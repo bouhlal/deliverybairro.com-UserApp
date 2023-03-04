@@ -1,19 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useCartContext } from "../../contexts/CartContext";
-
 import { DataStore } from "aws-amplify";
 import { Produto } from "../../models";
+import { CartContext } from "../../contexts/CartContext";
 
 import NO_IMAGE from "../../../assets/sem-imagem.jpg";
 
 export default function DeliveryItemToSelect({ item, CloseModal }) {
+  const { AddToCart } = useContext(CartContext);
+
   const [produto, setProduto] = useState([]);
   const [qtd, setQtd] = useState(1);
   const [total, setTotal] = useState(item.vr_unitario);
-
-  const { AddToCart } = useCartContext();
 
   const id = item.id; console.log("Produto ID: ", id);
 

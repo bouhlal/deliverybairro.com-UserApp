@@ -2,25 +2,44 @@
  * SignUpCode.js (src/pages/User/SignUpCode.js)
  */
 
-import React, { useState } from 'react';
-import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Platform } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Alert, Platform } from 'react-native';
+import { Auth } from "aws-amplify";
+import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
-import { useAuthContext } from '../../contexts/AuthContext';
 
 import logo from '../../../assets/logo.png';
 import marca from '../../../assets/marca.png';
 
 export default function CustomSignUpCode({ route }) {
-  const navigation = useNavigation();
+  const { authConfirmSignUp, authResendConfirmationCode } = useContext(AuthContext);
+  
   const [email, setEmail] = useState(route?.params?.email);
-  const [code, setCode] = useState("");
+  const [authCode, setAuthCode] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const { loading, authConfirmSignUp, authResendConfirmationCode } = useAuthContext();
+  const navigation = useNavigation();
 
-  function handleConfirmSignUpCode() {
-    authConfirmSignUp(email, code);
-    navigation.navigate('CustomSignIn');
+  async function confirmSignUp() {
+    const username = email;
+    setLoading(true);
+    try {
+      await Auth.confirmSignUp(username, authCode);
+      setLoading(false);
+      Alert.alert("Info",`Código enviado com sucesso! Confira o email enviado para: ${username}`);
+      console.log('Code confirmed');
+      navigation.navigate('CustomSignIn');
+    } catch (error) {
+      setLoading(false);
+      Alert.alert("Erro", "O código de verificação não corresponde. Insira um código de verificação válido.");
+      console.log('Verification code does not match. Please enter a valid verification code.', error.code);
+    }
   }
+
+  // function handleConfirmSignUpCode() {
+  //   authConfirmSignUp(email, code);
+  //   navigation.navigate('CustomSignIn');
+  // }
 
   return (
     <View style={styles.background}>
@@ -33,10 +52,11 @@ export default function CustomSignUpCode({ route }) {
           <Text style={{marginBottom: 5}}>Usuário:</Text>
           <TextInput
             value={email}
+            onChangeText={(input)=>setEmail(input)}
             placeholder='username@email.com'
             autoCapitalize='none'
-            autoCorrect={false}
-            onChangeText={(input) => setEmail(input)}
+            keyboardType='email-address'
+            textContentType='emailAddress'
             style={styles.input}
           />
         </View>
@@ -45,17 +65,16 @@ export default function CustomSignUpCode({ route }) {
           <Text>Código de confirmação:</Text>
           <TextInput
             value={code}
+            onChangeText={(input)=>setAuthCode(input)}
             placeholder="######"
-            autoCorrect={false}
             keyboardType='numeric'
-            onChangeText={(input)=>setCode(input)}
-            onSubmitEditing={() => Keyboard.dismiss()}
+            // onSubmitEditing={() => Keyboard.dismiss()}
             secureTextEntry={false}
             style={styles.input}
           />
         </View>
 
-        <TouchableOpacity style={styles.btnSubmit} onPress={() => handleConfirmSignUpCode()}>
+        <TouchableOpacity style={styles.btnSubmit} onPress={confirmSignUp}>
           {loading ? (
             <ActivityIndicator size={"large"} color="#FFF" />
           ) : (

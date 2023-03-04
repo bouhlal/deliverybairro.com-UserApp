@@ -4,39 +4,37 @@
 
 import * as Location from 'expo-location';
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Text,
-  TextInput,
-  Keyboard,
-  TouchableOpacity,
-  Alert,
-  Platform,
-} from 'react-native';
-import { useAuthContext } from '../../contexts/AuthContext';
+import { StyleSheet, View, ScrollView, Text, TextInput, Keyboard, TouchableOpacity, Alert, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Auth, DataStore } from 'aws-amplify';
 import { User } from '../../models';
+import { useAuthContext } from '../../contexts/AuthContext';
+
 import Header from '../../components/Header';
 
 export default function Perfil() {
-  const { dbUser, setDbUser, sub } = useAuthContext();
-  const navigation = useNavigation();
+  const { usr_token, dbUser } = useAuthContext();
 
   const [nome, setNome] = useState(dbUser?.nome || '');
-  const [sobrenome, setSobrenome] = useState(dbUser?.sobrenome || '');
-  const [url_foto, setUrlFoto] = useState(dbUser?.url_foto || '');
-  const [latitude, setLatitude] = useState(dbUser?.latitude || '0');
-  const [longitude, setLongitude] = useState(dbUser?.longitude || '0');
-  const [error_msg, setErrorMsg] = useState(null);
-  const [info, setInfo] = useState('');
-  const [gps, setGps] = useState(null);
+  const [sobrenome, setSobrenome] = useState(dbUser?.sobrenome || "");
+  const [url_foto, setUrlFoto] = useState(dbUser?.url_foto || "");
+  const [latitude, setLatitude] = useState(dbUser?.latitude || "0");
+  const [longitude, setLongitude] = useState(dbUser?.longitude || "0");
+  const [info, setInfo] = useState("");
+
+  const navigation = useNavigation();
+
+  async function signOut() {
+    try {
+      await Auth.signOut();
+    } catch (error) {
+      console.log('Error signing out: ', error);
+    }
+  }
 
   async function onSave() {
     try {
-      if (dbUser) {
+      if (!!dbUser) {
         await updateUser();
       } else {
         await createUser();
@@ -49,62 +47,58 @@ export default function Perfil() {
 
   async function updateUser() {
     try {
-      const user = await DataStore.save(
+      await DataStore.save(
         User.copyOf(dbUser, (updated) => {
           updated.nome = nome;
           updated.sobrenome = sobrenome;
           updated.url_foto = url_foto;
+          updated.token = usr_token;
           updated.latitude = parseFloat(latitude);
           updated.longitude = parseFloat(longitude);
         })
       );
-      setDbUser(user);
+      Alert.alert("Sucesso", "Dados do Usuário atualizados com sucesso!");
     } catch (error) {
-      throw new Error(`Não foi possível atualizar o usuário. ${error.message}`);
+      Alert.alert("Erro", "Não foi possível atualizar os dados do Usuário.");
+      console.log(error.message);
     }
   };
 
   async function createUser() {
     try {
-      const user = await DataStore.save(
+      await DataStore.save(
         new User({
           nome,
           sobrenome,
           url_foto: null,
-          token: sub,
+          token: usr_token,
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
         })
       );
-      setDbUser(user);
-      Alert.alert(
-        'Sucesso',
-        `Dados do Usuário cadastrados com sucesso! ID: ${user.id}`
+      Alert.alert("Sucesso", "Dados do Usuário cadastrados com sucesso!"
       );
     } catch (error) {
-      throw new Error(`Não foi possível criar o usuário. ${error.message}`);
+      Alert.alert("Erro", "Não foi possível cadastrar os dados do Usuário. Tente novamente");
+      console.log(error.message);
     }
   };
 
-  async function getLocation() {
+  async function getPositionByGps() {
     try {
-      // let { status } = await Location.requestForegroundPermissionsAsync();
-      // if (status !== 'granted') {
-      //   setErrorMsg('Permissão para acessar a localização foi negada');
-      //   return;
-      // }
-      // const { coords } = await Location.getCurrentPositionAsync({});
-      // setLatitude(coords.latitude);
-      // setLongitude(coords.longitude);
-      const position = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-      setLatitude(position.coords.latitude);
-      setLongitude(position.coords.longitude);
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permissão para acessar a localização foi negada');
+        return;
+      }
+      const { coords } = await Location.getCurrentPositionAsync({});
+      setLatitude(coords.latitude);
+      setLongitude(coords.longitude);
       const info = `(latitude: ${latitude}, longitude: ${longitude})`;
       setInfo(info);
     } catch (error) {
-      console.error(error);
+      console.error(`Não foi possível obter a localização. ${error.message}`);
+      setInfo("Não foi possível obter a localização atual do Usuário.");
     }
   }
 
@@ -150,7 +144,7 @@ export default function Perfil() {
           <Text style={{marginBottom: 5}}>Latitude:</Text>
           <TextInput
             value={latitude}
-            placeholder="-19.82711"
+            // placeholder="-19.82711"
             onChangeText={(input) => setLatitude(input)}
             keyboardType='numeric'
             style={styles.input}
@@ -160,7 +154,7 @@ export default function Perfil() {
           <Text style={{marginBottom: 5}}>Longitude:</Text>
           <TextInput
             value={longitude}
-            placeholder="-43.98319"
+            // placeholder="-43.98319"
             onChangeText={(input) => setLongitude(input)}
             keyboardType='numeric'
             style={styles.input}
@@ -169,15 +163,15 @@ export default function Perfil() {
       </ScrollView>
 
       <TouchableOpacity style={[styles.btnSubmit, {marginTop: 15}]} onPress={onSave}>
-        <Text style={styles.btnTxt}>{(!dbUser) ? "SALVAR" : "ATUALIZAR"} DADOS</Text>
+        <Text style={styles.btnTxt}>{ (!!dbUser) ? "ATUALIZAR" : "SALVAR" } DADOS</Text>
       </TouchableOpacity>
 
       <Text style={{fontSize: 13, textAlign: "center"}}>{info}</Text>
 
-      <TouchableOpacity style={styles.btnSubmit} onPress={() => getLocation()} >
+      <TouchableOpacity style={styles.btnSubmit} onPress={() => getPositionByGps()} >
         <Text style={styles.btnTxt}>OBTER COORDENADAS</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.btnLogout} onPress={() => Auth.signOut()} >
+      <TouchableOpacity style={styles.btnLogout} onPress={signOut} >
         <Text style={styles.btnTxt}>SAIR (LOGOUT)</Text>
       </TouchableOpacity>
 
