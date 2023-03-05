@@ -1,67 +1,135 @@
-import { useState, useEffect, useMemo, useContext, createContext } from 'react';
-import { DataStore } from 'aws-amplify';
-import { Basket, BasketItem } from '../models';
+import { useState, useEffect, useContext, createContext } from 'react';
 import { AuthContext } from './AuthContext';
+
+import { DataStore } from 'aws-amplify';
+import { Basket, BasketItem, Produto } from '../models';
 
 export const CartContext = createContext({});
 
 function CartConextProvider({ children }) {
-  const { dbUser } = useContext(AuthContext);
-
-  console.log("dbUser (src/context/Cart.js): ", dbUser);
-
-  const [basket, setBasket] = useState(null);
-  const [basketItems, setBasketItems] = useState([]);
-  const [delivery, setDelivery] = useState(null);
   const [cart, setCart] = useState([]);
-  
-  const total = useMemo(() => {
-    if (!cart.length) return 0;
-    return cart.reduce((soma, item) => soma + item.total, 0).toFixed(2);
-  }, [cart]);
-  
-  useEffect(() => {
-    async function fetchBasket() {
-      const baskets = await DataStore.query(Basket, (basket) => basket.userID.eq(dbUser.token));
-      setBasket(baskets[0]);
-    }
-    fetchBasket();
-  }, [dbUser]);
+  const [delivery, setDelivery] = useState([]);
+  const [subtotal, setSubTotal] = useState(0);
+
+  const { dbUser } = useContext(AuthContext);
+  const [basket, setBasket] = useState(null);
+  const [basketItens, setBasketItens] = useState([]);
 
   useEffect(() => {
-    async function fetchBasketItems() {
-      if (basket) {
-        const items = await DataStore.query(BasketItem, (item) => item.basketID.eq(basket.id));
-        setBasketItems(items);
-      }
+    DataStore.query(Basket, (b) =>
+      b.deliveryID.eq(delivery.id).userID.eq(dbUser.id)
+    ).then((baskets) => setBasket(baskets[0]));
+  }, [dbUser, delivery]);
+
+  useEffect(() => {
+    if (basket) {
+      DataStore.query(BasketItem, (basketitens) => basketitens.basketID.eq(basket.id)).then(
+        setBasketItens
+      );
     }
-    fetchBasketItems();
   }, [basket]);
 
-  async function AddToCart(newItem, qty, total) {
-    const itemIndex = cart.findIndex((item) => item.produtoID === newItem.produtoID);
-    if (itemIndex !== -1) {
-      const updatedCart = [...cart];
-      updatedCart[itemIndex].qtd += qty;
-      updatedCart[itemIndex].total += total;
-      setCart(updatedCart);
-    } else {
-      const newItemWithQtyAndTotal = { ...newItem, qtd: qty, total };
-      setCart([...cart, newItemWithQtyAndTotal]);
+  async function AddToCart(produto, qtd, total) {
+    console.log(produto);
+    const i = cart.findIndex(item => item.produtoID === produto.produtoID);
+    if(i !== -1){
+      let cList = cart;
+      cList[i].qtd = cList[i].qtd +qtd;
+      cList[i].total  = cList[i].total +total;
+      setCart(cList);
+      setCartTotal(cList);
+      return;
+    }
+    let data = {
+      ...produto,
+      qtd: qtd,
+      total: total
+    }
+    setCart(produtos => [...produtos, data]);
+    setCartTotal([...cart, data])
+    // get the existing basket or create a new one
+    let current_cart = basket || (await createNewBasket());
+    // create a new_item and save to Datastore
+    const new_item = await DataStore.save(
+      new BasketItem({ qtd: qtd, Item: produto, basketID: current_cart.id })
+    );
+    setBasketItens([...basketItens, new_item]);
+  };
+
+  async function createNewBasket() {
+    const new_basket = await DataStore.save(
+      new Basket({ userID: dbUser.id, deliveryID: delivery.id })
+    );
+    setBasket(new_basket);
+    return new_basket;
+  };
+
+  async function RemoveFromCart(produto){
+    const i = cart.findIndex(item => item.produtoID === produto.produtoID);
+    if (cart[i]?.qtd >1) {
+      let cList = cart;
+      cList[i].qtd = cList[i].qtd -1;
+      cList[i].total = cList[i].total - cList[i].vr_unitario;
+      setCart(cList);
+      setCartTotal(cList);
+      return;
+    }
+    const update_cart = cart.filter(item => item.produtoID !== produto.produtoID);
+    setCart(update_cart);
+    setCartTotal(update_cart);
+
+    try {
+      const itemToDelete = await DataStore.query(BasketItem, produto.id);
+      await DataStore.delete(itemToDelete);
+      setBasketItens(produtos => produtos.filter((item) => item.id !== produto.id));
+    } catch (error) {
+      console.log("Error: ", error.message);
     }
 
-    let currentBasket = basket || (await createNewBasket({ delivery }));
-    const newBasketItem = await DataStore.save(new BasketItem({ qty, Item: newItem, basketID: currentBasket.id }));
-    setBasketItems([...basketItems, newBasketItem]);
   }
 
-  async function createNewBasket({ delivery }) {
-    const newBasket = await DataStore.save(
-      new Basket({ userID: dbUser.token, deliveryID: delivery.id })
-    );
-    setBasket(newBasket => newBasket || newBasket);
-    return newBasket;
+  function setCartTotal(items) {
+    let cesta = items;
+    let result = cesta.reduce((acc, obj) => { return acc + obj.vr_total}, 0)
+    setSubTotal(result.toFixed(2));
   }
+
+  async function cleanCart() {
+    setCart([]);
+    setSubTotal(0);
+    try {
+      if (basket) {
+        const basketToDelete = await DataStore.query(Basket, basket.id);
+        await DataStore.delete(basketToDelete);
+      }
+    } catch(error) {
+      console.log("Error: ", error.message);
+    }
+
+  }
+
+  return(
+    <CartContext.Provider 
+      value={{ 
+        cart, delivery, subtotal, 
+        cleanCart, AddToCart, RemoveFromCart,
+        setDelivery
+      }}
+    >
+      { children }
+    </CartContext.Provider>
+  )
+}
+
+export default CartConextProvider;
+
+
+/**
+------------------------------------------------------------------------------------
+  const subtotal = basketItens.reduce(
+    (sum, basketItem) => sum + basketItem.qtd * basketItem.Produto.vr_unitario,
+    delivery?.taxa_entrega
+  );
 
   async function RemoveFromCart(selectedItem) {
     const itemIndex = cart.findIndex((item) => item.id === selectedItem.id);
@@ -95,19 +163,5 @@ function CartConextProvider({ children }) {
       console.log("Error: ", error.message);
     }
   }
-
-  return(
-    <CartContext.Provider 
-      value={{ 
-        delivery, cart, total, 
-        cleanCart, AddToCart, RemoveFromCart,
-        setDelivery
-      }}
-    >
-      { children }
-    </CartContext.Provider>
-  )
-}
-
-export default CartConextProvider;
-
+----------------------------------------------------------------------------------------
+**/
