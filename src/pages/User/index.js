@@ -26,7 +26,7 @@ export default function Perfil() {
 
   async function signOut() {
     try {
-      await Auth.signOut();
+      authSignOut();
     } catch (error) {
       console.log('Error signing out: ', error);
     }
@@ -171,7 +171,7 @@ export default function Perfil() {
       <TouchableOpacity style={styles.btnSubmit} onPress={() => getPositionByGps()} >
         <Text style={styles.btnTxt}>OBTER COORDENADAS</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.btnLogout} onPress={authSignOut} >
+      <TouchableOpacity style={styles.btnLogout} onPress={signOut} >
         <Text style={styles.btnTxt}>SAIR (LOGOUT)</Text>
       </TouchableOpacity>
 

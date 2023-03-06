@@ -8,7 +8,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import logo_png from '../../../assets/logo.png';
 
 export default function SideBar({ props }) {
-  const { dbUser, signOut } = useContext(AuthContext);
+  const { dbUser, authSignOut } = useContext(AuthContext);
   
   const navigation = useNavigation();
 
@@ -63,7 +63,7 @@ export default function SideBar({ props }) {
       />
       <DrawerItem
         label="Sair (LogOut)"
-        onPress={() => signOut()}
+        onPress={() => authSignOut()}
         activeTintColor='#FFF'
         activeBackgroundColor='#FF0000'
         inactiveTintColor='#FFF'

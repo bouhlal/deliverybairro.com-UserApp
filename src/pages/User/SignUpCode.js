@@ -32,7 +32,7 @@ export default function CustomSignUpCode({ route }) {
     } catch (error) {
       setLoading(false);
       Alert.alert("Erro", "O código de verificação não corresponde. Insira um código de verificação válido.");
-      console.log('Verification code does not match. Please enter a valid verification code.', error.code);
+      console.log('Verification code does not match. Please enter a valid verification code.', error.authCode);
     }
   }
 
@@ -64,7 +64,7 @@ export default function CustomSignUpCode({ route }) {
         <View style={styles.areaInput}>
           <Text>Código de confirmação:</Text>
           <TextInput
-            value={code}
+            value={authCode}
             onChangeText={(input)=>setAuthCode(input)}
             placeholder="######"
             keyboardType='numeric'

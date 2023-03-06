@@ -21,12 +21,18 @@ function AuthContextProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    if (authUser) { // verificação adicionada aqui
-      DataStore.query(User, (user) => user.token.eq(usr_token)).then((users) =>
-        setDbUser(users[0])
-      );
-    }
-  }, [authUser, usr_token]);
+    DataStore.query(User, (user) => user.token.eq(usr_token)).then((users) =>
+      setDbUser(users[0])
+    );
+  }, [usr_token]);
+
+  // useEffect(() => {
+  //   if (authUser) { // verificação adicionada aqui
+  //     DataStore.query(User, (user) => user.token.eq(usr_token)).then((users) =>
+  //       setDbUser(users[0])
+  //     );
+  //   }
+  // }, [authUser, usr_token]);
 
   async function authSignIn(email, password) {
     setLoading(true);
