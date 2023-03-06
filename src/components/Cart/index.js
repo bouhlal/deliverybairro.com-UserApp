@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function CardItem({ data, AddQtd, RemoveQtd }) {
-  const [qtd, setQtd] = useState(data?.qtd);
+export default function CardItem({ produto, AddQtd, RemoveQtd }) {
+  const [qtd, setQtd] = useState(produto?.qtd);
+
+  console.log(produto);
 
   function add(){
     AddQtd();
@@ -23,8 +25,8 @@ export default function CardItem({ data, AddQtd, RemoveQtd }) {
     <View style={styles.container}>
       <View>
         <View>
-          <Text style={styles.nome}>{data.nome}</Text>
-          <Text style={styles.preco}>R$ {data.vr_unitario.toFixed(2)}</Text>
+          <Text style={styles.nome}>{produto.nome}</Text>
+          <Text style={styles.preco}>R$ {produto.vr_unitario.toFixed(2)}</Text>
         </View>
         <View style={styles.qtd}>
           <TouchableOpacity onPress={add}>
@@ -36,7 +38,7 @@ export default function CardItem({ data, AddQtd, RemoveQtd }) {
           </TouchableOpacity>
         </View>
       </View>
-      <Image style={styles.imagem} source={{uri: data.url_imagem}} />
+      <Image style={styles.imagem} source={{uri: produto.url_imagem}} />
     </View>
   );
 }

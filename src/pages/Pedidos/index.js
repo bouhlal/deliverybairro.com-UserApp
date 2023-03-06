@@ -6,7 +6,7 @@ import Header from '../../components/Header';
 
 export default function Pedidos() { 
   const { dbUser } = useContext(AuthContext);
-
+  console.log("Pedidos (dbUser): ", dbUser);
   return (
     <View style={styles.background}>
       <Header/>

@@ -35,8 +35,9 @@ export default function DeliveryItemToSelect({ item, close }) {
     }
   }
 
-  async function AddItemToCart() {
+  async function AddItem() {
     await AddToCart(produto, qtd, total);
+    close();
   }
 
   return (
@@ -62,8 +63,8 @@ export default function DeliveryItemToSelect({ item, close }) {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.btnAdd} onPress={AddItemToCart}>
-            <Text style={{ color: '#FFF', fontSize: 18 }}>Adiciona item ao Pedido</Text>
+          <TouchableOpacity style={styles.btnAdd} onPress={()=>AddItem()}>
+            <Text style={{ color: '#FFF', fontSize: 18 }}>Adiciona Pedido</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btnClose} onPress={close}>
             <Text style={{ color: '#FFF', fontSize: 18 }}>FECHAR</Text>

@@ -15,9 +15,6 @@ https://www.npmjs.com/package/npm-windows-upgrade
 npm install -g expo-cli
 npm install -g eas-cli
 
-## re-build das unimodules
-expo prebuild
-
 ## deployment
 <strong>eas build -p android --profile preview</strong>
 
@@ -25,7 +22,7 @@ expo prebuild
 See at https://docs.expo.dev/push-notifications/using-fcm/
 Finally, make a new build of your app by <strong>running eas build --platform android</strong> (or <strong>expo build:android<strong> if you're using the classic build system).
 
-## Link para baixar o APK DeliveryBairro v1.0 (MVP) Build #1 (Quinta-feira, 27/10/2022 às 12:07)
+## Link para baixar o APK DeliveryBairro v1.0 (MVP) Build #1 (27/10/2022 12:07)
 https://expo.dev/artifacts/eas/fByfzoZUQava4UaUjLChQa.apk
 
 ## Some parts of the source code written with the aid of the artificial intelligence of OpenAI's ChatGPT

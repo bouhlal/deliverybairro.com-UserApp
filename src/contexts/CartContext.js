@@ -1,8 +1,4 @@
-import { useState, useEffect, useContext, createContext } from 'react';
-import { AuthContext } from './AuthContext';
-
-import { DataStore } from 'aws-amplify';
-import { Basket, BasketItem, Produto } from '../models';
+import { useState, useContext, createContext } from 'react';
 
 export const CartContext = createContext({});
 
@@ -11,27 +7,9 @@ function CartConextProvider({ children }) {
   const [delivery, setDelivery] = useState([]);
   const [subtotal, setSubTotal] = useState(0);
 
-  const { dbUser } = useContext(AuthContext);
-  const [basket, setBasket] = useState(null);
-  const [basketItens, setBasketItens] = useState([]);
-
-  useEffect(() => {
-    DataStore.query(Basket, (b) =>
-      b.deliveryID.eq(delivery.id).userID.eq(dbUser.id)
-    ).then((baskets) => setBasket(baskets[0]));
-  }, [dbUser, delivery]);
-
-  useEffect(() => {
-    if (basket) {
-      DataStore.query(BasketItem, (basketitens) => basketitens.basketID.eq(basket.id)).then(
-        setBasketItens
-      );
-    }
-  }, [basket]);
-
-  async function AddToCart(produto, qtd, total) {
-    console.log(produto);
-    const i = cart.findIndex(item => item.produtoID === produto.produtoID);
+  async function AddToCart(newItem, qtd, total) {
+    console.log(newItem);
+    const i = cart.findIndex(item => item.id === newItem.id);
     if(i !== -1){
       let cList = cart;
       cList[i].qtd = cList[i].qtd +qtd;
@@ -41,31 +19,16 @@ function CartConextProvider({ children }) {
       return;
     }
     let data = {
-      ...produto,
+      ...newItem,
       qtd: qtd,
       total: total
     }
     setCart(produtos => [...produtos, data]);
     setCartTotal([...cart, data])
-    // get the existing basket or create a new one
-    let current_cart = basket || (await createNewBasket());
-    // create a new_item and save to Datastore
-    const new_item = await DataStore.save(
-      new BasketItem({ qtd: qtd, Item: produto, basketID: current_cart.id })
-    );
-    setBasketItens([...basketItens, new_item]);
-  };
-
-  async function createNewBasket() {
-    const new_basket = await DataStore.save(
-      new Basket({ userID: dbUser.id, deliveryID: delivery.id })
-    );
-    setBasket(new_basket);
-    return new_basket;
   };
 
   async function RemoveFromCart(produto){
-    const i = cart.findIndex(item => item.produtoID === produto.produtoID);
+    const i = cart.findIndex(item => item.id === produto.id);
     if (cart[i]?.qtd >1) {
       let cList = cart;
       cList[i].qtd = cList[i].qtd -1;
@@ -74,38 +37,19 @@ function CartConextProvider({ children }) {
       setCartTotal(cList);
       return;
     }
-    const update_cart = cart.filter(item => item.produtoID !== produto.produtoID);
-    setCart(update_cart);
-    setCartTotal(update_cart);
-
-    try {
-      const itemToDelete = await DataStore.query(BasketItem, produto.id);
-      await DataStore.delete(itemToDelete);
-      setBasketItens(produtos => produtos.filter((item) => item.id !== produto.id));
-    } catch (error) {
-      console.log("Error: ", error.message);
-    }
-
+    const newList = cart.filter(item => item.id !== produto.id);
+    setCart(newList);
+    setCartTotal(newList);
   }
 
-  function setCartTotal(items) {
-    let cesta = items;
-    let result = cesta.reduce((acc, obj) => { return acc + obj.vr_total}, 0)
+  function setCartTotal(itens) {
+    let result = itens.reduce((acc, obj) => { return acc + obj.total}, 0)
     setSubTotal(result.toFixed(2));
   }
 
   async function cleanCart() {
     setCart([]);
     setSubTotal(0);
-    try {
-      if (basket) {
-        const basketToDelete = await DataStore.query(Basket, basket.id);
-        await DataStore.delete(basketToDelete);
-      }
-    } catch(error) {
-      console.log("Error: ", error.message);
-    }
-
   }
 
   return(
@@ -164,4 +108,60 @@ export default CartConextProvider;
     }
   }
 ----------------------------------------------------------------------------------------
+import { AuthContext } from './AuthContext';
+
+// import { DataStore } from 'aws-amplify';
+// import { Basket, BasketItem } from '../models';
+
+  // const { dbUser } = useContext(AuthContext);
+  // const [basket, setBasket] = useState(null);
+  // const [basketItens, setBasketItens] = useState([]);
+
+  // useEffect(() => {
+  //   DataStore.query(Basket, (b) =>
+  //     b.deliveryID.eq(delivery.id).userID.eq(dbUser.id)
+  //   ).then((baskets) => setBasket(baskets[0]));
+  // }, [dbUser, delivery]);
+
+  // useEffect(() => {
+  //   if (basket) {
+  //     DataStore.query(BasketItem, (basketitens) => basketitens.basketID.eq(basket.id)).then(
+  //       setBasketItens
+  //     );
+  //   }
+  // }, [basket]);
+
+  // get the existing basket or create a new one
+  let current_cart = basket || (await createNewBasket());
+  // create a new_item and save to Datastore
+  const new_item = await DataStore.save(
+    new BasketItem({ qtd: qtd, Item: produto, basketID: current_cart.id })
+  );
+  setBasketItens([...basketItens, new_item]);
+
+  async function createNewBasket() {
+    const new_basket = await DataStore.save(
+      new Basket({ userID: dbUser.id, deliveryID: delivery.id })
+    );
+    setBasket(new_basket);
+    return new_basket;
+  };
+
+  try {
+    const itemToDelete = await DataStore.query(BasketItem, produto.id);
+    await DataStore.delete(itemToDelete);
+    setBasketItens(produtos => produtos.filter((item) => item.id !== produto.id));
+  } catch (error) {
+    console.log("Error: ", error.message);
+  }
+
+  try {
+    if (basket) {
+      const basketToDelete = await DataStore.query(Basket, basket.id);
+      await DataStore.delete(basketToDelete);
+    }
+  } catch(error) {
+    console.log("Error: ", error.message);
+  }
+
 **/

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react
 import { Fontisto } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import { CartContext } from '../../contexts/CartContext';
+import { OrderContext } from '../../contexts/OrderContext';
 
 import CardItem from '../../components/Cart';
 
@@ -11,14 +12,22 @@ export default function CartInfo() {
   const { cart, delivery, subtotal, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
   const [ total, setTotal ] = useState(0);
 
+  const { createOrder } = useContext(OrderContext);
+
   useEffect(() => {
-    setTotal(parseFloat(subtotal) + parseFloat(delivery.taxa_entrega));
-  }, [subtotal, delivery]);
+    let soma = parseFloat(subtotal) + delivery?.taxa_entrega;
+    setTotal(soma); console.log(soma);
+  }, [subtotal]);
 
   async function enviarPedidoELimparCarrinho() {
     Alert.alert("Envia pedido para o Delivery, e limpa a Cesta de Compras...")
+    const newOrder = await createOrder();
     await cleanCart();
-    GoToLink("Pedidos");
+    navigation.navigate("Pedidos", {
+      screen: "Pedidos",
+      params: { id: newOrder.id },
+    });
+    // GoToLink("Pedidos");
   }
 
   async function cancelarPedidoELimparCarrinho() {
@@ -42,6 +51,7 @@ export default function CartInfo() {
           <Text style={{ fontSize: 13}}>{delivery?.horario}</Text>
           <Text style={{ fontSize: 13}}><Fontisto color="#FF0000" name='map-marker-alt' size={18}/> {delivery?.latitude}, {delivery?.longitude}</Text>
           <Text style={{ fontSize: 13, marginBottom: 10}}>Valor da Taxa de Entrega: R$ {delivery?.taxa_entrega.toFixed(2)}</Text>
+          <Text style={{ fontWeight: "bold", marginTop: 20, fontSize: 19 }}>Seus Pedidos</Text>
         </View>
       </View>
 
@@ -52,7 +62,7 @@ export default function CartInfo() {
         ListEmptyComponent={() => <Text style={styles.empty}>Cesta de Compras vazia!</Text>}
         renderItem={({item})=>(
           <CardItem
-            data={item}
+            produto={item}
             AddQtd={() => AddToCart(item, 1, item.vr_unitario)}
             RemoveQtd={() => RemoveFromCart(item)}
           />
@@ -60,7 +70,7 @@ export default function CartInfo() {
         ListFooterComponent={() => (
           <View>
             <Text style={styles.subtotal}>Sub-Total: R$ {parseFloat(subtotal).toFixed(2)}</Text>
-            <Text style={styles.taxa}>Taxa de Entrega: R$ {parseFloat(delivery.taxa_entrega).toFixed(2)}</Text>
+            <Text style={styles.taxa}>Taxa de Entrega: R$ {parseFloat(delivery?.taxa_entrega).toFixed(2)}</Text>
             <Text style={styles.total}>Total: R$ {parseFloat(total).toFixed(2)}</Text>
           </View>
         )}
@@ -73,7 +83,7 @@ export default function CartInfo() {
         </TouchableOpacity>
       }
         <TouchableOpacity style={styles.btnCancel} onPress={()=>cancelarPedidoELimparCarrinho()}>
-          <Text style={{color: '#FFF', fontSize: 18}}>Cancelar Pedido</Text>
+          <Text style={{color: '#FFF', fontSize: 18}}>CANCELAR</Text>
         </TouchableOpacity>
 
     </View>
