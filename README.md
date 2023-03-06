@@ -31,7 +31,7 @@ Finally, make a new build of your app by <strong>running eas build --platform an
 ## Link para baixar o APK DeliveryBairro v1.0 (MVP) Build #1 (Quinta-feira, 27/10/2022 às 12:07)
 https://expo.dev/artifacts/eas/fByfzoZUQava4UaUjLChQa.apk
 
-## Design and Development Aided by AI via ChatGPT (OpenAi)
+## Some parts of the source code written with the aid of the artificial intelligence of OpenAI's ChatGPT
 https://openai.com/blog/chatgpt/
 
 ## Contato
