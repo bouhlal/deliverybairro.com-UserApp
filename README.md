@@ -1,5 +1,5 @@
 <img src=".temp/mobile.jpg" size="70%">
-# DeliveryBairro App 
+## DeliveryBairro App 
 Projeto desenvolvido em React Native + Expo CLI para gestão de pedidos e entregas foco no segmento de Delivery em Geral, tais como Bares, Restaurantes, Fastfoods, Distribuidoras de Bebidas, Farmárcias, Drograrias, Mercados de Conveniência, Supermercados, Gás de Cozinha, Água Mineral, etc.
 
 ## instalação
