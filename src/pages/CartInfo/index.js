@@ -8,7 +8,7 @@ import CardItem from '../../components/Cart';
 
 export default function CartInfo() {
   const navigation = useNavigation();
-  const { delivery, cart, subtotal, cleanCart } = useContext(CartContext);
+  const { cart, delivery, subtotal, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
   const [ total, setTotal ] = useState(0);
 
   useEffect(() => {

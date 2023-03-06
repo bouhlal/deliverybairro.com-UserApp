@@ -11,25 +11,36 @@ import DeliveryItemToSelect from '../../components/Delivery/DeliveryItemToSelect
 import DeliveryListItem from '../../components/Delivery/DeliveryListItem';
 
 export default function DeliveryInfo({ route }) {
-  const { delivery, setDelivery } = useContext(CartContext);
+  // const { delivery, setDelivery } = useContext(CartContext);
+  const [delivery, setDelivery] = useState(null);
+  const [listadeprodutos, setListaDeProdutos] = useState([]);
 
   const [show, showModal] = useState(false);
-  const [listaDeProdutos, setListaDeProdutos] = useState([]);
   const [produto, setProduto] = useState({});
   const [isAscending, setIsAscending] = useState(true);
 
   const id = route.params?.id; console.log('Delivery ID: ', id);
 
+  const {
+    setDelivery: setBasketDelivery, basket, basketItens 
+  } = useContext(CartContext);
+
   useEffect(() => {
     if (!id) {
       return;
     }
+    setBasketDelivery(null);
+    // fetch the restaurant with the id
     DataStore.query(Delivery, id).then(setDelivery);
     DataStore.query(Produto, (produto) => produto.deliverys?.deliveryId.eq(id)).then(setListaDeProdutos);
   }, [id]);
 
+  useEffect(() => {
+    setBasketDelivery(delivery);
+  }, [delivery]);
+
   function listByAZ() {
-    const listaordenada = [...listaDeProdutos].sort((a, b) => (
+    const listaordenada = [...listadeprodutos].sort((a, b) => (
       isAscending ? a.nome.localeCompare(b.nome) : b.nome.localeCompare(a.nome)
     ));
     setListaDeProdutos(listaordenada);
@@ -57,7 +68,7 @@ export default function DeliveryInfo({ route }) {
         </Modal>
         <Header />
         <FlatList
-          data={listaDeProdutos}
+          data={listadeprodutos}
           ListHeaderComponent={() => <DeliveryHeader delivery={delivery} listbyaz={()=>listByAZ()}/>}
           ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há produtos deste Delivery!</Text>}
           keyExtractor={(item) => item.id.toString()}

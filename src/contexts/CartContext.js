@@ -112,7 +112,7 @@ function CartConextProvider({ children }) {
     <CartContext.Provider 
       value={{ 
         cart, delivery, subtotal, 
-        cleanCart, AddToCart, RemoveFromCart,
+        AddToCart, RemoveFromCart, cleanCart, 
         setDelivery
       }}
     >
