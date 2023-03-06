@@ -4,14 +4,10 @@
 Projeto desenvolvido em React Native + Expo CLI para gestão de pedidos e entregas foco no segmento de Delivery em Geral, tais como Bares, Restaurantes, Fastfoods, Distribuidoras de Bebidas, Farmárcias, Drograrias, Mercados de Conveniência, Supermercados, Gás de Cozinha, Água Mineral, etc.
 
 ## instalação
-para instalar as dependências (node_modules) e executar o App, remova antes a pasta pasta "node_nodules" e o arquivo "yarn.lock" se existirem e execute o comando na pasta raiz:
+para instalar as dependências (node_modules) e executar o App, remova antes a pasta pasta "node_nodules" e o arquivo "yarn.lock" caso existam, em seguida execute o comando <strong>yarn install</strong> na pasta raiz, instale o Expo CLI: <strong>npm install -g expo-cli</strong> e o AWS Amplify CLI: <strong>npm install -g @aws-amplify/cli</strong>, caso for necessário, instale antes o Yarn: <strong>npm install --global yarn</strong>
 
-<strong>yarn install</strong> 
-para abrir e executar digite na pasta raiz do projeto:
-<strong>code . && npx expo start</strong>
-
-## Run 
--> "npx expo start" ou "expo run:android" para compilar e gerar o APK no dispositivo mobile via USB ou Wi-Fi c/ Expo.Go
+## Edit & Run App
+conecte o celular via cabo USB c/ o modo Desenvolvedor ativado e Depuração via USB, para abrir o editor (VSCode) e executar (via Expo GO) digite no prompt de comando <strong>code . && npx expo start</strong>
 
 ## Atualizando o NodeJs/npm, Expo-CLI e EAS-CLI
 https://www.npmjs.com/package/npm-windows-upgrade
