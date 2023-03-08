@@ -24,6 +24,7 @@ export default function Header() {
         <TouchableOpacity 
           onPress={()=> {
             alert("DeliveryBairro App v1.0 Build #21 "+'\n'+"(31) 98410-7540");
+            GoToLink("Home");
           }}
         >
           <Image source={logo_png} style={{ width: 85, height: 85 }} resizeMode="contain" />
