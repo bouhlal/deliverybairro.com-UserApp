@@ -13,30 +13,51 @@ import logo from "../../../assets/logo.png";
 import marca from "../../../assets/marca.png";
 
 export default function CustomSignUp() {
-  const { authSignUp } = useContext(AuthContext);
+  const { loading, authSignUp } = useContext(AuthContext);
   
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-
+  
   const navigation = useNavigation();
-
-  async function signUp() {
-    const username = email;
-    const phone_number = telefone;
-    setLoading(true);
-    try {
-      const { user } = await Auth.signUp({ username, password, attributes: { email, phone_number } });
-      setLoading(false);
-      console.log('Sign-Up Confirmed');
-      navigation.navigate('CustomSignUpCode', {email: email})
-    } catch (error) {
-      setLoading(false);
-      Alert.alert('Erro', 'Não foi possível registrar o login. Tente novamente.');
-      console.log('Error signing up...', error);
+  function checkEmptyField(field){
+    if(field.trim()==='') {
+      return false;
+    } else {
+      return true;
     }
   }
+
+  function signUp() {
+    const vUsername = checkEmptyField(email);
+    const vPassword = checkEmptyField(password);
+    const vPhoneNumber = checkEmptyField(telefone);
+    const vEmail = checkEmptyField(email);
+
+    if(!vEmail || !vPassword || vPhoneNumber || vEmail) {
+      alert('Preencha todos os campos!');
+    } else {
+      authSignUp({ vUsername, vPassword, attributes: { vEmail, vPhoneNumber } });
+      Alert.alert("Atenção","Um código de confirmação foi enviado para o seu e-mail.");
+      navigation.navigate('SignUpCode', {email: vEmail});
+    }
+  }
+
+  // async function signUp() {
+  //   const username = email;
+  //   const phone_number = telefone;
+  //   setLoading(true);
+  //   try {
+  //     const { user } = await Auth.signUp({ username, password, attributes: { email, phone_number } });
+  //     setLoading(false);
+  //     console.log('Sign-Up Confirmed');
+  //     navigation.navigate('CustomSignUpCode', {email: email})
+  //   } catch (error) {
+  //     setLoading(false);
+  //     Alert.alert('Erro', 'Não foi possível registrar o login. Tente novamente.');
+  //     console.log('Error signing up...', error);
+  //   }
+  // }
 
   // async function handleSignUp() {
   //   authSignUp(email, password, telefone);
@@ -70,6 +91,7 @@ export default function CustomSignUp() {
               onChangeText={maskEditPhone}
               keyboardType="numeric"
               placeholder="+55 31 99999-9999"
+              onSubmitEditing={() => Keyboard.dismiss()}
               style={styles.input}
             />
           </View>
@@ -83,6 +105,7 @@ export default function CustomSignUp() {
               autoCapitalize='none'
               keyboardType="email-address"
               textContentType="emailAddress"
+              onSubmitEditing={() => Keyboard.dismiss()}
               style={styles.input}
             />
           </View>
@@ -99,6 +122,7 @@ export default function CustomSignUp() {
               secureTextEntry={true}
               // onSubmitEditing={() => Keyboard.dismiss()}
               textContentType="password"
+              onSubmitEditing={() => Keyboard.dismiss()}
               style={styles.input}
             />
           </View>

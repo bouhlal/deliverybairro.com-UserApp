@@ -10,12 +10,12 @@ function OrderContextProvider({ children }) {
   const { usr_token, dbUser } = useContext(AuthContext);
   const { delivery, total, basket, basketItens } = useContext(CartContext);
 
-  console.log("dbUser (src/context/Order.js): ", dbUser);
+  console.log("usr_token (OrderContext): ", usr_token);
 
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
-    DataStore.query(Pedido, (pedido) => pedido.userID.eq(dbUser.token)).then(setPedidos);
+    DataStore.query(Pedido, (pedido) => pedido.userID.eq(usr_token)).then(setPedidos);
   }, [dbUser]);
 
   async function createOrder() {

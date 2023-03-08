@@ -4,7 +4,6 @@
 
 import React, { useState, useContext } from 'react';
 import { StyleSheet, View, Image, Text, TextInput, TouchableOpacity, Keyboard, ActivityIndicator, Alert, Platform } from 'react-native';
-import { Auth } from "aws-amplify";
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 
@@ -20,25 +19,25 @@ export default function CustomSignUpCode({ route }) {
 
   const navigation = useNavigation();
 
-  async function confirmSignUp() {
-    const username = email;
-    setLoading(true);
-    try {
-      await Auth.confirmSignUp(username, authCode);
-      setLoading(false);
-      Alert.alert("Info",`Código enviado com sucesso! Confira o email enviado para: ${username}`);
-      console.log('Code confirmed');
-      navigation.navigate('CustomSignIn');
-    } catch (error) {
-      setLoading(false);
-      Alert.alert("Erro", "O código de verificação não corresponde. Insira um código de verificação válido.");
-      console.log('Verification code does not match. Please enter a valid verification code.', error.authCode);
-    }
+  function confirmSignUp() {
+    authConfirmSignUp(email, code);
+    navigation.navigate('CustomSignIn');
   }
 
-  // function handleConfirmSignUpCode() {
-  //   authConfirmSignUp(email, code);
-  //   navigation.navigate('CustomSignIn');
+  // async function confirmSignUp() {
+  //   const username = email;
+  //   setLoading(true);
+  //   try {
+  //     await Auth.confirmSignUp(username, authCode);
+  //     setLoading(false);
+  //     Alert.alert("Info",`Código enviado com sucesso! Confira o email enviado para: ${username}`);
+  //     console.log('Code confirmed');
+  //     navigation.navigate('CustomSignIn');
+  //   } catch (error) {
+  //     setLoading(false);
+  //     Alert.alert("Erro", "O código de verificação não corresponde. Insira um código de verificação válido.");
+  //     console.log('Verification code does not match. Please enter a valid verification code.', error.authCode);
+  //   }
   // }
 
   return (
@@ -57,6 +56,7 @@ export default function CustomSignUpCode({ route }) {
             autoCapitalize='none'
             keyboardType='email-address'
             textContentType='emailAddress'
+            onSubmitEditing={() => Keyboard.dismiss()}
             style={styles.input}
           />
         </View>
@@ -68,7 +68,7 @@ export default function CustomSignUpCode({ route }) {
             onChangeText={(input)=>setAuthCode(input)}
             placeholder="######"
             keyboardType='numeric'
-            // onSubmitEditing={() => Keyboard.dismiss()}
+            onSubmitEditing={() => Keyboard.dismiss()}
             secureTextEntry={false}
             style={styles.input}
           />

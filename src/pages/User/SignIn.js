@@ -12,27 +12,31 @@ import logo from "../../../assets/logo.png"
 import marca from "../../../assets/marca.png"
 
 export default function CustomSignIn() {
-  const { authSignIn } = useContext(AuthContext);
+  const { loading, authSignIn } = useContext(AuthContext);
 
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);  
-  const [loading, setLoading] = useState(false);
-
+  
   const navigation = useNavigation();
 
-  async function signIn() {
-    const username = email;
-    setLoading(true);
-    try {
-      const user = await Auth.signIn(username, password);
-      setLoading(false);
-      console.log('Success');
-    } catch(error) {
-      Alert.alert('Erro', 'Não foi possível realizar o login. Verifique suas credenciais e tente novamente.');
-      console.log('Error signing in...', error)
-      setLoading(false);
-    }
+  function login() {
+    authSignIn(email, password);
   }
+
+  // async function signIn() {
+  //   const username = email;
+  //   setLoading(true);
+  //   try {
+  //     const user = await Auth.signIn(username, password);
+  //     setLoading(false);
+  //     console.log('Success');
+  //     <AppRoutes dbUser={user}/>
+  //   } catch(error) {
+  //     Alert.alert('Erro', 'Não foi possível realizar o login. Verifique suas credenciais e tente novamente.');
+  //     console.log('Error signing in...', error)
+  //     setLoading(false);
+  //   }
+  // }
 
   return (
     <View style={styles.background}>
@@ -50,6 +54,7 @@ export default function CustomSignIn() {
             autoCapitalize='none'
             keyboardType='email-address'
             textContentType='emailAddress'
+            onSubmitEditing={() => Keyboard.dismiss()}
             style={styles.input}
           />
         </View>
@@ -65,12 +70,12 @@ export default function CustomSignIn() {
             secureTextEntry={true}
             keyboardType='numeric'
             textContentType='password'
-            // onSubmitEditing={() => Keyboard.dismiss()}
+            onSubmitEditing={() => Keyboard.dismiss()}
             style={styles.input}
           />
         </View>
 
-        <TouchableOpacity style={styles.btnSubmit} onPress={signIn}>
+        <TouchableOpacity style={styles.btnSubmit} onPress={login}>
           {loading ? (
             <ActivityIndicator size={20} color='#FFF' />
           ) : (
