@@ -22,9 +22,10 @@ import Perfil from '../pages/User';
 
 import SideBar from '../components/SideBar';
 
+// const HomeStack = createStackNavigator();
+// const OrdersStack = createStackNavigator();
+
 const Stack = createStackNavigator();
-const HomeStack = createStackNavigator();
-const OrdersStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 

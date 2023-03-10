@@ -2,12 +2,14 @@ type BasketItem @model @auth(rules: [{allow: public}]) {
   id: ID!
   qtd: Int
   basketID: ID! @index(name: "byBasket")
+  Produto: Produto! @hasOne
 }
 
 type Basket @model @auth(rules: [{allow: public}]) {
   id: ID!
   BasketItems: [BasketItem] @hasMany(indexName: "byBasket", fields: ["id"])
   userID: ID! @index(name: "byUser")
+  deliveryID: ID! @index(name: "byDelivery")
 }
 
 type Categoria @model @auth(rules: [{allow: public}]) {
@@ -62,6 +64,7 @@ type Delivery @model @auth(rules: [{allow: public}]) {
   Categorias: [Categoria] @manyToMany(relationName: "DeliveryCategoria")
   latitude: Float
   longitude: Float
+  Baskets: [Basket] @hasMany(indexName: "byDelivery", fields: ["id"])
 }
 
 type Item @model @auth(rules: [{allow: public}]) {

@@ -1,6 +1,11 @@
+/**
+ * index.js (src/context/OrderContext.js)
+ */
+
 import { useState, useEffect, useContext, createContext } from "react";
 import { DataStore } from "aws-amplify";
 import { Pedido, Item } from "../models";
+
 import { AuthContext } from "./AuthContext";
 import { CartContext } from "./CartContext";
 
@@ -20,7 +25,7 @@ function OrderContextProvider({ children }) {
 
   async function createOrder() {
     // Create new Order by Delivery
-    const novoPedido = await DataStore.save(
+    const pedido = await DataStore.save(
       new Pedido({
         userID: usr_token,
         Delivery: delivery,
@@ -35,8 +40,8 @@ function OrderContextProvider({ children }) {
         DataStore.save(
           new Itens({
             qtd: basketItem.qtd,
-            pedidoID: novoPedido.id,
-            Item: basketItens.Item,
+            pedidoID: pedido.id,
+            Item: basketItem.Item,
           })
         )
       )
@@ -44,8 +49,8 @@ function OrderContextProvider({ children }) {
 
     // Delete Basket
     await DataStore.delete(basket);
-    setPedidos([...pedidos, novoPedido]);
-    return newOrder;
+    setPedidos([...pedidos, pedido]);
+    return pedido;
   };
 
   async function getOrder(id) {

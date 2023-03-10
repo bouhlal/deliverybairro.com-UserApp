@@ -1,3 +1,7 @@
+/**
+ * DeliveryListItem.js (src/components/Delivery/DeliveryListItem.js) 
+ */
+
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 import NO_IMAGE from "../../../assets/sem-imagem.jpg";

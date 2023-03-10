@@ -1,3 +1,7 @@
+/**
+ * index.js (src/pages/DeliveryInfo/index.js) 
+ */
+
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, FlatList, Modal, SafeAreaView, ActivityIndicator } from "react-native";
 import { DataStore } from "aws-amplify";

@@ -1,8 +1,11 @@
-import { useState, useContext, createContext } from 'react';
+/**
+ * index.js (src/context/CartContext.js)
+ */
 
+import { useState, createContext } from 'react';
 export const CartContext = createContext({});
 
-function CartConextProvider({ children }) {
+function CartContextProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [delivery, setDelivery] = useState([]);
   const [subtotal, setSubTotal] = useState(0);
@@ -23,11 +26,11 @@ function CartConextProvider({ children }) {
       qtd: qtd,
       total: total
     }
-    setCart(produtos => [...produtos, data]);
+    setCart(itens => [...itens, data]);
     setCartTotal([...cart, data])
   };
 
-  async function RemoveFromCart(produto){
+  async function RemoveFromCart(produto)  {
     const i = cart.findIndex(item => item.id === produto.id);
     if (cart[i]?.qtd >1) {
       let cList = cart;
@@ -65,7 +68,7 @@ function CartConextProvider({ children }) {
   )
 }
 
-export default CartConextProvider;
+export default CartContextProvider;
 
 
 /**

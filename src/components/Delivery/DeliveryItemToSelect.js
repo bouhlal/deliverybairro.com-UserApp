@@ -1,3 +1,7 @@
+/**
+ * DeliveryItemToSelect.js (src/components/Delivery/DeliveryItemToSelect.js) 
+ */
+
 import { useState, useEffect, useContext } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";

@@ -1,3 +1,7 @@
+/**
+ * index.js (src/pages/Deliveries/index.js)
+ */
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList, TouchableOpacity, SafeAreaView, ActivityIndicator, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';

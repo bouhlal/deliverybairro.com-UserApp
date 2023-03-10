@@ -1,3 +1,7 @@
+/**
+ * DeliveryHeader.js (src/components/Delivery/DeliveryHeader.js) 
+ */
+
 import { View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import { MaterialCommunityIcons, Fontisto } from '@expo/vector-icons';
 

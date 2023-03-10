@@ -1,6 +1,6 @@
 import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-amplify/datastore";
 // @ts-ignore
-import { LazyLoading, LazyLoadingDisabled, AsyncCollection, AsyncItem } from "@aws-amplify/datastore";
+import { LazyLoading, LazyLoadingDisabled, AsyncItem, AsyncCollection } from "@aws-amplify/datastore";
 
 export enum Situacao {
   ATIVO = "ATIVO",
@@ -70,8 +70,10 @@ type EagerBasketItem = {
   readonly id: string;
   readonly qtd?: number | null;
   readonly basketID: string;
+  readonly Produto: Produto;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
+  readonly basketItemProdutoId: string;
 }
 
 type LazyBasketItem = {
@@ -82,8 +84,10 @@ type LazyBasketItem = {
   readonly id: string;
   readonly qtd?: number | null;
   readonly basketID: string;
+  readonly Produto: AsyncItem<Produto>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
+  readonly basketItemProdutoId: string;
 }
 
 export declare type BasketItem = LazyLoading extends LazyLoadingDisabled ? EagerBasketItem : LazyBasketItem
@@ -100,6 +104,7 @@ type EagerBasket = {
   readonly id: string;
   readonly BasketItems?: (BasketItem | null)[] | null;
   readonly userID: string;
+  readonly deliveryID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -112,6 +117,7 @@ type LazyBasket = {
   readonly id: string;
   readonly BasketItems: AsyncCollection<BasketItem>;
   readonly userID: string;
+  readonly deliveryID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -222,6 +228,7 @@ type EagerDelivery = {
   readonly Categorias?: (DeliveryCategoria | null)[] | null;
   readonly latitude?: number | null;
   readonly longitude?: number | null;
+  readonly Baskets?: (Basket | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -250,6 +257,7 @@ type LazyDelivery = {
   readonly Categorias: AsyncCollection<DeliveryCategoria>;
   readonly latitude?: number | null;
   readonly longitude?: number | null;
+  readonly Baskets: AsyncCollection<Basket>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

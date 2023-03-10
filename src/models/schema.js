@@ -24,6 +24,24 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "Produto": {
+                    "name": "Produto",
+                    "isArray": false,
+                    "type": {
+                        "model": "Produto"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": [
+                            "id"
+                        ],
+                        "targetNames": [
+                            "basketItemProdutoId"
+                        ]
+                    }
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -39,6 +57,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
+                },
+                "basketItemProdutoId": {
+                    "name": "basketItemProdutoId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -108,6 +133,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "deliveryID": {
+                    "name": "deliveryID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -138,6 +170,15 @@ export const schema = {
                         "name": "byUser",
                         "fields": [
                             "userID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byDelivery",
+                        "fields": [
+                            "deliveryID"
                         ]
                     }
                 },
@@ -533,6 +574,22 @@ export const schema = {
                     "type": "Float",
                     "isRequired": false,
                     "attributes": []
+                },
+                "Baskets": {
+                    "name": "Baskets",
+                    "isArray": true,
+                    "type": {
+                        "model": "Basket"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "deliveryID"
+                        ]
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -1334,5 +1391,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.6",
-    "version": "627c182b16e477fd80f570ed2c56ca78"
+    "version": "4fc2865086ae9b1c444344bd9f0802f0"
 };
