@@ -13,11 +13,10 @@ export const OrderContext = createContext({});
 
 function OrderContextProvider({ children }) {
   const { usr_token, dbUser } = useContext(AuthContext);
-  const { delivery, total, basket, basketItens } = useContext(CartContext);
+  const { delivery, total, cart, cartItens } = useContext(CartContext);
+  const [pedidos, setPedidos] = useState([]);
 
   console.log("usr_token (OrderContext): ", usr_token);
-
-  const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
     DataStore.query(Pedido, (pedido) => pedido.userID.eq(usr_token)).then(setPedidos);
@@ -34,21 +33,21 @@ function OrderContextProvider({ children }) {
       })
     );
 
-    // Add all basketItens to the new Order
+    // Add all cartItens to the new Order
     await Promise.all(
-      basketItens.map((basketItem) =>
+      cartItens.map((cartItem) =>
         DataStore.save(
           new Itens({
-            qtd: basketItem.qtd,
+            qtd: cartItem.qtd,
             pedidoID: pedido.id,
-            Item: basketItem.Item,
+            Item: cartItem.Item,
           })
         )
       )
     );
 
-    // Delete Basket
-    await DataStore.delete(basket);
+    // Delete Cart
+    await DataStore.delete(cart);
     setPedidos([...pedidos, pedido]);
     return pedido;
   };

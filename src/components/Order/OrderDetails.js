@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { View, Text, Image, FlatList, ActivityIndicator, StyleSheet } from "react-native";
 import { OrderContext } from "../../contexts/OrderContext";
 
-import Item from "../../components/Item";
+import Item from "../Item";
 
 export default function OrderDetails({ id }) {
   const [pedido, setPedido] = useState();

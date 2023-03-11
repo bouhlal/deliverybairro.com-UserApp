@@ -2,7 +2,7 @@
  * index.js (src/context/CartContext.js)
  */
 
-import { useState, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import { DataStore } from 'aws-amplify';
 import { Cart, CartItem, Produto } from "../models";
 import { AuthContext } from './AuthContext';

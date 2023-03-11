@@ -8,22 +8,18 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { FontAwesome5, Fontisto, Entypo } from '@expo/vector-icons';
-import { AuthContext } from '../contexts/AuthContext';
 
 import Home from '../pages/Home';
 import Deliveries from '../pages/Deliveries';
 import DeliveryInfo from '../pages/DeliveryInfo';
 import CartInfo from '../pages/CartInfo';
 import Pedidos from '../pages/Pedidos';
-import OrderDetails from "../pages/Pedidos/_OrderDetails";
-import OrderLiveUpdates from "../pages/Pedidos/_OrderLiveUpdates";
-import OrderPayment from '../pages/Pedidos/_OrderPayment';
+import OrderDetails from '../components/Order/OrderDetails';
+import OrderLiveUpdates from '../components/Order/OrderLiveUpdates';
+import OrderPayment from '../components/Order/OrderPayment';
 import Perfil from '../pages/User';
 
 import SideBar from '../components/SideBar';
-
-// const HomeStack = createStackNavigator();
-// const OrdersStack = createStackNavigator();
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -155,7 +151,12 @@ export default function AppRoutes() {
  * tabela de cores: #FFB901 #55A9D6 #7F7B7B #5D5D5D #FF0000 #0033CC #FFF000 #131313 #4DCE4D
  */
 
-//   const { usr_token, dbUser } = useContext(AuthContext);
+// import { AuthContext } from '../contexts/AuthContext';
+
+// const HomeStack = createStackNavigator();
+// const OrdersStack = createStackNavigator();
+
+// const { usr_token, dbUser } = useContext(AuthContext);
 
 //   return (
 //     <Stack.Navigator screenOptions={{ headerShown: false }}>

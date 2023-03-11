@@ -60,20 +60,20 @@ const Uf = {
   "TO": "TO"
 };
 
-const { CartItem, Cart, Categoria, User, Delivery, Item, Pedido, Produto, Courier, DeliveryCategoria, DeliveryProduto } = initSchema(schema);
+const { Pedido, User, Delivery, CartItem, Cart, Categoria, Item, Produto, Courier, DeliveryProduto, DeliveryCategoria } = initSchema(schema);
 
 export {
+  Pedido,
+  User,
+  Delivery,
   CartItem,
   Cart,
   Categoria,
-  User,
-  Delivery,
   Item,
-  Pedido,
   Produto,
   Courier,
-  DeliveryCategoria,
   DeliveryProduto,
+  DeliveryCategoria,
   Situacao,
   Plano,
   Status,

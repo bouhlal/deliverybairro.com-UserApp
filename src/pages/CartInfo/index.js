@@ -32,7 +32,7 @@ export default function CartInfo() {
     await cleanCart();
     navigation.goBack();
   }
-
+ 
   return (
     <View style={styles.container}>
 
