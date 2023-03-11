@@ -1,19 +1,23 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet} from 'react-native';
-import { AuthContext } from '../../contexts/AuthContext';
+import { OrderContext } from '../../contexts/OrderContext';
 
 import Header from '../../components/Header';
+import OrderListItem from '../../components/Order/OrderListItem';
 
 export default function Pedidos() { 
-  const { dbUser } = useContext(AuthContext);
-  console.log("Pedidos (dbUser): ", dbUser);
+  const { pedidos } = useContext(OrderContext);
+  console.log(pedidos)
+
   return (
     <View style={styles.background}>
       <Header/>
       <View style={styles.container}>
         <Text style={styles.subtitle}>Meus Pedidos</Text>
-        <Text style={styles.line18}>{dbUser.nome} {dbUser.sobrenome}</Text>
-        <Text style={styles.line13}>{dbUser.token}</Text>
+        <FlatList
+          data={pedidos}
+          renderItem={({ item }) => <OrderListItem order={item} />}
+        />
       </View>
     </View>
   );
@@ -22,6 +26,7 @@ export default function Pedidos() {
 const styles = StyleSheet.create({
   background:{
     flex: 1,
+    width: "100%",
     backgroundColor: "#FFF",
   },
   container:{

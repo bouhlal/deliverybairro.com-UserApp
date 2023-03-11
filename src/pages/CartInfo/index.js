@@ -2,96 +2,35 @@
  * index.js (src/pages/CartInfo/index.js) 
  */
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import { Fontisto } from "@expo/vector-icons";
-import { useNavigation } from '@react-navigation/native';
-import { AuthContext } from '../../contexts/AuthContext';
 import { CartContext } from '../../contexts/CartContext';
 import { OrderContext } from '../../contexts/OrderContext';
+import { useNavigation } from '@react-navigation/native';
 
-import { DataStore } from 'aws-amplify';
-import { Basket, BasketItem } from "../../models";
-
-import CardItem from '../../components/Cart';
+import { CartItemList } from '../../components/Cart';
 
 // exibe o Carrinho de Compras e permite enviar/gerar o Pedido (Order) através da função createOrder()
 
 export default function CartInfo() {
-  const { dbUser } = useContext(AuthContext);
-  const { cart, delivery, subtotal, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
+  const { delivery, cart, cartItens, subtotal, total, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
   const { createOrder } = useContext(OrderContext);
-  const [basket, setBasket] = useState(null);
-  const [basketItens, setBasketItens] = useState([]);
-  const [total, setTotal] = useState(0);
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    let soma = parseFloat(subtotal) + delivery?.taxa_entrega;
-    setTotal(soma); console.log(soma);
-  }, [subtotal]);
-
-  useEffect(() => {
-    DataStore.query(Basket, (b) =>
-      b.deliveryID.eq(delivery.id).userID.eq(dbUser.id)
-    ).then((baskets) => setBasket(baskets[0]));
-  }, [dbUser, delivery]);
-
-  useEffect(() => {
-    if (basket) {
-      DataStore.query(BasketItem, (bd) => bd.basketID.eq(basket.id)).then(
-        setBasketItens
-      );
-    }
-  }, [basket]);
-
-  async function addItemToBasket(item) {
-    // get the existing basket or create a new one
-    let theBasket = basket || (await createNewBasket());
-    // create a BasketDish item and save to Datastore
-    const newItem = await DataStore.save(
-      new BasketItem({ quantity: item.qtd, Produto: item.produto, basketID: theBasket.id })
-    );
-    setBasketItens([...basketItens, newItem]);
-  };
-
-  async function createNewBasket() {
-    const newBasket = await DataStore.save(
-      new Basket({ userID: dbUser.id, deliveryID: delivery.id })
-    );
-    setBasket(newBasket);
-    return newBasket;
-  };
-
-  async function enviarPedidoELimparCarrinho() {
-    console.log(cart);
-    Alert.alert("Atenção", "See ate LOG the content of Cart");
-
-    cart.map((item) => {
-      addItemToBasket(item);
-    });
-    
-    Alert.alert("Envia pedido para o Delivery, e limpa a Cesta de Compras...")
-    const newOrder = await createOrder();
+  async function gerarPedidoELimparCestaDeCompras() {
+    const novoPedido = await createOrder();
     await cleanCart();
     navigation.navigate("Pedidos", {
       screen: "Pedidos",
-      params: { id: newOrder.id },
+      params: { id: novoPedido.id },
     });
-    // GoToLink("Pedidos");
-  }
+  };
 
-  async function cancelarPedidoELimparCarrinho() {
-    Alert.alert("Cancela pedido e limpa a Cesta de Compras...")
+  async function cancelarPedidoELimparCestaDeCompras() {
     await cleanCart();
     navigation.goBack();
-  }
-
-  function GoToLink(link) {
-    return (
-      navigation.navigate(link)
-    )
   }
 
   return (
@@ -113,7 +52,7 @@ export default function CartInfo() {
         keyExtractor={(item)=>String(item.id)}
         ListEmptyComponent={() => <Text style={styles.empty}>Cesta de Compras vazia!</Text>}
         renderItem={({item})=>(
-          <CardItem
+          <CartItemList
             produto={item}
             AddQtd={() => AddToCart(item, 1, item.vr_unitario)}
             RemoveQtd={() => RemoveFromCart(item)}
@@ -130,11 +69,11 @@ export default function CartInfo() {
 
       {
         (cart.length > 0) &&
-        <TouchableOpacity style={styles.btnAdd} onPress={()=>enviarPedidoELimparCarrinho()}>
+        <TouchableOpacity style={styles.btnAdd} onPress={()=>gerarPedidoELimparCestaDeCompras()}>
           <Text style={{color: '#FFF', fontSize: 18}}>Enviar Pedido</Text>
         </TouchableOpacity>
       }
-        <TouchableOpacity style={styles.btnCancel} onPress={()=>cancelarPedidoELimparCarrinho()}>
+        <TouchableOpacity style={styles.btnCancel} onPress={()=>cancelarPedidoELimparCestaDeCompras()}>
           <Text style={{color: '#FFF', fontSize: 18}}>CANCELAR</Text>
         </TouchableOpacity>
 

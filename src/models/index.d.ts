@@ -1,6 +1,6 @@
 import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-amplify/datastore";
 // @ts-ignore
-import { LazyLoading, LazyLoadingDisabled, AsyncItem, AsyncCollection } from "@aws-amplify/datastore";
+import { LazyLoading, LazyLoadingDisabled, AsyncCollection, AsyncItem } from "@aws-amplify/datastore";
 
 export enum Situacao {
   ATIVO = "ATIVO",
@@ -62,70 +62,66 @@ export enum Uf {
 
 
 
-type EagerBasketItem = {
+type EagerCartItem = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<BasketItem, 'id'>;
+    identifier: ManagedIdentifier<CartItem, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly qtd?: number | null;
-  readonly basketID: string;
-  readonly Produto: Produto;
+  readonly qtd: number;
+  readonly cartID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly basketItemProdutoId: string;
 }
 
-type LazyBasketItem = {
+type LazyCartItem = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<BasketItem, 'id'>;
+    identifier: ManagedIdentifier<CartItem, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly qtd?: number | null;
-  readonly basketID: string;
-  readonly Produto: AsyncItem<Produto>;
+  readonly qtd: number;
+  readonly cartID: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly basketItemProdutoId: string;
 }
 
-export declare type BasketItem = LazyLoading extends LazyLoadingDisabled ? EagerBasketItem : LazyBasketItem
+export declare type CartItem = LazyLoading extends LazyLoadingDisabled ? EagerCartItem : LazyCartItem
 
-export declare const BasketItem: (new (init: ModelInit<BasketItem>) => BasketItem) & {
-  copyOf(source: BasketItem, mutator: (draft: MutableModel<BasketItem>) => MutableModel<BasketItem> | void): BasketItem;
+export declare const CartItem: (new (init: ModelInit<CartItem>) => CartItem) & {
+  copyOf(source: CartItem, mutator: (draft: MutableModel<CartItem>) => MutableModel<CartItem> | void): CartItem;
 }
 
-type EagerBasket = {
+type EagerCart = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Basket, 'id'>;
+    identifier: ManagedIdentifier<Cart, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly BasketItems?: (BasketItem | null)[] | null;
   readonly userID: string;
   readonly deliveryID: string;
+  readonly CartItems?: CartItem[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-type LazyBasket = {
+type LazyCart = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<Basket, 'id'>;
+    identifier: ManagedIdentifier<Cart, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly BasketItems: AsyncCollection<BasketItem>;
   readonly userID: string;
   readonly deliveryID: string;
+  readonly CartItems: AsyncCollection<CartItem>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
 
-export declare type Basket = LazyLoading extends LazyLoadingDisabled ? EagerBasket : LazyBasket
+export declare type Cart = LazyLoading extends LazyLoadingDisabled ? EagerCart : LazyCart
 
-export declare const Basket: (new (init: ModelInit<Basket>) => Basket) & {
-  copyOf(source: Basket, mutator: (draft: MutableModel<Basket>) => MutableModel<Basket> | void): Basket;
+export declare const Cart: (new (init: ModelInit<Cart>) => Cart) & {
+  copyOf(source: Cart, mutator: (draft: MutableModel<Cart>) => MutableModel<Cart> | void): Cart;
 }
 
 type EagerCategoria = {
@@ -134,7 +130,7 @@ type EagerCategoria = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly descricao?: string | null;
+  readonly descricao: string;
   readonly url_imagem?: string | null;
   readonly ordem?: string | null;
   readonly deliverys?: (DeliveryCategoria | null)[] | null;
@@ -148,7 +144,7 @@ type LazyCategoria = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly descricao?: string | null;
+  readonly descricao: string;
   readonly url_imagem?: string | null;
   readonly ordem?: string | null;
   readonly deliverys: AsyncCollection<DeliveryCategoria>;
@@ -168,14 +164,14 @@ type EagerUser = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly nome?: string | null;
-  readonly sobrenome?: string | null;
+  readonly nome: string;
+  readonly sobrenome: string;
   readonly url_foto?: string | null;
-  readonly token?: string | null;
-  readonly Baskets?: (Basket | null)[] | null;
-  readonly Pedidos?: (Pedido | null)[] | null;
-  readonly latitude?: number | null;
-  readonly longitude?: number | null;
+  readonly token: string;
+  readonly Baskets?: Cart[] | null;
+  readonly Pedidos?: Cart[] | null;
+  readonly latitude: number;
+  readonly longitude: number;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -186,14 +182,14 @@ type LazyUser = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly nome?: string | null;
-  readonly sobrenome?: string | null;
+  readonly nome: string;
+  readonly sobrenome: string;
   readonly url_foto?: string | null;
-  readonly token?: string | null;
-  readonly Baskets: AsyncCollection<Basket>;
-  readonly Pedidos: AsyncCollection<Pedido>;
-  readonly latitude?: number | null;
-  readonly longitude?: number | null;
+  readonly token: string;
+  readonly Baskets: AsyncCollection<Cart>;
+  readonly Pedidos: AsyncCollection<Cart>;
+  readonly latitude: number;
+  readonly longitude: number;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -210,25 +206,25 @@ type EagerDelivery = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly nome?: string | null;
-  readonly plano_assinatura?: Plano | keyof typeof Plano | null;
-  readonly situacao?: Situacao | keyof typeof Situacao | null;
-  readonly responsavel?: string | null;
+  readonly nome: string;
+  readonly plano_assinatura: Plano | keyof typeof Plano;
+  readonly situacao: Situacao | keyof typeof Situacao;
+  readonly responsavel: string;
   readonly telefone?: string | null;
   readonly email?: string | null;
-  readonly endereco?: string | null;
-  readonly uf?: Uf | keyof typeof Uf | null;
+  readonly endereco: string;
+  readonly uf: Uf | keyof typeof Uf;
   readonly horario?: string | null;
-  readonly minDeliveryTime?: number | null;
-  readonly maxDeliveryTime?: number | null;
+  readonly minDeliveryTime: number;
+  readonly maxDeliveryTime: number;
   readonly rating?: number | null;
-  readonly taxa_entrega?: number | null;
+  readonly taxa_entrega: number;
   readonly url_imagem?: string | null;
-  readonly Produtos?: (DeliveryProduto | null)[] | null;
-  readonly Categorias?: (DeliveryCategoria | null)[] | null;
-  readonly latitude?: number | null;
-  readonly longitude?: number | null;
-  readonly Baskets?: (Basket | null)[] | null;
+  readonly Produtos?: DeliveryProduto[] | null;
+  readonly Categorias?: DeliveryCategoria[] | null;
+  readonly latitude: number;
+  readonly longitude: number;
+  readonly Baskets?: Cart[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -239,25 +235,25 @@ type LazyDelivery = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly nome?: string | null;
-  readonly plano_assinatura?: Plano | keyof typeof Plano | null;
-  readonly situacao?: Situacao | keyof typeof Situacao | null;
-  readonly responsavel?: string | null;
+  readonly nome: string;
+  readonly plano_assinatura: Plano | keyof typeof Plano;
+  readonly situacao: Situacao | keyof typeof Situacao;
+  readonly responsavel: string;
   readonly telefone?: string | null;
   readonly email?: string | null;
-  readonly endereco?: string | null;
-  readonly uf?: Uf | keyof typeof Uf | null;
+  readonly endereco: string;
+  readonly uf: Uf | keyof typeof Uf;
   readonly horario?: string | null;
-  readonly minDeliveryTime?: number | null;
-  readonly maxDeliveryTime?: number | null;
+  readonly minDeliveryTime: number;
+  readonly maxDeliveryTime: number;
   readonly rating?: number | null;
-  readonly taxa_entrega?: number | null;
+  readonly taxa_entrega: number;
   readonly url_imagem?: string | null;
   readonly Produtos: AsyncCollection<DeliveryProduto>;
   readonly Categorias: AsyncCollection<DeliveryCategoria>;
-  readonly latitude?: number | null;
-  readonly longitude?: number | null;
-  readonly Baskets: AsyncCollection<Basket>;
+  readonly latitude: number;
+  readonly longitude: number;
+  readonly Baskets: AsyncCollection<Cart>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -308,12 +304,12 @@ type EagerPedido = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly dt_pedido?: string | null;
-  readonly vr_subtotal?: number | null;
-  readonly vr_taxaentrega?: number | null;
-  readonly vr_total?: number | null;
-  readonly status?: Status | keyof typeof Status | null;
-  readonly token_sms?: string | null;
+  readonly dt_pedido: string;
+  readonly vr_subtotal: number;
+  readonly vr_taxaentrega: number;
+  readonly vr_total: number;
+  readonly status: Status | keyof typeof Status;
+  readonly token_sms: string;
   readonly Items?: (Item | null)[] | null;
   readonly Delivery?: Delivery | null;
   readonly Courier?: Courier | null;
@@ -330,12 +326,12 @@ type LazyPedido = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly dt_pedido?: string | null;
-  readonly vr_subtotal?: number | null;
-  readonly vr_taxaentrega?: number | null;
-  readonly vr_total?: number | null;
-  readonly status?: Status | keyof typeof Status | null;
-  readonly token_sms?: string | null;
+  readonly dt_pedido: string;
+  readonly vr_subtotal: number;
+  readonly vr_taxaentrega: number;
+  readonly vr_total: number;
+  readonly status: Status | keyof typeof Status;
+  readonly token_sms: string;
   readonly Items: AsyncCollection<Item>;
   readonly Delivery: AsyncItem<Delivery | undefined>;
   readonly Courier: AsyncItem<Courier | undefined>;
@@ -358,11 +354,11 @@ type EagerProduto = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly nome?: string | null;
+  readonly nome: string;
   readonly descricao?: string | null;
-  readonly vr_unitario?: number | null;
+  readonly vr_unitario: number;
   readonly url_imagem?: string | null;
-  readonly deliverys?: (DeliveryProduto | null)[] | null;
+  readonly deliverys?: DeliveryProduto[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -373,9 +369,9 @@ type LazyProduto = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly nome?: string | null;
+  readonly nome: string;
   readonly descricao?: string | null;
-  readonly vr_unitario?: number | null;
+  readonly vr_unitario: number;
   readonly url_imagem?: string | null;
   readonly deliverys: AsyncCollection<DeliveryProduto>;
   readonly createdAt?: string | null;
@@ -394,16 +390,16 @@ type EagerCourier = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly nome?: string | null;
-  readonly cpf?: string | null;
-  readonly telefone?: string | null;
+  readonly nome: string;
+  readonly cpf: string;
+  readonly telefone: string;
   readonly endereco?: string | null;
   readonly uf?: Uf | keyof typeof Uf | null;
-  readonly tipo_transporte?: Transporte | keyof typeof Transporte | null;
+  readonly tipo_transporte: Transporte | keyof typeof Transporte;
   readonly url_foto?: string | null;
-  readonly token_sms?: string | null;
-  readonly latitude?: number | null;
-  readonly longitude?: number | null;
+  readonly token_sms: string;
+  readonly latitude: number;
+  readonly longitude: number;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -414,16 +410,16 @@ type LazyCourier = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly nome?: string | null;
-  readonly cpf?: string | null;
-  readonly telefone?: string | null;
+  readonly nome: string;
+  readonly cpf: string;
+  readonly telefone: string;
   readonly endereco?: string | null;
   readonly uf?: Uf | keyof typeof Uf | null;
-  readonly tipo_transporte?: Transporte | keyof typeof Transporte | null;
+  readonly tipo_transporte: Transporte | keyof typeof Transporte;
   readonly url_foto?: string | null;
-  readonly token_sms?: string | null;
-  readonly latitude?: number | null;
-  readonly longitude?: number | null;
+  readonly token_sms: string;
+  readonly latitude: number;
+  readonly longitude: number;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

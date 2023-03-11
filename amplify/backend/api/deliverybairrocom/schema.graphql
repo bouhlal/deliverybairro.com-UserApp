@@ -1,20 +1,19 @@
-type BasketItem @model @auth(rules: [{allow: public}]) {
+type CartItem @model @auth(rules: [{allow: public}]) {
   id: ID!
-  qtd: Int
-  basketID: ID! @index(name: "byBasket")
-  Produto: Produto! @hasOne
+  qtd: Int!
+  cartID: ID! @index(name: "byCart")
 }
 
-type Basket @model @auth(rules: [{allow: public}]) {
+type Cart @model @auth(rules: [{allow: public}]) {
   id: ID!
-  BasketItems: [BasketItem] @hasMany(indexName: "byBasket", fields: ["id"])
   userID: ID! @index(name: "byUser")
   deliveryID: ID! @index(name: "byDelivery")
+  CartItems: [CartItem!] @hasMany(indexName: "byCart", fields: ["id"])
 }
 
 type Categoria @model @auth(rules: [{allow: public}]) {
   id: ID!
-  descricao: String
+  descricao: String!
   url_imagem: AWSURL
   ordem: String
   deliverys: [Delivery] @manyToMany(relationName: "DeliveryCategoria")
@@ -22,14 +21,14 @@ type Categoria @model @auth(rules: [{allow: public}]) {
 
 type User @model @auth(rules: [{allow: public}]) {
   id: ID!
-  nome: String
-  sobrenome: String
+  nome: String!
+  sobrenome: String!
   url_foto: AWSURL
-  token: String
-  Baskets: [Basket] @hasMany(indexName: "byUser", fields: ["id"])
-  Pedidos: [Pedido] @hasMany(indexName: "byUser", fields: ["id"])
-  latitude: Float
-  longitude: Float
+  token: String!
+  Baskets: [Cart!] @hasMany(indexName: "byUser", fields: ["id"])
+  Pedidos: [Cart!] @hasMany(indexName: "byUser", fields: ["id"])
+  latitude: Float!
+  longitude: Float!
 }
 
 enum Situacao {
@@ -46,25 +45,25 @@ enum Plano {
 
 type Delivery @model @auth(rules: [{allow: public}]) {
   id: ID!
-  nome: String
-  plano_assinatura: Plano
-  situacao: Situacao
-  responsavel: String
+  nome: String!
+  plano_assinatura: Plano!
+  situacao: Situacao!
+  responsavel: String!
   telefone: AWSPhone
   email: AWSEmail
-  endereco: AWSJSON
-  uf: UF
+  endereco: AWSJSON!
+  uf: UF!
   horario: String
-  minDeliveryTime: Int
-  maxDeliveryTime: Int
+  minDeliveryTime: Int!
+  maxDeliveryTime: Int!
   rating: Float
-  taxa_entrega: Float
+  taxa_entrega: Float!
   url_imagem: String
-  Produtos: [Produto] @manyToMany(relationName: "DeliveryProduto")
-  Categorias: [Categoria] @manyToMany(relationName: "DeliveryCategoria")
-  latitude: Float
-  longitude: Float
-  Baskets: [Basket] @hasMany(indexName: "byDelivery", fields: ["id"])
+  Produtos: [Produto!] @manyToMany(relationName: "DeliveryProduto")
+  Categorias: [Categoria!] @manyToMany(relationName: "DeliveryCategoria")
+  latitude: Float!
+  longitude: Float!
+  Baskets: [Cart!] @hasMany(indexName: "byDelivery", fields: ["id"])
 }
 
 type Item @model @auth(rules: [{allow: public}]) {
@@ -88,12 +87,12 @@ enum Status {
 
 type Pedido @model @auth(rules: [{allow: public}]) {
   id: ID!
-  dt_pedido: AWSDateTime
-  vr_subtotal: Float
-  vr_taxaentrega: Float
-  vr_total: Float
-  status: Status
-  token_sms: String
+  dt_pedido: AWSDateTime!
+  vr_subtotal: Float!
+  vr_taxaentrega: Float!
+  vr_total: Float!
+  status: Status!
+  token_sms: String!
   Items: [Item] @hasMany(indexName: "byPedido", fields: ["id"])
   Delivery: Delivery @hasOne
   Courier: Courier @hasOne
@@ -102,11 +101,11 @@ type Pedido @model @auth(rules: [{allow: public}]) {
 
 type Produto @model @auth(rules: [{allow: public}]) {
   id: ID!
-  nome: String
+  nome: String!
   descricao: String
-  vr_unitario: Float
+  vr_unitario: Float!
   url_imagem: AWSURL
-  deliverys: [Delivery] @manyToMany(relationName: "DeliveryProduto")
+  deliverys: [Delivery!] @manyToMany(relationName: "DeliveryProduto")
 }
 
 enum Transporte {
@@ -146,15 +145,15 @@ enum UF {
 
 type Courier @model @auth(rules: [{allow: public}]) {
   id: ID!
-  nome: String
-  cpf: String
-  telefone: AWSPhone
+  nome: String!
+  cpf: String!
+  telefone: AWSPhone!
   endereco: AWSJSON
   uf: UF
-  tipo_transporte: Transporte
+  tipo_transporte: Transporte!
   url_foto: AWSURL
-  token_sms: String
-  latitude: Float
-  longitude: Float
+  token_sms: String!
+  latitude: Float!
+  longitude: Float!
 }
  

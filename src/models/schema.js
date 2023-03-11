@@ -1,7 +1,7 @@
 export const schema = {
     "models": {
-        "BasketItem": {
-            "name": "BasketItem",
+        "CartItem": {
+            "name": "CartItem",
             "fields": {
                 "id": {
                     "name": "id",
@@ -14,33 +14,15 @@ export const schema = {
                     "name": "qtd",
                     "isArray": false,
                     "type": "Int",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
-                "basketID": {
-                    "name": "basketID",
+                "cartID": {
+                    "name": "cartID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
-                },
-                "Produto": {
-                    "name": "Produto",
-                    "isArray": false,
-                    "type": {
-                        "model": "Produto"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": [
-                            "id"
-                        ],
-                        "targetNames": [
-                            "basketItemProdutoId"
-                        ]
-                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -57,17 +39,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
-                },
-                "basketItemProdutoId": {
-                    "name": "basketItemProdutoId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
                 }
             },
             "syncable": true,
-            "pluralName": "BasketItems",
+            "pluralName": "CartItems",
             "attributes": [
                 {
                     "type": "model",
@@ -76,9 +51,9 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byBasket",
+                        "name": "byCart",
                         "fields": [
-                            "basketID"
+                            "cartID"
                         ]
                     }
                 },
@@ -100,8 +75,8 @@ export const schema = {
                 }
             ]
         },
-        "Basket": {
-            "name": "Basket",
+        "Cart": {
+            "name": "Cart",
             "fields": {
                 "id": {
                     "name": "id",
@@ -109,22 +84,6 @@ export const schema = {
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
-                },
-                "BasketItems": {
-                    "name": "BasketItems",
-                    "isArray": true,
-                    "type": {
-                        "model": "BasketItem"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "basketID"
-                        ]
-                    }
                 },
                 "userID": {
                     "name": "userID",
@@ -139,6 +98,22 @@ export const schema = {
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
+                },
+                "CartItems": {
+                    "name": "CartItems",
+                    "isArray": true,
+                    "type": {
+                        "model": "CartItem"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "cartID"
+                        ]
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -158,7 +133,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Baskets",
+            "pluralName": "Carts",
             "attributes": [
                 {
                     "type": "model",
@@ -214,7 +189,7 @@ export const schema = {
                     "name": "descricao",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "url_imagem": {
@@ -303,14 +278,14 @@ export const schema = {
                     "name": "nome",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "sobrenome": {
                     "name": "sobrenome",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "url_foto": {
@@ -324,16 +299,16 @@ export const schema = {
                     "name": "token",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "Baskets": {
                     "name": "Baskets",
                     "isArray": true,
                     "type": {
-                        "model": "Basket"
+                        "model": "Cart"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": [],
                     "isArrayNullable": true,
                     "association": {
@@ -347,9 +322,9 @@ export const schema = {
                     "name": "Pedidos",
                     "isArray": true,
                     "type": {
-                        "model": "Pedido"
+                        "model": "Cart"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": [],
                     "isArrayNullable": true,
                     "association": {
@@ -363,14 +338,14 @@ export const schema = {
                     "name": "latitude",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "longitude": {
                     "name": "longitude",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "createdAt": {
@@ -429,7 +404,7 @@ export const schema = {
                     "name": "nome",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "plano_assinatura": {
@@ -438,7 +413,7 @@ export const schema = {
                     "type": {
                         "enum": "Plano"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "situacao": {
@@ -447,14 +422,14 @@ export const schema = {
                     "type": {
                         "enum": "Situacao"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "responsavel": {
                     "name": "responsavel",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "telefone": {
@@ -475,7 +450,7 @@ export const schema = {
                     "name": "endereco",
                     "isArray": false,
                     "type": "AWSJSON",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "uf": {
@@ -484,7 +459,7 @@ export const schema = {
                     "type": {
                         "enum": "Uf"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "horario": {
@@ -498,14 +473,14 @@ export const schema = {
                     "name": "minDeliveryTime",
                     "isArray": false,
                     "type": "Int",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "maxDeliveryTime": {
                     "name": "maxDeliveryTime",
                     "isArray": false,
                     "type": "Int",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "rating": {
@@ -519,7 +494,7 @@ export const schema = {
                     "name": "taxa_entrega",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "url_imagem": {
@@ -535,7 +510,7 @@ export const schema = {
                     "type": {
                         "model": "DeliveryProduto"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": [],
                     "isArrayNullable": true,
                     "association": {
@@ -551,7 +526,7 @@ export const schema = {
                     "type": {
                         "model": "DeliveryCategoria"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": [],
                     "isArrayNullable": true,
                     "association": {
@@ -565,23 +540,23 @@ export const schema = {
                     "name": "latitude",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "longitude": {
                     "name": "longitude",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "Baskets": {
                     "name": "Baskets",
                     "isArray": true,
                     "type": {
-                        "model": "Basket"
+                        "model": "Cart"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": [],
                     "isArrayNullable": true,
                     "association": {
@@ -736,28 +711,28 @@ export const schema = {
                     "name": "dt_pedido",
                     "isArray": false,
                     "type": "AWSDateTime",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "vr_subtotal": {
                     "name": "vr_subtotal",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "vr_taxaentrega": {
                     "name": "vr_taxaentrega",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "vr_total": {
                     "name": "vr_total",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "status": {
@@ -766,14 +741,14 @@ export const schema = {
                     "type": {
                         "enum": "Status"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "token_sms": {
                     "name": "token_sms",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "Items": {
@@ -914,7 +889,7 @@ export const schema = {
                     "name": "nome",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "descricao": {
@@ -928,7 +903,7 @@ export const schema = {
                     "name": "vr_unitario",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "url_imagem": {
@@ -944,7 +919,7 @@ export const schema = {
                     "type": {
                         "model": "DeliveryProduto"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": [],
                     "isArrayNullable": true,
                     "association": {
@@ -1010,21 +985,21 @@ export const schema = {
                     "name": "nome",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "cpf": {
                     "name": "cpf",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "telefone": {
                     "name": "telefone",
                     "isArray": false,
                     "type": "AWSPhone",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "endereco": {
@@ -1049,7 +1024,7 @@ export const schema = {
                     "type": {
                         "enum": "Transporte"
                     },
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "url_foto": {
@@ -1063,21 +1038,21 @@ export const schema = {
                     "name": "token_sms",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "latitude": {
                     "name": "latitude",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "longitude": {
                     "name": "longitude",
                     "isArray": false,
                     "type": "Float",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "createdAt": {
@@ -1391,5 +1366,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.6",
-    "version": "4fc2865086ae9b1c444344bd9f0802f0"
+    "version": "17f36d941a3e9a6d21d19f1e3c27a221"
 };
