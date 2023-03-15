@@ -462,22 +462,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "Produtos": {
-                    "name": "Produtos",
-                    "isArray": true,
-                    "type": {
-                        "model": "DeliveryProduto"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "delivery"
-                        ]
-                    }
-                },
                 "Categorias": {
                     "name": "Categorias",
                     "isArray": true,
@@ -507,6 +491,22 @@ export const schema = {
                         "connectionType": "HAS_MANY",
                         "associatedWith": [
                             "deliveryID"
+                        ]
+                    }
+                },
+                "Produtos": {
+                    "name": "Produtos",
+                    "isArray": true,
+                    "type": {
+                        "model": "DeliveryProduto"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "delivery"
                         ]
                     }
                 },
@@ -1134,104 +1134,6 @@ export const schema = {
                 }
             ]
         },
-        "DeliveryProduto": {
-            "name": "DeliveryProduto",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "deliveryId": {
-                    "name": "deliveryId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "produtoId": {
-                    "name": "produtoId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "delivery": {
-                    "name": "delivery",
-                    "isArray": false,
-                    "type": {
-                        "model": "Delivery"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetNames": [
-                            "deliveryId"
-                        ]
-                    }
-                },
-                "produto": {
-                    "name": "produto",
-                    "isArray": false,
-                    "type": {
-                        "model": "Produto"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetNames": [
-                            "produtoId"
-                        ]
-                    }
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "DeliveryProdutos",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byDelivery",
-                        "fields": [
-                            "deliveryId"
-                        ]
-                    }
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byProduto",
-                        "fields": [
-                            "produtoId"
-                        ]
-                    }
-                }
-            ]
-        },
         "DeliveryCategoria": {
             "name": "DeliveryCategoria",
             "fields": {
@@ -1325,6 +1227,104 @@ export const schema = {
                         "name": "byCategoria",
                         "fields": [
                             "categoriaId"
+                        ]
+                    }
+                }
+            ]
+        },
+        "DeliveryProduto": {
+            "name": "DeliveryProduto",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "deliveryId": {
+                    "name": "deliveryId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "produtoId": {
+                    "name": "produtoId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "delivery": {
+                    "name": "delivery",
+                    "isArray": false,
+                    "type": {
+                        "model": "Delivery"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "deliveryId"
+                        ]
+                    }
+                },
+                "produto": {
+                    "name": "produto",
+                    "isArray": false,
+                    "type": {
+                        "model": "Produto"
+                    },
+                    "isRequired": true,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "produtoId"
+                        ]
+                    }
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "DeliveryProdutos",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byDelivery",
+                        "fields": [
+                            "deliveryId"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byProduto",
+                        "fields": [
+                            "produtoId"
                         ]
                     }
                 }

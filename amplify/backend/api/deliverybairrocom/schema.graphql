@@ -46,9 +46,9 @@ type Delivery @model @auth(rules: [{allow: public}]) {
   endereco: String
   cidade: String
   UF: UF
-  Produtos: [Produto] @manyToMany(relationName: "DeliveryProduto")
   Categorias: [Categoria] @manyToMany(relationName: "DeliveryCategoria")
   Carts: [Cart] @hasMany(indexName: "byDelivery", fields: ["id"])
+  Produtos: [Produto] @manyToMany(relationName: "DeliveryProduto")
 }
 
 type CartItem @model @auth(rules: [{allow: public}]) {

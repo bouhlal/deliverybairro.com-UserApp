@@ -6,7 +6,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 import NO_IMAGE from "../../../assets/sem-imagem.jpg";
 
-export default function DeliveryListItem({ item, dlvry, selectItem }) {
+export default function DeliveryListItem({ item, selectItem }) {
   const produto = item;
   
   console.log("DeliveryListItem: ", produto);

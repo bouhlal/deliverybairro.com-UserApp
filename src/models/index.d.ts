@@ -183,9 +183,9 @@ type EagerDelivery = {
   readonly endereco?: string | null;
   readonly cidade?: string | null;
   readonly UF?: Uf | keyof typeof Uf | null;
-  readonly Produtos?: (DeliveryProduto | null)[] | null;
   readonly Categorias?: (DeliveryCategoria | null)[] | null;
   readonly Carts?: (Cart | null)[] | null;
+  readonly Produtos?: (DeliveryProduto | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -213,9 +213,9 @@ type LazyDelivery = {
   readonly endereco?: string | null;
   readonly cidade?: string | null;
   readonly UF?: Uf | keyof typeof Uf | null;
-  readonly Produtos: AsyncCollection<DeliveryProduto>;
   readonly Categorias: AsyncCollection<DeliveryCategoria>;
   readonly Carts: AsyncCollection<Cart>;
+  readonly Produtos: AsyncCollection<DeliveryProduto>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -440,40 +440,6 @@ export declare const Courier: (new (init: ModelInit<Courier>) => Courier) & {
   copyOf(source: Courier, mutator: (draft: MutableModel<Courier>) => MutableModel<Courier> | void): Courier;
 }
 
-type EagerDeliveryProduto = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<DeliveryProduto, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly deliveryId?: string | null;
-  readonly produtoId?: string | null;
-  readonly delivery: Delivery;
-  readonly produto: Produto;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-type LazyDeliveryProduto = {
-  readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<DeliveryProduto, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
-  };
-  readonly id: string;
-  readonly deliveryId?: string | null;
-  readonly produtoId?: string | null;
-  readonly delivery: AsyncItem<Delivery>;
-  readonly produto: AsyncItem<Produto>;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
-}
-
-export declare type DeliveryProduto = LazyLoading extends LazyLoadingDisabled ? EagerDeliveryProduto : LazyDeliveryProduto
-
-export declare const DeliveryProduto: (new (init: ModelInit<DeliveryProduto>) => DeliveryProduto) & {
-  copyOf(source: DeliveryProduto, mutator: (draft: MutableModel<DeliveryProduto>) => MutableModel<DeliveryProduto> | void): DeliveryProduto;
-}
-
 type EagerDeliveryCategoria = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<DeliveryCategoria, 'id'>;
@@ -506,4 +472,38 @@ export declare type DeliveryCategoria = LazyLoading extends LazyLoadingDisabled 
 
 export declare const DeliveryCategoria: (new (init: ModelInit<DeliveryCategoria>) => DeliveryCategoria) & {
   copyOf(source: DeliveryCategoria, mutator: (draft: MutableModel<DeliveryCategoria>) => MutableModel<DeliveryCategoria> | void): DeliveryCategoria;
+}
+
+type EagerDeliveryProduto = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<DeliveryProduto, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly deliveryId?: string | null;
+  readonly produtoId?: string | null;
+  readonly delivery: Delivery;
+  readonly produto: Produto;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyDeliveryProduto = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<DeliveryProduto, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly deliveryId?: string | null;
+  readonly produtoId?: string | null;
+  readonly delivery: AsyncItem<Delivery>;
+  readonly produto: AsyncItem<Produto>;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type DeliveryProduto = LazyLoading extends LazyLoadingDisabled ? EagerDeliveryProduto : LazyDeliveryProduto
+
+export declare const DeliveryProduto: (new (init: ModelInit<DeliveryProduto>) => DeliveryProduto) & {
+  copyOf(source: DeliveryProduto, mutator: (draft: MutableModel<DeliveryProduto>) => MutableModel<DeliveryProduto> | void): DeliveryProduto;
 }

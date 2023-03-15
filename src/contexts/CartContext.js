@@ -22,15 +22,17 @@ function CartContextProvider({ children }) {
     delivery?.taxa_entrega
   );
 
+  const id = dbUser.id;
+
   useEffect(() => {
-    DataStore.query(Cart, (cart) =>
-      cart.deliveryID.eq(delivery.id).userID.eq(dbUser.id)
-    ).then((carts) => setCart(carts[0]));
+    DataStore.query(Cart, (basket) =>
+      basket.deliveryID.eq(delivery.id).userID.eq(id)).then((baskets) => setCart(baskets[0])
+    );
   }, [dbUser, delivery]);
 
   useEffect(() => {
     if (cart) {
-      DataStore.query(CartItem, (cartitem) => cartitem.cartID.eq(cart.id)).then(
+      DataStore.query(CartItem, (basketdish) => basketdish.cartID.eq(cart.id)).then(
         setCartItens
       );
     }

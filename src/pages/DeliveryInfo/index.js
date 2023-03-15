@@ -23,20 +23,29 @@ export default function DeliveryInfo({ route }) {
   const [produto, setProduto] = useState({});
   const [isAscending, setIsAscending] = useState(true);
 
-  const id = route.params?.id; console.log('Delivery ID: ', id);
+  const id = route.params?.id; 
+
+  console.log('Delivery ID: ', id);
 
   const {
-    setDelivery: setBasketDelivery, basket, basketItens 
+    setDelivery: setBasketDelivery, cart, cartItens 
   } = useContext(CartContext);
 
   useEffect(() => {
     if (!id) {
       return;
     }
-    setBasketDelivery(null);
     // fetch the restaurant with the id
-    DataStore.query(Delivery, id).then(setDelivery);
-    DataStore.query(Produto, (produto) => produto.deliverys?.deliveryId.eq(id)).then(setListaDeProdutos);
+    (async function() {
+      try {
+        setBasketDelivery(null);
+        await DataStore.query(Delivery, id).then(setDelivery);
+        await DataStore.query(Produto, (produto) => produto.deliverys?.deliveryId.eq(id)).then(setListaDeProdutos)
+        console.log("Deliveries: ", deliveries);
+      } catch(error) {
+        console.error("Error (query: Delivery): ", error);
+      }
+    })();
   }, [id]);
 
   useEffect(() => {
@@ -50,7 +59,7 @@ export default function DeliveryInfo({ route }) {
     setListaDeProdutos(listaordenada);
     setIsAscending(!isAscending);
   }
-  
+
   async function handleSelectItem(item) {
     setProduto(item);
     showModal(true);
@@ -74,9 +83,9 @@ export default function DeliveryInfo({ route }) {
         <FlatList
           data={listadeprodutos}
           ListHeaderComponent={() => <DeliveryHeader delivery={delivery} listbyaz={()=>listByAZ()}/>}
-          ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há produtos deste Delivery!</Text>}
+          ListEmptyComponent={() => <Text style={styles.empty}>Ainda não há produtos deste Delivery.</Text>}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({item}) => <DeliveryListItem item={item} dlvry={delivery} selectItem={()=>handleSelectItem(item)}/>}
+          renderItem={({item}) => <DeliveryListItem item={item} selectItem={()=>handleSelectItem(item)}/>}
         />
       </View>
     </SafeAreaView>
