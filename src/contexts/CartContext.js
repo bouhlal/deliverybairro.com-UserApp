@@ -22,11 +22,9 @@ function CartContextProvider({ children }) {
     delivery?.taxa_entrega
   );
 
-  const id = dbUser.id;
-
   useEffect(() => {
     DataStore.query(Cart, (basket) =>
-      basket.deliveryID.eq(delivery.id).userID.eq(id)).then((baskets) => setCart(baskets[0])
+      basket.deliveryID.eq(delivery.id).userID.eq(dbUser.id)).then((baskets) => setCart(baskets[0])
     );
   }, [dbUser, delivery]);
 
