@@ -30,8 +30,8 @@ export default function App() {
       <AuthContextProvider>
         <CartContextProvider>
           <OrderContextProvider>
-            <StatusBar backgroundColor='#FFF' barStyle='dark-content'  />
             <Routes />
+            <StatusBar backgroundColor='#FFF' barStyle='dark-content'  />
           </OrderContextProvider>
         </CartContextProvider>  
       </AuthContextProvider>
