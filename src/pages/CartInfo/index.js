@@ -9,23 +9,64 @@ import { CartContext } from '../../contexts/CartContext';
 import { OrderContext } from '../../contexts/OrderContext';
 import { useNavigation } from '@react-navigation/native';
 
+import { DataStore } from 'aws-amplify';
+import { Order } from '../../models';
+
 import CartItemList from '../../components/Cart';
 
 // exibe o Carrinho de Compras e permite enviar/gerar o Pedido (Order) através da função createOrder()
 
 export default function CartInfo() {
-  const { delivery, cart, cartItens, subtotal, total, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
-  const { createOrder } = useContext(OrderContext);
-
   const navigation = useNavigation();
+  const { delivery, cart, cartItens, subtotal, total, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
+  // const { createOrder } = useContext(OrderContext);
+
+  async function createOrder() {
+    try {
+      const newOrder = await DataStore.save(new Order({
+        status: 'PREPARANDO',
+        items: cartItens,
+        deliveryId: delivery.id,
+        subtotal: subtotal,
+        deliveryFee: delivery.taxa_entrega,
+        total: total
+      }));
+      return newOrder;
+    } catch (error) {
+      console.log('Error creating order', error);
+      Alert.alert('Erro ao gerar pedido', 'Não foi possível gerar o pedido no momento. Por favor, tente novamente mais tarde.');
+      return null;
+    }
+  }
+  
+  // async function gerarPedidoELimparCestaDeCompras() {
+  //   const novoPedido = await createOrder();
+  //   await cleanCart();
+  //   navigation.navigate("Pedidos", {
+  //     screen: "Pedidos",
+  //     params: { id: novoPedido.id },
+  //   });
+  // };
 
   async function gerarPedidoELimparCestaDeCompras() {
-    const novoPedido = await createOrder();
-    await cleanCart();
-    navigation.navigate("Pedidos", {
-      screen: "Pedidos",
-      params: { id: novoPedido.id },
-    });
+    try {
+      const novoPedido = await DataStore.save(new Order({
+        status: 'PROCESSING',
+        items: cartItens,
+        deliveryId: delivery.id,
+        subtotal: subtotal,
+        deliveryFee: delivery.taxa_entrega,
+        total: total
+      }));
+      await cleanCart();
+      navigation.navigate("Pedidos", {
+        screen: "Pedidos",
+        params: { id: novoPedido.id },
+      });
+    } catch (error) {
+      console.log('Error creating order', error);
+      Alert.alert('Erro ao gerar pedido', 'Não foi possível gerar o pedido no momento. Por favor, tente novamente mais tarde.');
+    }
   };
 
   async function cancelarPedidoELimparCestaDeCompras() {
@@ -70,7 +111,7 @@ export default function CartInfo() {
       {
         (cart.length > 0) &&
         <TouchableOpacity style={styles.btnAdd} onPress={()=>gerarPedidoELimparCestaDeCompras()}>
-          <Text style={{color: '#FFF', fontSize: 18}}>Enviar Pedido</Text>
+          <Text style={{color: '#FFF', fontSize: 18}}>CONFIRMAR PEDIDO</Text>
         </TouchableOpacity>
       }
         <TouchableOpacity style={styles.btnCancel} onPress={()=>cancelarPedidoELimparCestaDeCompras()}>
