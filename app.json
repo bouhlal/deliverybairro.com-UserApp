@@ -24,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.deliverybairro.UserApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

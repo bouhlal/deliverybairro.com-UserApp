@@ -9,7 +9,7 @@ import { CartContext } from '../../contexts/CartContext';
 import { OrderContext } from '../../contexts/OrderContext';
 import { useNavigation } from '@react-navigation/native';
 
-import { CartItemList } from '../../components/Cart';
+import CartItemList from '../../components/Cart';
 
 // exibe o Carrinho de Compras e permite enviar/gerar o Pedido (Order) através da função createOrder()
 
