@@ -45,6 +45,7 @@ export default function Deliveries({ route }) {
       <Header />
       <View style={styles.container}>
         <Text style={styles.categoria_title}>{route.params.descricao}</Text>
+
         <FlatList
           data={deliveries}
           keyExtractor={(item) => item.id.toString()}
