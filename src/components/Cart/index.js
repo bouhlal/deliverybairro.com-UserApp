@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function CartItemList({ produto, AddQtd, RemoveQtd }) {
+export default function CartItem({ produto, AddQtd, RemoveQtd }) {
   const [qtd, setQtd] = useState(produto?.qtd);
 
   console.log(produto);

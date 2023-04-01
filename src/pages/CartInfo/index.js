@@ -9,14 +9,14 @@ import { CartContext } from '../../contexts/CartContext';
 import { OrderContext } from '../../contexts/OrderContext';
 import { useNavigation } from '@react-navigation/native';
 
-import { DataStore } from 'aws-amplify';
-import { Order } from '../../models';
-
-import CartItemList from '../../components/Cart';
+import CartItem from '../../components/Cart'; 
 
 // exibe o Carrinho de Compras e permite enviar/gerar o Pedido (Order) através da função createOrder()
 
 export default function CartInfo() {
+  const { delivery, cart, subtotal, total, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
+  const { createOrder } = useContext(OrderContext);
+
   const navigation = useNavigation();
   const { delivery, cart, cartItens, subtotal, total, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
   // const { createOrder } = useContext(OrderContext);
@@ -93,7 +93,7 @@ export default function CartInfo() {
         keyExtractor={(item)=>String(item.id)}
         ListEmptyComponent={() => <Text style={styles.empty}>Cesta de Compras vazia!</Text>}
         renderItem={({item})=>(
-          <CartItemList
+          <CartItem
             produto={item}
             AddQtd={() => AddToCart(item, 1, item.vr_unitario)}
             RemoveQtd={() => RemoveFromCart(item)}
