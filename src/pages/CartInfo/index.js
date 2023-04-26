@@ -3,7 +3,7 @@
  */
 
 import React, { useContext } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react-native';
 import { Fontisto } from "@expo/vector-icons";
 import { CartContext } from '../../contexts/CartContext';
 import { OrderContext } from '../../contexts/OrderContext';
@@ -14,9 +14,6 @@ import CartItem from '../../components/Cart';
 // exibe o Carrinho de Compras e permite enviar/gerar o Pedido (Order) através da função createOrder()
 
 export default function CartInfo() {
-  const { delivery, cart, subtotal, total, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
-  const { createOrder } = useContext(OrderContext);
-
   const navigation = useNavigation();
   const { delivery, cart, cartItens, subtotal, total, AddToCart, RemoveFromCart, cleanCart } = useContext(CartContext);
   // const { createOrder } = useContext(OrderContext);
@@ -24,7 +21,7 @@ export default function CartInfo() {
   async function createOrder() {
     try {
       const newOrder = await DataStore.save(new Order({
-        status: 'PREPARANDO',
+        status: 'NOVO',
         items: cartItens,
         deliveryId: delivery.id,
         subtotal: subtotal,
@@ -38,7 +35,12 @@ export default function CartInfo() {
       return null;
     }
   }
-  
+
+  // useEffect(() => {
+  //   let soma = parseFloat(subtotal) + parseFloat(delivery.taxa_entrega);
+  //   setTotal(soma);
+  // }, [subtotal]);
+
   // async function gerarPedidoELimparCestaDeCompras() {
   //   const novoPedido = await createOrder();
   //   await cleanCart();
@@ -110,7 +112,7 @@ export default function CartInfo() {
 
       {
         (cart.length > 0) &&
-        <TouchableOpacity style={styles.btnAdd} onPress={()=>gerarPedidoELimparCestaDeCompras()}>
+        <TouchableOpacity style={styles.btnAdd} onPress={()=>createOrder()}>
           <Text style={{color: '#FFF', fontSize: 18}}>CONFIRMAR PEDIDO</Text>
         </TouchableOpacity>
       }
@@ -121,6 +123,7 @@ export default function CartInfo() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -170,8 +173,3 @@ const styles = StyleSheet.create({
     height: 75,
   },
 })
-
-// useEffect(() => {
-//   let soma = parseFloat(subtotal) + parseFloat(delivery.taxa_entrega);
-//   setTotal(soma);
-// }, [subtotal]);
